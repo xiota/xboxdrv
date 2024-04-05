@@ -101,9 +101,8 @@ env.ParseConfig(env['PKG_CONFIG'] + " --cflags --libs gthread-2.0 | sed 's/-I/-i
 env.ParseConfig(env['PKG_CONFIG'] + " --cflags --libs libusb-1.0 | sed 's/-I/-isystem/g'")
 env.ParseConfig(env['PKG_CONFIG'] + " --cflags --libs libudev | sed 's/-I/-isystem/g'")
 
-f = open("VERSION")
-package_version = f.read()
-f.close()
+with open('VERSION') as f:
+    package_version = f.readline().strip('\n')
 
 env.Append(CPPDEFINES = { 'PACKAGE_VERSION': "'\"%s\"'" % package_version })
 
