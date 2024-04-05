@@ -4,7 +4,7 @@ import os
 import subprocess
 import string
 import re
-
+
 def build_dbus_glue(target, source, env):
     """
     C++ doesn't allow casting from void* to a function pointer,
@@ -23,7 +23,7 @@ def build_dbus_glue(target, source, env):
 
     with open(target[0].get_path(), "w") as f:
         f.write(xml)
-
+
 def build_bin2h(target, source, env):
     """
     Takes a list of files and converts them into a C source that can be included
@@ -67,7 +67,7 @@ def build_bin2h(target, source, env):
 
         fout.write("/* EOF */\n")
 
-
+
 env = Environment(ENV=os.environ, BUILDERS = {
     'DBusGlue' : Builder(action = build_dbus_glue),
     'Bin2H'    : Builder(action = build_bin2h)
@@ -80,7 +80,7 @@ opts.Add('CPPFLAGS', 'Additional preprocessor flags')
 opts.Add('CPPDEFINES', 'defined constants')
 opts.Add('LIBPATH', 'Additional library paths')
 opts.Add('LIBS', 'Additional libraries')
-opts.Add('CCFLAGS', 'C Compiler flags')
+opts.Add('CFLAGS', 'C Compiler flags')
 opts.Add('CXXFLAGS', 'C++ Compiler flags')
 opts.Add('LINKFLAGS', 'Linker Compiler flags')
 opts.Add('AR', 'Library archiver')
@@ -94,6 +94,7 @@ opts.Update(env)
 Help(opts.GenerateHelpText(env))
 
 env.Append(CPPPATH=["src/"])
+env.Append(CXXFLAGS=' -std=c++20')
 
 env.ParseConfig(env['PKG_CONFIG'] + " --cflags --libs dbus-glib-1 | sed 's/-I/-isystem/g'")
 env.ParseConfig(env['PKG_CONFIG'] + " --cflags --libs glib-2.0 | sed 's/-I/-isystem/g'")
@@ -107,7 +108,7 @@ with open('VERSION') as f:
 env.Append(CPPDEFINES = { 'PACKAGE_VERSION': "'\"%s\"'" % package_version })
 
 conf = Configure(env)
-
+
 if not conf.env['CXX']:
     print("g++ must be installed!")
     Exit(1)
