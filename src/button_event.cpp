@@ -18,9 +18,8 @@
 
 #include "button_event.hpp"
 
-#include <errno.h>
-
 #include <boost/tokenizer.hpp>
+#include <cerrno>
 #include <fstream>
 
 #include "buttonevent/abs_button_event_handler.hpp"

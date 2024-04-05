@@ -1,10 +1,10 @@
 #include <pthread.h>
-#include <signal.h>
-#include <stdio.h>
-#include <string.h>
 #include <usb.h>
 
 #include <boost/format.hpp>
+#include <csignal>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>

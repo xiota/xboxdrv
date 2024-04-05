@@ -19,9 +19,8 @@
 #ifndef HEADER_HELPER_HPP
 #define HEADER_HELPER_HPP
 
-#include <stdint.h>
-
 #include <boost/function.hpp>
+#include <cstdint>
 #include <vector>
 
 int hexstr2int(const std::string& str);

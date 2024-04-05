@@ -21,9 +21,9 @@
 
 #include <glib.h>
 #include <linux/uinput.h>
-#include <stdint.h>
 
 #include <boost/function.hpp>
+#include <cstdint>
 
 class ForceFeedbackHandler;
 class Controller;

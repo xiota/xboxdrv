@@ -18,9 +18,8 @@
 
 #include "headset.hpp"
 
-#include <errno.h>
-
 #include <boost/bind.hpp>
+#include <cerrno>
 #include <fstream>
 
 #include "helper.hpp"

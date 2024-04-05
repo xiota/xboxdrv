@@ -20,10 +20,10 @@
 
 #include <glib.h>
 #include <libusb.h>
-#include <stdio.h>
 
 #include <boost/bind.hpp>
 #include <boost/format.hpp>
+#include <cstdio>
 #include <iostream>
 #include <stdexcept>
 

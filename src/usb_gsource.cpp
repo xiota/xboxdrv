@@ -18,10 +18,11 @@
 
 #include "usb_gsource.hpp"
 
-#include <assert.h>
 #include <libusb.h>
 #include <poll.h>
-#include <stdlib.h>
+
+#include <cassert>
+#include <cstdlib>
 
 #include "log.hpp"
 #include "usb_helper.hpp"

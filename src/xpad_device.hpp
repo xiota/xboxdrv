@@ -19,7 +19,7 @@
 #ifndef HEADER_XPAD_DEVICES_HPP
 #define HEADER_XPAD_DEVICES_HPP
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "xboxmsg.hpp"
 

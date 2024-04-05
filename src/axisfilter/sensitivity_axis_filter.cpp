@@ -18,9 +18,8 @@
 
 #include "sensitivity_axis_filter.hpp"
 
-#include <math.h>
-
 #include <boost/tokenizer.hpp>
+#include <cmath>
 #include <sstream>
 
 #include "helper.hpp"

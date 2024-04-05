@@ -18,9 +18,8 @@
 
 #include "playstation3_usb_controller.hpp"
 
-#include <string.h>
-
 #include <boost/format.hpp>
+#include <cstring>
 #include <sstream>
 
 #include "log.hpp"

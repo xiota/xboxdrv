@@ -18,9 +18,8 @@
 
 #include "saitek_p3600_controller.hpp"
 
-#include <stdio.h>
-
 #include <bitset>
+#include <cstdio>
 #include <iostream>
 #include <sstream>
 

@@ -18,15 +18,15 @@
 
 #include "xboxdrv.hpp"
 
-#include <errno.h>
 #include <sched.h>
-#include <signal.h>
-#include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 #include <boost/algorithm/string/join.hpp>
 #include <boost/format.hpp>
+#include <cerrno>
+#include <csignal>
+#include <cstdio>
 #include <iostream>
 
 #include "command_line_options.hpp"

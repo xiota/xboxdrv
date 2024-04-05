@@ -19,8 +19,7 @@
 #ifndef HEADER_XBOXDRV_UI_EVENT_HPP
 #define HEADER_XBOXDRV_UI_EVENT_HPP
 
-#include <stdint.h>
-
+#include <cstdint>
 #include <string>
 
 enum {

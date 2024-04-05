@@ -19,9 +19,8 @@
 #ifndef HEADER_XBOX_GENERIC_CONTROLLER_HPP
 #define HEADER_XBOX_GENERIC_CONTROLLER_HPP
 
-#include <stdint.h>
-
 #include <boost/function.hpp>
+#include <cstdint>
 #include <memory>
 
 extern "C" {

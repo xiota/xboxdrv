@@ -19,9 +19,8 @@
 #ifndef HEADER_XBOXDRV_UI_EVENT_COLLECTOR_HPP
 #define HEADER_XBOXDRV_UI_EVENT_COLLECTOR_HPP
 
-#include <stdint.h>
-
 #include <boost/shared_ptr.hpp>
+#include <cstdint>
 #include <vector>
 
 #include "ui_event_emitter.hpp"

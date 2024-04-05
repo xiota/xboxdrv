@@ -1,13 +1,13 @@
 #include <dirent.h>
-#include <errno.h>
 #include <fcntl.h>
 #include <linux/input.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 
 /** Simple program to send events to /dev/input/eventX devices, useful

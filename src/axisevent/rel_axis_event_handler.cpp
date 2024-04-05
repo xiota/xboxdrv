@@ -18,9 +18,8 @@
 
 #include "axisevent/rel_axis_event_handler.hpp"
 
-#include <math.h>
-
 #include <boost/tokenizer.hpp>
+#include <cmath>
 
 #include "evdev_helper.hpp"
 #include "helper.hpp"

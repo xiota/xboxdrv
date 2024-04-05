@@ -18,8 +18,7 @@
 
 #include "square_axis_modifier.hpp"
 
-#include <math.h>
-
+#include <cmath>
 #include <sstream>
 
 #include "helper.hpp"

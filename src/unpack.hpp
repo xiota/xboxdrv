@@ -19,7 +19,7 @@
 #ifndef HEADER_XBOXDRV_ENDIAN_HPP
 #define HEADER_XBOXDRV_ENDIAN_HPP
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace unpack {
 

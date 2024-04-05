@@ -19,9 +19,8 @@
 #ifndef HEADER_XBOXDRV_UI_EVENT_EMITTER_HPP
 #define HEADER_XBOXDRV_UI_EVENT_EMITTER_HPP
 
-#include <stdint.h>
-
 #include <boost/shared_ptr.hpp>
+#include <cstdint>
 
 class UInput;
 class UIEventEmitter;

@@ -18,8 +18,7 @@
 
 #include "arg_parser.hpp"
 
-#include <stdio.h>
-
+#include <cstdio>
 #include <ostream>
 
 #include "helper.hpp"

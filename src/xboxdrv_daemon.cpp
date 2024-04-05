@@ -21,11 +21,11 @@
 #include <dbus/dbus-glib-lowlevel.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus.h>
-#include <errno.h>
 
 #include <boost/bind.hpp>
 #include <boost/format.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <cerrno>
 #include <fstream>
 
 #include "controller.hpp"

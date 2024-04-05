@@ -18,9 +18,8 @@
 
 #include "select.hpp"
 
-#include <errno.h>
-#include <string.h>
-
+#include <cerrno>
+#include <cstring>
 #include <stdexcept>
 
 #include "raise_exception.hpp"

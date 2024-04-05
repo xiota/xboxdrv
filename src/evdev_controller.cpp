@@ -19,12 +19,12 @@
 #include "evdev_controller.hpp"
 
 #include <err.h>
-#include <errno.h>
 #include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
 
 #include <boost/format.hpp>
+#include <cerrno>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 
 #include "evdev_helper.hpp"

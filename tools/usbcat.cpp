@@ -16,12 +16,12 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
 #include <usb.h>
 
 #include <boost/format.hpp>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 
 std::ostream& operator<<(std::ostream& out, struct usb_device* dev) {

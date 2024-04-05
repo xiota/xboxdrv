@@ -19,9 +19,8 @@
 #ifndef HEADER_XBOXDRV_MESSAGE_PROCESSOR_HPP
 #define HEADER_XBOXDRV_MESSAGE_PROCESSOR_HPP
 
-#include <stdint.h>
-
 #include <boost/function.hpp>
+#include <cstdint>
 
 struct XboxGenericMsg;
 class Controller;

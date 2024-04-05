@@ -34,18 +34,19 @@
  * Vojtech Pavlik, Simunkova 1594, Prague 8, 182 00 Czech Republic
  */
 
-#include <errno.h>
 #include <fcntl.h>
 #include <linux/input.h>
 #include <linux/joystick.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include <cerrno>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 char *axis_names[ABS_MAX + 1] = {
     "X",     "Y",     "Z",     "Rx",    "Ry",    "Rz",    "Throttle", "Rudder",

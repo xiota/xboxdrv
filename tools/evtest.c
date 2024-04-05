@@ -31,11 +31,12 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <linux/input.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 char *events[EV_MAX + 1] = {"Reset",    "Key",
                             "Relative", "Absolute",

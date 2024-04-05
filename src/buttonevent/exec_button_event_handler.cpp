@@ -18,11 +18,11 @@
 
 #include "exec_button_event_handler.hpp"
 
-#include <errno.h>
-#include <string.h>
 #include <sys/wait.h>
 
 #include <boost/tokenizer.hpp>
+#include <cerrno>
+#include <cstring>
 
 #include "log.hpp"
 

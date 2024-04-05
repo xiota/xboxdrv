@@ -18,10 +18,9 @@
 
 #include "uinput.hpp"
 
-#include <math.h>
-#include <stdio.h>
-
 #include <boost/tokenizer.hpp>
+#include <cmath>
+#include <cstdio>
 #include <iostream>
 #include <stdexcept>
 

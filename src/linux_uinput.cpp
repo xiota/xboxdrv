@@ -18,10 +18,10 @@
 
 #include "linux_uinput.hpp"
 
-#include <errno.h>
 #include <fcntl.h>
 
 #include <boost/format.hpp>
+#include <cerrno>
 
 #include "controller.hpp"
 #include "evdev_helper.hpp"
