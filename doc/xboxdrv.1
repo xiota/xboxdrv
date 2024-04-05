@@ -1,11 +1,12 @@
-'\" t -*- coding: us-ascii -*-
+.\" t
+.\" -*- coding: us-ascii -*-
 .if \n(.g .ds T< \\FC
 .if \n(.g .ds T> \\F[\n[.fam]]
 .de URL
 \\$2 \(la\\$1\(ra\\$3
 ..
 .if \n(.g .mso www.tmac
-.TH "xboxdrv " 1 2011-07-20 0.8.3 "User Commands"
+.TH "xboxdrv " 1 2011-07-20 0.8.9 "User Commands"
 .SH NAME
 xboxdrv
 \- A Xbox/Xbox360 gamepad driver that works in userspace 
@@ -856,11 +857,11 @@ as autofire while another one, emitting the same signal, acts normally.
 \*(T<$ xboxdrv \-\-autofire B=250 \-\-buttonmap B=A\*(T>
 .fi
 .TP 
-\*(T<\fB\-\-axis\-sensitivity \fR\*(T>\fIAXIS=SENSITIVITY\fR,...
-The sensitive of an axis can be adjusted via --axis-sensitivity:
+\*(T<\fB\-\-axis\-sensitivty \fR\*(T>\fIAXIS=SENSITIVITY\fR,...
+The sensitive of an axis can be adjusted via --axis-sensitivty:
 
 .nf
-\*(T<$ xboxdrv \-\-axis\-sensitivity X1=\-1.0,Y1=\-1.0\*(T>
+\*(T<$ xboxdrv \-\-axis\-sensitivty X1=\-1.0,Y1=\-1.0\*(T>
 .fi
 
 A value of 0 gives you the default linear sensitivity,
@@ -2177,7 +2178,7 @@ If you use options in xboxdrv that change the number of axis you
 have to adjust the variable accordingly, see:
 .TP 0.2i
 \(bu
-\(laftp://ptah.lnf.kth.se/pub/misc/sdl-env-vars\(ra
+\(lahttp://sdl.beuc.net/sdl.wiki/SDL_envvars\(ra
 .TP 
 SDL_LINUX_JOYSTICK
 Special joystick configuration string for linux. The format is
@@ -2399,7 +2400,7 @@ when Foobar is mapped to multiple keycodes in the keymap.
 .PP
 Workaround: Use \fBKEY_\fR instead or cleanup your keymap
 .PP
-Newer versions of Xorg will also do perform some auto
+Newer versions of Xorg will also perform some auto
 configuration that might lead to your keymap being switched
 whenever a new keyboard is detected, in cases of custom
 Xmodmaps this might confuse xboxdrv and make the XK_ style
@@ -2411,15 +2412,6 @@ basically have to reboot. This looks like it might be a kernel issue
 and not a xboxdrv one.
 .PP
 Workaround: Kill the app that uses xboxdrv before xboxdrv itself.
-.SS "QUESTIONS, BUG REPORTS AND FEATURE REQUESTS"
-Bug reports and feature request can be report to the xboxdrv issue tracker at:
-.PP
-.URL https://github.com/Grumbel/xboxdrv/issues/new ""
-.PP
-General questions and requests for configuration help should
-be directed to the xboxdrv mailing list at:
-.PP
-.URL http://groups.google.com/group/xboxdrv ""
 .SH COPYRIGHT
 Copyright \(co 2010-2011 Ingo Ruhnke <\*(T<grumbel@gmail.com\*(T>>
 License GPLv3+: GNU GPL version 3 or later

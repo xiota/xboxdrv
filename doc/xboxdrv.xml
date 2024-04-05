@@ -3429,7 +3429,7 @@ EndSection]]></programlisting>
       <para>Workaround: Use <keysym>KEY_</keysym> instead or cleanup your keymap</para>
 
       <para>
-        Newer versions of Xorg will also do perform some auto
+        Newer versions of Xorg will also perform some auto
         configuration that might lead to your keymap being switched
         whenever a new keyboard is detected, in cases of custom
         Xmodmaps this might confuse xboxdrv and make the XK_ style
@@ -3449,23 +3449,6 @@ EndSection]]></programlisting>
 
       <para>
         Workaround: Kill the app that uses xboxdrv before xboxdrv itself.
-      </para>
-    </refsect2>
-
-    <refsect2>
-      <title>Questions, Bug Reports and Feature Requests</title>
-      <para>
-        Bug reports and feature request can be report to the xboxdrv issue tracker at:
-      </para>
-      <para>
-        <ulink url="https://github.com/Grumbel/xboxdrv/issues/new" />
-      </para>
-      <para>
-        General questions and requests for configuration help should
-        be directed to the xboxdrv mailing list at:
-      </para>
-      <para>
-        <ulink url="http://groups.google.com/group/xboxdrv" />
       </para>
     </refsect2>
   </refsect1>
