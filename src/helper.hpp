@@ -28,8 +28,6 @@
 int hexstr2int(const std::string& str);
 
 bool str2bool(std::string const& str);
-int str2int(std::string const& str);
-float str2float(std::string const& str);
 
 std::string raw2str(uint8_t* buffer, int len);
 std::string to_lower(const std::string& str);

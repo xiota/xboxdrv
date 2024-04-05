@@ -76,14 +76,14 @@ bool get_usb_path(udev_device* device, int* bus, int* dev) {
   if (!busnum_str) {
     return false;
   } else {
-    *bus = str2int(busnum_str);
+    *bus = std::stoi(busnum_str);
   }
 
   const char* devnum_str = udev_device_get_property_value(device, "DEVNUM");
   if (!devnum_str) {
     return false;
   } else {
-    *dev = str2int(devnum_str);
+    *dev = std::stoi(devnum_str);
   }
 
   return true;

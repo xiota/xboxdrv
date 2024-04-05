@@ -40,13 +40,13 @@ CalibrationAxisFilter* CalibrationAxisFilter::from_string(
   for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i, ++j) {
     switch (j) {
       case 0:
-        min = str2int(*i);
+        min = std::stoi(*i);
         break;
       case 1:
-        center = str2int(*i);
+        center = std::stoi(*i);
         break;
       case 2:
-        max = str2int(*i);
+        max = std::stoi(*i);
         break;
       default:
         throw std::runtime_error("to many arguments");

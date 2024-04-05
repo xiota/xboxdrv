@@ -138,7 +138,7 @@ int str2deviceid(const std::string& device) {
   } else if (device == "joystick" || device == "joy") {
     return DEVICEID_JOYSTICK;
   } else {
-    return str2int(device);
+    return std::stoi(device);
   }
 }
 
@@ -146,7 +146,7 @@ int str2slotid(const std::string& slot) {
   if (slot == "auto" || slot.empty()) {
     return SLOTID_AUTO;
   } else {
-    return str2int(slot);
+    return std::stoi(slot);
   }
 }
 

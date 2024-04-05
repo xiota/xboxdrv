@@ -32,7 +32,7 @@ RotateAxisModifier* RotateAxisModifier::from_string(
         "RotateAxisModifier requires three or four arguments");
   } else {
     return new RotateAxisModifier(string2axis(args[0]), string2axis(args[1]),
-                                  str2float(args[2]) * M_PI / 180.0f,
+                                  std::stof(args[2]) * M_PI / 180.0f,
                                   args.size() == 3 ? false : str2bool(args[3]));
   }
 }

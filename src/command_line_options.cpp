@@ -734,7 +734,7 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
       break;
 
     case OPTION_TIMEOUT:
-      opts.timeout = str2int(opt.argument);
+      opts.timeout = std::stoi(opt.argument);
       break;
 
     case OPTION_NO_UINPUT:
@@ -870,11 +870,11 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
       break;
 
     case OPTION_CONTROLLER_SLOT:
-      opts.controller_slot = str2int(opt.argument);
+      opts.controller_slot = std::stoi(opt.argument);
       break;
 
     case OPTION_CONFIG_SLOT:
-      opts.config_slot = str2int(opt.argument);
+      opts.config_slot = std::stoi(opt.argument);
       break;
 
     case OPTION_TOGGLE:
@@ -934,11 +934,11 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
       break;
 
     case OPTION_ID:
-      opts.controller_id = str2int(opt.argument);
+      opts.controller_id = std::stoi(opt.argument);
       break;
 
     case OPTION_WID:
-      opts.wireless_id = str2int(opt.argument);
+      opts.wireless_id = std::stoi(opt.argument);
       if (opts.wireless_id < 0 || opts.wireless_id > 3) {
         throw std::runtime_error("wireless id must be within 0 and 3");
       }
@@ -1348,13 +1348,13 @@ void CommandLineParser::set_evdev_keymap(const std::string& name,
 void CommandLineParser::set_relative_axis(const std::string& name,
                                           const std::string& value) {
   m_options->get_controller_options().relative_axis_map[string2axis(name)] =
-      AxisFilterPtr(new RelativeAxisFilter(str2int(value)));
+      AxisFilterPtr(new RelativeAxisFilter(std::stoi(value)));
 }
 
 void CommandLineParser::set_autofire(const std::string& name,
                                      const std::string& value) {
   m_options->get_controller_options().autofire_map[string2btn(name)] =
-      ButtonFilterPtr(new AutofireButtonFilter(str2int(value), 0));
+      ButtonFilterPtr(new AutofireButtonFilter(std::stoi(value), 0));
 }
 
 void CommandLineParser::set_calibration(const std::string& name,
@@ -1369,14 +1369,14 @@ void CommandLineParser::set_calibration(const std::string& name,
   } else {
     m_options->get_controller_options().calibration_map[string2axis(name)] =
         AxisFilterPtr(new CalibrationAxisFilter(
-            str2int(args[0]), str2int(args[1]), str2int(args[2])));
+            std::stoi(args[0]), std::stoi(args[1]), std::stoi(args[2])));
   }
 }
 
 void CommandLineParser::set_axis_sensitivity(const std::string& name,
                                              const std::string& value) {
   m_options->get_controller_options().sensitivity_map[string2axis(name)] =
-      AxisFilterPtr(new SensitivityAxisFilter(str2float(value)));
+      AxisFilterPtr(new SensitivityAxisFilter(std::stof(value)));
 }
 
 void CommandLineParser::set_deadzone(const std::string& value) {
@@ -1396,7 +1396,7 @@ void CommandLineParser::set_four_way_restrictor() {
 }
 
 void CommandLineParser::set_dpad_rotation(const std::string& value) {
-  int degree = str2int(value);
+  int degree = std::stoi(value);
   degree /= 45;
   degree %= 8;
   if (degree < 0) degree += 8;
@@ -1489,7 +1489,7 @@ void CommandLineParser::set_relative_axis_n(int controller, int config,
   m_options->controller_slots[controller]
       .get_options(config)
       .relative_axis_map[string2axis(name)] =
-      AxisFilterPtr(new RelativeAxisFilter(str2int(value)));
+      AxisFilterPtr(new RelativeAxisFilter(std::stoi(value)));
 }
 
 void CommandLineParser::set_autofire_n(int controller, int config,
@@ -1498,7 +1498,7 @@ void CommandLineParser::set_autofire_n(int controller, int config,
   m_options->controller_slots[controller]
       .get_options(config)
       .autofire_map[string2btn(name)] =
-      ButtonFilterPtr(new AutofireButtonFilter(str2int(value), 0));
+      ButtonFilterPtr(new AutofireButtonFilter(std::stoi(value), 0));
 }
 
 void CommandLineParser::set_calibration_n(int controller, int config,
@@ -1514,7 +1514,7 @@ void CommandLineParser::set_axis_sensitivity_n(int controller, int config,
   m_options->controller_slots[controller]
       .get_options(config)
       .sensitivity_map[string2axis(name)] =
-      AxisFilterPtr(new SensitivityAxisFilter(str2float(value)));
+      AxisFilterPtr(new SensitivityAxisFilter(std::stof(value)));
 }
 
 void CommandLineParser::mouse() {

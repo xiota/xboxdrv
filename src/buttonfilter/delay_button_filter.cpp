@@ -24,7 +24,7 @@
 #include "helper.hpp"
 
 DelayButtonFilter* DelayButtonFilter::from_string(const std::string& str) {
-  return new DelayButtonFilter(str2int(str));
+  return new DelayButtonFilter(std::stoi(str));
 }
 
 DelayButtonFilter::DelayButtonFilter(int delay) : m_delay(delay), m_time(0) {}

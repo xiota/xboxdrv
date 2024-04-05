@@ -38,7 +38,7 @@ SensitivityAxisFilter* SensitivityAxisFilter::from_string(
   for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i, ++j) {
     switch (j) {
       case 0:
-        sensitivity = str2float(*i);
+        sensitivity = std::stof(*i);
         break;
       default:
         throw std::runtime_error("to many arguments");

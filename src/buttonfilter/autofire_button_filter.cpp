@@ -37,10 +37,10 @@ AutofireButtonFilter* AutofireButtonFilter::from_string(
   for (tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx) {
     switch (idx) {
       case 0:
-        rate = str2int(*t);
+        rate = std::stoi(*t);
         break;
       case 1:
-        delay = str2int(*t);
+        delay = std::stoi(*t);
         break;
       default:
         throw std::runtime_error("to many arguments");

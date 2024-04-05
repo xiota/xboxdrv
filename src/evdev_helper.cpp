@@ -116,7 +116,7 @@ void str2event(const std::string& name, int& type, int& code) {
     code = xkeysym2keycode(name);
   } else if (name.compare(0, 2, "JS") == 0) {
     type = EV_KEY;
-    code = BTN_JOYSTICK + str2int(name.substr(3));
+    code = BTN_JOYSTICK + std::stoi(name.substr(3));
   } else if (name.compare(0, 3, "KEY") == 0 || name.compare(0, 3, "BTN") == 0) {
     type = EV_KEY;
     code = str2key(name);
@@ -143,7 +143,7 @@ int get_event_type(const std::string& name) {
 
 int str2abs(const std::string& name) {
   if (name.compare(0, 5, "ABS_#") == 0) {
-    return str2int(name.substr(5));
+    return std::stoi(name.substr(5));
   } else {
     return evdev_abs_names[name];
   }
@@ -153,9 +153,9 @@ int str2key(const std::string& name) {
   if (name.compare(0, 2, "XK") == 0) {
     return xkeysym2keycode(name);
   } else if (name.compare(0, 2, "JS") == 0) {
-    return BTN_JOYSTICK + str2int(name.substr(3));
+    return BTN_JOYSTICK + std::stoi(name.substr(3));
   } else if (name.compare(0, 5, "KEY_#") == 0) {
-    return str2int(name.substr(5));
+    return std::stoi(name.substr(5));
   } else if (name.compare(0, 3, "KEY") == 0 || name.compare(0, 3, "BTN") == 0) {
     return evdev_key_names[name];
   } else {
@@ -166,7 +166,7 @@ int str2key(const std::string& name) {
 
 int str2rel(const std::string& name) {
   if (name.compare(0, 5, "REL_#") == 0) {
-    return str2int(name.substr(5));
+    return std::stoi(name.substr(5));
   } else {
     return evdev_rel_names[name];
   }

@@ -52,7 +52,7 @@ KeyButtonEventHandler* KeyButtonEventHandler::from_string(
       } break;
 
       case 2: {
-        ev->m_hold_threshold = str2int(*i);
+        ev->m_hold_threshold = std::stoi(*i);
       } break;
 
       default: {

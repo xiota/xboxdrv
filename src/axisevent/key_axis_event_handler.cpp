@@ -45,7 +45,7 @@ KeyAxisEventHandler* KeyAxisEventHandler::from_string(const std::string& str) {
         if (is_number(*i)) {
           // bit of hackery to handle simplified syntax for trigger button that
           // don't need up/down events
-          ev->m_threshold = str2int(*i);
+          ev->m_threshold = std::stoi(*i);
           ev->m_down_codes = ev->m_up_codes;
           ev->m_up_codes.clear();
         } else {
@@ -54,7 +54,7 @@ KeyAxisEventHandler* KeyAxisEventHandler::from_string(const std::string& str) {
       } break;
 
       case 2:
-        ev->m_threshold = str2int(*i);
+        ev->m_threshold = std::stoi(*i);
         break;
 
       default:

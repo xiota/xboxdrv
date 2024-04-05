@@ -37,13 +37,13 @@ DeadzoneAxisFilter* DeadzoneAxisFilter::from_string(const std::string& str) {
   for (tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx) {
     switch (idx) {
       case 0:
-        max_deadzone = str2int(*t);
+        max_deadzone = std::stoi(*t);
         min_deadzone = -max_deadzone;
         break;
 
       case 1:
         min_deadzone = -min_deadzone;
-        max_deadzone = str2int(*t);
+        max_deadzone = std::stoi(*t);
         break;
 
       case 2:

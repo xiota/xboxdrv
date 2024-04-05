@@ -73,12 +73,12 @@ MacroButtonEventHandler::macro_event_from_string(const std::string& str) {
         MacroEvent event;
         event.type = MacroEvent::kInitOp;
         event.init.event = UIEvent::from_string(args[1]);
-        event.init.minimum = str2int(args[2]);
-        event.init.maximum = str2int(args[3]);
+        event.init.minimum = std::stoi(args[2]);
+        event.init.maximum = std::stoi(args[3]);
         event.init.fuzz = 0;
         event.init.flat = 0;
-        if (args.size() > 4) event.init.fuzz = str2int(args[4]);
-        if (args.size() > 5) event.init.flat = str2int(args[5]);
+        if (args.size() > 4) event.init.fuzz = std::stoi(args[4]);
+        if (args.size() > 5) event.init.flat = std::stoi(args[5]);
 
         return event;
       }
@@ -90,7 +90,7 @@ MacroButtonEventHandler::macro_event_from_string(const std::string& str) {
         MacroEvent event;
         event.type = MacroEvent::kSendOp;
         event.send.event = UIEvent::from_string(args[1]);
-        event.send.value = str2int(args[2]);
+        event.send.value = std::stoi(args[2]);
         return event;
       }
     } else if (args[0] == "wait") {
@@ -100,7 +100,7 @@ MacroButtonEventHandler::macro_event_from_string(const std::string& str) {
       } else {
         MacroEvent event;
         event.type = MacroEvent::kWaitOp;
-        event.wait.msec = str2int(args[1]);
+        event.wait.msec = std::stoi(args[1]);
         return event;
       }
     } else {

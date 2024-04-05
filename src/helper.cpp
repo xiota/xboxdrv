@@ -23,7 +23,6 @@
 #include <unistd.h>
 
 #include <algorithm>
-#include <boost/lexical_cast.hpp>
 #include <boost/tokenizer.hpp>
 #include <cassert>
 #include <cerrno>
@@ -49,33 +48,9 @@ int hexstr2int(const std::string& str) {
 }
 
 bool str2bool(std::string const& str) {
-  try {
-    return boost::lexical_cast<bool>(str);
-  } catch (boost::bad_lexical_cast const& err) {
-    std::ostringstream out;
-    out << "str2bool(): couldn't convert '" << str << "' to bool";
-    throw std::runtime_error(out.str());
-  }
-}
-
-int str2int(std::string const& str) {
-  try {
-    return boost::lexical_cast<int>(str);
-  } catch (boost::bad_lexical_cast const& err) {
-    std::ostringstream out;
-    out << "str2int(): couldn't convert '" << str << "' to int";
-    throw std::runtime_error(out.str());
-  }
-}
-
-float str2float(std::string const& str) {
-  try {
-    return boost::lexical_cast<float>(str);
-  } catch (boost::bad_lexical_cast const& err) {
-    std::ostringstream out;
-    out << "str2float(): couldn't convert '" << str << "' to float";
-    throw std::runtime_error(out.str());
-  }
+  bool b;
+  std::istringstream(str) >> std::boolalpha >> b;
+  return b;
 }
 
 std::string raw2str(uint8_t* data, int len) {
@@ -139,10 +114,10 @@ int to_number(int range, const std::string& str) {
     return 0;
   } else {
     if (str[str.size() - 1] == '%') {
-      int percent = str2int(str.substr(0, str.size() - 1));
+      int percent = std::stoi(str.substr(0, str.size() - 1));
       return range * percent / 100;
     } else {
-      return str2int(str);
+      return std::stoi(str);
     }
   }
 }

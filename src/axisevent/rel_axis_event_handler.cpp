@@ -43,11 +43,11 @@ RelAxisEventHandler* RelAxisEventHandler::from_string(const std::string& str) {
         break;
 
       case 1:
-        ev->m_value = str2float(*i);
+        ev->m_value = std::stof(*i);
         break;
 
       case 2:
-        ev->m_repeat = str2int(*i);
+        ev->m_repeat = std::stoi(*i);
         break;
 
       default:

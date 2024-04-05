@@ -24,7 +24,7 @@
 #include "helper.hpp"
 
 ConstAxisFilter* ConstAxisFilter::from_string(const std::string& rest) {
-  return new ConstAxisFilter(str2int(rest));
+  return new ConstAxisFilter(std::stoi(rest));
 }
 
 ConstAxisFilter::ConstAxisFilter(int value) : m_value(value) {}

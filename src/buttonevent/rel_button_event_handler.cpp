@@ -42,11 +42,11 @@ RelButtonEventHandler* RelButtonEventHandler::from_string(
         break;
 
       case 1:
-        ev->m_value = str2int(*i);
+        ev->m_value = std::stoi(*i);
         break;
 
       case 2:
-        ev->m_repeat = str2int(*i);
+        ev->m_repeat = std::stoi(*i);
         break;
     }
   }

@@ -36,7 +36,7 @@ RelativeAxisFilter* RelativeAxisFilter::from_string(const std::string& str) {
   for (tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx) {
     switch (idx) {
       case 0:
-        speed = str2int(*t);
+        speed = std::stoi(*t);
         break;
       default:
         throw std::runtime_error("to many arguments");

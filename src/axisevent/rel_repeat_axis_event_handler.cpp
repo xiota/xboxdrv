@@ -39,8 +39,8 @@ RelRepeatAxisEventHandler* RelRepeatAxisEventHandler::from_string(
   std::copy(tokens.begin(), tokens.end(), std::back_inserter(args));
 
   if (args.size() == 3) {
-    return new RelRepeatAxisEventHandler(str2rel_event(args[0]),
-                                         str2int(args[1]), str2float(args[2]));
+    return new RelRepeatAxisEventHandler(
+        str2rel_event(args[0]), std::stoi(args[1]), std::stof(args[2]));
   } else {
     raise_exception(std::runtime_error, "must have three arguments");
   }

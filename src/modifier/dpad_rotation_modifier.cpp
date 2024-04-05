@@ -36,7 +36,7 @@ DpadRotationModifier* DpadRotationModifier::from_string(
 
 DpadRotationModifier* DpadRotationModifier::from_string(
     const std::string& value) {
-  int degree = str2int(value);
+  int degree = std::stoi(value);
   degree /= 45;
   degree %= 8;
   if (degree < 0) degree += 8;

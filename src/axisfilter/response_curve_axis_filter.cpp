@@ -33,7 +33,7 @@ ResponseCurveAxisFilter* ResponseCurveAxisFilter::from_string(
       str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
   int idx = 0;
   for (tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx) {
-    samples.push_back(str2int(*t));
+    samples.push_back(std::stoi(*t));
   }
 
   return new ResponseCurveAxisFilter(samples);

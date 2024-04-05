@@ -94,8 +94,8 @@ void USBSubsystem::find_controller(libusb_device** dev, XPadDevice& dev_type,
 bool USBSubsystem::find_controller_by_path(const std::string& busid_str,
                                            const std::string& devid_str,
                                            libusb_device** xbox_device) {
-  int busid = str2int(busid_str);
-  int devid = str2int(devid_str);
+  int busid = std::stoi(busid_str);
+  int devid = std::stoi(devid_str);
 
   libusb_device** list;
   ssize_t num_devices = libusb_get_device_list(NULL, &list);
