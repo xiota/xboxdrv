@@ -23,86 +23,71 @@
 
 #include "helper.hpp"
 
-AutofireButtonFilter*
-AutofireButtonFilter::from_string(const std::string& str)
-{
-  int rate  = 50;
+AutofireButtonFilter* AutofireButtonFilter::from_string(
+    const std::string& str) {
+  int rate = 50;
   int delay = 0;
 
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  tokenizer tokens(
+      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
   int idx = 0;
-  for(tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx)
-  {
-    switch(idx)
-    {
-      case 0: rate  = str2int(*t); break;
-      case 1: delay = str2int(*t); break;
-      default: throw std::runtime_error("to many arguments"); break;
+  for (tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx) {
+    switch (idx) {
+      case 0:
+        rate = str2int(*t);
+        break;
+      case 1:
+        delay = str2int(*t);
+        break;
+      default:
+        throw std::runtime_error("to many arguments");
+        break;
     }
   }
 
   return new AutofireButtonFilter(rate, delay);
 }
 
-AutofireButtonFilter::AutofireButtonFilter(int rate, int delay) :
-  m_state(false),
-  m_autofire(false),
-  m_rate(rate),
-  m_delay(delay),
-  m_counter(0)
-{
-}
+AutofireButtonFilter::AutofireButtonFilter(int rate, int delay)
+    : m_state(false),
+      m_autofire(false),
+      m_rate(rate),
+      m_delay(delay),
+      m_counter(0) {}
 
-void
-AutofireButtonFilter::update(int msec_delta)
-{
-  if (m_state)
-  {
+void AutofireButtonFilter::update(int msec_delta) {
+  if (m_state) {
     m_counter += msec_delta;
 
-    if (m_counter > m_delay)
-    {
+    if (m_counter > m_delay) {
       m_autofire = true;
     }
   }
 }
 
-bool
-AutofireButtonFilter::filter(bool value)
-{
+bool AutofireButtonFilter::filter(bool value) {
   m_state = value;
 
-  if (!value)
-  {
-    m_counter  = 0;
+  if (!value) {
+    m_counter = 0;
     m_autofire = false;
     return false;
-  }
-  else
-  { // auto fire
-    if (m_autofire)
-    {
-      if (m_counter > m_rate)
-      {
+  } else {  // auto fire
+    if (m_autofire) {
+      if (m_counter > m_rate) {
         m_counter = 0;
         return true;
-      }
-      else
-      {
+      } else {
         return false;
       }
-    }
-    else
-    {
+    } else {
       return true;
     }
   }
 }
 
-std::string
-AutofireButtonFilter::str() const
-{
+std::string AutofireButtonFilter::str() const {
   std::ostringstream out;
   out << "auto:" << m_rate << ":" << m_delay;
   return out.str();

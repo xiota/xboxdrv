@@ -18,19 +18,12 @@
 
 #include "dummy_message_processor.hpp"
 
-DummyMessageProcessor::DummyMessageProcessor()
-{
-}
+DummyMessageProcessor::DummyMessageProcessor() {}
 
-void
-DummyMessageProcessor::send(const XboxGenericMsg& msg, int msec_delta)
-{
+void DummyMessageProcessor::send(const XboxGenericMsg& msg, int msec_delta) {
   // do nothing as the XboxdrvThread is already doing the printing
 }
 
-void
-DummyMessageProcessor::set_controller(Controller* controller)
-{
-}
+void DummyMessageProcessor::set_controller(Controller* controller) {}
 
 /* EOF */

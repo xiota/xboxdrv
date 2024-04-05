@@ -21,10 +21,9 @@
 
 #include "button_event.hpp"
 
-class MacroButtonEventHandler : public ButtonEventHandler
-{
-public:
-private:
+class MacroButtonEventHandler : public ButtonEventHandler {
+ public:
+ private:
   struct AbsInfo {
     UIEvent event;
     int minimum;
@@ -35,7 +34,7 @@ private:
 
   struct Event {
     UIEvent event;
-    int     value;
+    int value;
   };
 
   struct Time {
@@ -52,10 +51,10 @@ private:
     };
   };
 
-public:
+ public:
   static MacroButtonEventHandler* from_string(const std::string& filename);
 
-public:
+ public:
   MacroButtonEventHandler(const std::vector<MacroEvent>& events);
 
   void init(UInput& uinput, int slot, bool extra_devices);
@@ -64,10 +63,10 @@ public:
 
   std::string str() const;
 
-private:
+ private:
   static MacroEvent macro_event_from_string(const std::string& str);
 
-private:
+ private:
   std::vector<MacroEvent> m_events;
   bool m_send_in_progress;
   int m_countdown;

@@ -27,22 +27,21 @@ class Options;
 class ControllerOptions;
 class Controller;
 
-class UInputMessageProcessor : public MessageProcessor
-{
-private:
+class UInputMessageProcessor : public MessageProcessor {
+ private:
   UInput& m_uinput;
   ControllerSlotConfigPtr m_config;
 
-  XboxGenericMsg m_oldmsg; /// last data send to uinput
+  XboxGenericMsg m_oldmsg;  /// last data send to uinput
   XboxButton m_config_toggle_button;
 
   int m_rumble_gain;
   bool m_rumble_test;
   Controller* m_controller;
 
-public:
+ public:
   UInputMessageProcessor(UInput& uinput, ControllerSlotConfigPtr config,
-                          const Options& opts);
+                         const Options& opts);
   ~UInputMessageProcessor();
 
   void send(const XboxGenericMsg& msg, int msec_delta);
@@ -51,7 +50,7 @@ public:
   void set_config(int num);
   ControllerSlotConfigPtr get_config() const { return m_config; }
 
-private:
+ private:
   UInputMessageProcessor(const UInputMessageProcessor&);
   UInputMessageProcessor& operator=(const UInputMessageProcessor&);
 };

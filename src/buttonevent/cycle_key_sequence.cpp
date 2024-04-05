@@ -22,54 +22,41 @@
 
 #include "raise_exception.hpp"
 
-CycleKeySequencePtr
-CycleKeySequence::from_range(std::vector<std::string>::const_iterator beg,
-                             std::vector<std::string>::const_iterator end,
-                             bool wrap_around)
-{
+CycleKeySequencePtr CycleKeySequence::from_range(
+    std::vector<std::string>::const_iterator beg,
+    std::vector<std::string>::const_iterator end, bool wrap_around) {
   Keys keys;
 
-  for(std::vector<std::string>::const_iterator i = beg; i != end; ++i)
-  {
+  for (std::vector<std::string>::const_iterator i = beg; i != end; ++i) {
     keys.push_back(UIEventSequence::from_string(*i));
   }
 
-  if (keys.empty())
-  {
+  if (keys.empty()) {
     raise_exception(std::runtime_error, "no keys found");
-  }
-  else
-  {
+  } else {
     return CycleKeySequencePtr(new CycleKeySequence(keys, wrap_around));
   }
 }
-
-CycleKeySequence::CycleKeySequence(const Keys& keys, bool wrap_around) :
-  m_keys(keys),
-  m_wrap_around(wrap_around),
-  m_inited(false),
-  m_current_key(0),
-  m_last_key(0)
-{
+
+CycleKeySequence::CycleKeySequence(const Keys& keys, bool wrap_around)
+    : m_keys(keys),
+      m_wrap_around(wrap_around),
+      m_inited(false),
+      m_current_key(0),
+      m_last_key(0) {
   assert(!m_keys.empty());
 }
 
-void
-CycleKeySequence::init(UInput& uinput, int slot, bool extra_devices)
-{
-  if (!m_inited)
-  {
-    for(Keys::iterator i = m_keys.begin(); i != m_keys.end(); ++i)
-    {
+void CycleKeySequence::init(UInput& uinput, int slot, bool extra_devices) {
+  if (!m_inited) {
+    for (Keys::iterator i = m_keys.begin(); i != m_keys.end(); ++i) {
       i->init(uinput, slot, extra_devices);
     }
     m_inited = true;
   }
 }
 
-void
-CycleKeySequence::send(UInput& uinput, bool value)
-{
+void CycleKeySequence::send(UInput& uinput, bool value) {
   int send_key = has_current_key() ? m_current_key : m_last_key;
 
   m_keys[send_key].send(uinput, value);
@@ -78,49 +65,31 @@ CycleKeySequence::send(UInput& uinput, bool value)
   m_current_key = -1;
 }
 
-void
-CycleKeySequence::next_key()
-{
-  if (has_current_key())
-  {
-    if (m_current_key == static_cast<int>(m_keys.size() - 1))
-    {
-      if (m_wrap_around)
-      {
+void CycleKeySequence::next_key() {
+  if (has_current_key()) {
+    if (m_current_key == static_cast<int>(m_keys.size() - 1)) {
+      if (m_wrap_around) {
         m_current_key = 0;
       }
-    }
-    else
-    {
+    } else {
       m_current_key += 1;
     }
-  }
-  else
-  {
+  } else {
     m_current_key = m_last_key;
     next_key();
   }
 }
 
-void
-CycleKeySequence::prev_key()
-{
-  if (has_current_key())
-  {
-    if (m_current_key == 0)
-    {
-      if (m_wrap_around)
-      {
+void CycleKeySequence::prev_key() {
+  if (has_current_key()) {
+    if (m_current_key == 0) {
+      if (m_wrap_around) {
         m_current_key = static_cast<int>(m_keys.size() - 1);
       }
-    }
-    else
-    {
+    } else {
       m_current_key -= 1;
     }
-  }
-  else
-  {
+  } else {
     m_current_key = m_last_key;
     prev_key();
   }

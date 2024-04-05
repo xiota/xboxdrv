@@ -20,12 +20,12 @@
 #define HEADER_T_WIRELESS_CONTROLLER_HPP
 
 #include <libusb.h>
-#include "xboxmsg.hpp"
-#include "usb_controller.hpp"
 
-class TWirelessController : public USBController
-{
-public:
+#include "usb_controller.hpp"
+#include "xboxmsg.hpp"
+
+class TWirelessController : public USBController {
+ public:
   TWirelessController(libusb_device* dev, bool try_detach);
   ~TWirelessController();
 
@@ -34,11 +34,11 @@ public:
 
   bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
 
-protected:
+ protected:
   static int16_t scale_x8to16(uint8_t x);
   static int16_t scale_y8to16(uint8_t y);
 
-private:
+ private:
   TWirelessController(const TWirelessController&);
   TWirelessController& operator=(const TWirelessController&);
 };

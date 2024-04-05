@@ -19,27 +19,26 @@
 #ifndef HEADER_XBOXDRV_CONTROLLER_CONFIG_HPP
 #define HEADER_XBOXDRV_CONTROLLER_CONFIG_HPP
 
-#include "uinput_config.hpp"
 #include "modifier.hpp"
+#include "uinput_config.hpp"
 
 class ControllerOptions;
 class ControllerConfig;
 typedef boost::shared_ptr<ControllerConfig> ControllerConfigPtr;
 
-class ControllerConfig
-{
-private:
+class ControllerConfig {
+ private:
   std::vector<ModifierPtr> m_modifier;
   UInputConfig m_uinput;
 
-public:
+ public:
   ControllerConfig(UInput& uinput, int slot, bool extra_devices,
                    const ControllerOptions& opts);
 
   std::vector<ModifierPtr>& get_modifier();
   UInputConfig& get_uinput();
 
-private:
+ private:
   ControllerConfig(const ControllerConfig&);
   ControllerConfig& operator=(const ControllerConfig&);
 };

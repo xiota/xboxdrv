@@ -24,12 +24,11 @@
 
 #include "button_filter.hpp"
 
-class DelayButtonFilter : public ButtonFilter
-{
-public:
+class DelayButtonFilter : public ButtonFilter {
+ public:
   static DelayButtonFilter* from_string(const std::string& str);
 
-public:
+ public:
   DelayButtonFilter(int delay);
 
   bool filter(bool value);
@@ -37,7 +36,7 @@ public:
 
   std::string str() const;
 
-private:
+ private:
   int m_delay;
   int m_time;
 };

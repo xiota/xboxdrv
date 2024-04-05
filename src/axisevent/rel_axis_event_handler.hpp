@@ -20,17 +20,16 @@
 #define HEADER_XBOXDRV_AXISEVENT_REL_AXIS_EVENT_HANDLER_HPP
 
 #include "axis_event.hpp"
-
 #include "ui_event_emitter.hpp"
 
-class RelAxisEventHandler : public AxisEventHandler
-{
-public:
+class RelAxisEventHandler : public AxisEventHandler {
+ public:
   static RelAxisEventHandler* from_string(const std::string& str);
 
-public:
+ public:
   RelAxisEventHandler();
-  RelAxisEventHandler(int device_id, int code, int repeat = 10, float value = 5);
+  RelAxisEventHandler(int device_id, int code, int repeat = 10,
+                      float value = 5);
 
   void init(UInput& uinput, int slot, bool extra_devices);
   void send(UInput& uinput, int value);
@@ -38,13 +37,13 @@ public:
 
   std::string str() const;
 
-private:
+ private:
   UIEvent m_code;
-  float   m_value;
-  int     m_repeat;
+  float m_value;
+  int m_repeat;
 
-  float   m_stick_value;
-  float   m_rest_value;
+  float m_stick_value;
+  float m_rest_value;
 
   UIEventEmitterPtr m_rel_emitter;
 };

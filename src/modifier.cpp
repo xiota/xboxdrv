@@ -27,55 +27,37 @@
 #include "modifier/square_axis_modifier.hpp"
 #include "modifier/statistic_modifier.hpp"
 
-Modifier*
-Modifier::from_string(const std::string& name, const std::string& value)
-{
-  if (name == "axismap")
-  {
-    //return AxismapModifier::from_string(value);
+Modifier* Modifier::from_string(const std::string& name,
+                                const std::string& value) {
+  if (name == "axismap") {
+    // return AxismapModifier::from_string(value);
     throw std::runtime_error("unknown modifier: " + name);
-  }
-  else if (name == "buttonmap")
-  {
-    //return ButtonmapModifier::from_string(value);
+  } else if (name == "buttonmap") {
+    // return ButtonmapModifier::from_string(value);
     throw std::runtime_error("unknown modifier: " + name);
-  }
-  else
-  {
+  } else {
     typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-    tokenizer tokens(value, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+    tokenizer tokens(
+        value, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
 
     std::vector<std::string> args(tokens.begin(), tokens.end());
 
-    if (name == "dpad-rotation" || name == "dpad-rotate")
-    {
+    if (name == "dpad-rotation" || name == "dpad-rotate") {
       return DpadRotationModifier::from_string(args);
-    }
-    else if (name == "4wayrest" || name == "four-way-restrictor")
-    {
+    } else if (name == "4wayrest" || name == "four-way-restrictor") {
       return FourWayRestrictorModifier::from_string(args);
-    }
-    else if (name == "square" || name == "square-axis")
-    {
+    } else if (name == "square" || name == "square-axis") {
       return SquareAxisModifier::from_string(args);
-    }
-    else if (name == "rotate")
-    {
+    } else if (name == "rotate") {
       return RotateAxisModifier::from_string(args);
-    }
-    else if (name == "stat" || name == "statistic")
-    {
+    } else if (name == "stat" || name == "statistic") {
       return StatisticModifier::from_string(args);
-    }
-    else if (name == "dpad-restrictor")
-    {
+    } else if (name == "dpad-restrictor") {
       return DpadRestrictorModifier::from_string(args);
-    }
-    else
-    {
+    } else {
       throw std::runtime_error("unknown modifier: " + name);
     }
   }
 }
 
-  /* EOF */
+/* EOF */

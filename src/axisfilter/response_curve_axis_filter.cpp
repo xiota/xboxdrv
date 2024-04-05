@@ -23,60 +23,52 @@
 
 #include "helper.hpp"
 
-ResponseCurveAxisFilter*
-ResponseCurveAxisFilter::from_string(const std::string& str)
-{
+ResponseCurveAxisFilter* ResponseCurveAxisFilter::from_string(
+    const std::string& str) {
   std::vector<int> samples;
 
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  tokenizer tokens(
+      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
   int idx = 0;
-  for(tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx)
-  {
+  for (tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx) {
     samples.push_back(str2int(*t));
   }
 
   return new ResponseCurveAxisFilter(samples);
 }
 
-ResponseCurveAxisFilter::ResponseCurveAxisFilter(const std::vector<int>& samples) :
-  m_samples(samples)
-{
-}
+ResponseCurveAxisFilter::ResponseCurveAxisFilter(
+    const std::vector<int>& samples)
+    : m_samples(samples) {}
 
-int
-ResponseCurveAxisFilter::filter(int value, int min, int max)
-{
-  if (m_samples.empty())
-  {
+int ResponseCurveAxisFilter::filter(int value, int min, int max) {
+  if (m_samples.empty()) {
     return value;
-  }
-  else if (m_samples.size() == 1)
-  {
+  } else if (m_samples.size() == 1) {
     return m_samples[0];
-  }
-  else
-  {
+  } else {
     // FIXME: should rewrite this to use integer only and make sure
     // that the edge conditions are meet
-    int   bucket_count = m_samples.size() - 1;
-    float bucket_size  = (max - min) / static_cast<float>(bucket_count);
+    int bucket_count = m_samples.size() - 1;
+    float bucket_size = (max - min) / static_cast<float>(bucket_count);
 
     int bucket_index = int((value - min) / bucket_size);
 
-    float t = ((value - min) - (static_cast<float>(bucket_index) * bucket_size)) / bucket_size;
+    float t =
+        ((value - min) - (static_cast<float>(bucket_index) * bucket_size)) /
+        bucket_size;
 
-    return ((1.0f - t) * m_samples[bucket_index]) + (t * m_samples[bucket_index + 1]);
+    return ((1.0f - t) * m_samples[bucket_index]) +
+           (t * m_samples[bucket_index + 1]);
   }
 }
 
-std::string
-ResponseCurveAxisFilter::str() const
-{
+std::string ResponseCurveAxisFilter::str() const {
   std::ostringstream out;
   out << "responsecurve";
-  for(std::vector<int>::const_iterator i = m_samples.begin(); i != m_samples.end(); ++i)
-  {
+  for (std::vector<int>::const_iterator i = m_samples.begin();
+       i != m_samples.end(); ++i) {
     out << ":" << *i;
   }
   return out.str();

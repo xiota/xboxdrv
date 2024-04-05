@@ -21,16 +21,15 @@
 
 #include "button_filter.hpp"
 
-class ToggleButtonFilter : public ButtonFilter
-{
-public:
+class ToggleButtonFilter : public ButtonFilter {
+ public:
   ToggleButtonFilter();
 
   bool filter(bool value);
   void update(int msec_delta) {}
   std::string str() const;
 
-private:
+ private:
   bool m_state;
   bool m_last_value;
 };

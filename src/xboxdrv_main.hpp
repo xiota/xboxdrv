@@ -19,28 +19,28 @@
 #ifndef HEADER_XBOXDRV_XBOXDRV_MAIN_HPP
 #define HEADER_XBOXDRV_XBOXDRV_MAIN_HPP
 
-#include <memory>
-#include <libusb.h>
 #include <glib.h>
-#include <boost/scoped_ptr.hpp>
+#include <libusb.h>
 
-#include "xpad_device.hpp"
+#include <boost/scoped_ptr.hpp>
+#include <memory>
+
 #include "controller_ptr.hpp"
+#include "xpad_device.hpp"
 
 class MessageProcessor;
 class Options;
 class UInput;
 class USBGSource;
 
-class XboxdrvMain
-{
-private:
+class XboxdrvMain {
+ private:
   static XboxdrvMain* s_current;
 
-public:
+ public:
   static XboxdrvMain* current() { return s_current; }
 
-private:
+ private:
   const Options& m_opts;
   GMainLoop* m_gmain;
   boost::scoped_ptr<USBGSource> m_usb_gsource;
@@ -55,20 +55,19 @@ private:
 
   ControllerPtr m_controller;
 
-public:
+ public:
   XboxdrvMain(const Options& opts);
   ~XboxdrvMain();
 
   void run();
   void shutdown();
 
-private:
+ private:
   ControllerPtr create_controller();
 
   void init_controller(const ControllerPtr& controller);
 
-  void print_info(libusb_device* dev,
-                  const XPadDevice& dev_type,
+  void print_info(libusb_device* dev, const XPadDevice& dev_type,
                   const Options& opts) const;
 
   static void on_sigint(int);
@@ -80,7 +79,7 @@ private:
     static_cast<XboxdrvMain*>(data)->on_child_watch(pid, status);
   }
 
-private:
+ private:
   XboxdrvMain(const XboxdrvMain&);
   XboxdrvMain& operator=(const XboxdrvMain&);
 };

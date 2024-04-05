@@ -20,19 +20,13 @@
 
 #include "ui_key_event_collector.hpp"
 
-UIKeyEventEmitter::UIKeyEventEmitter(UIKeyEventCollector& collector) :
-  m_collector(collector),
-  m_value(0)
-{
-}
+UIKeyEventEmitter::UIKeyEventEmitter(UIKeyEventCollector& collector)
+    : m_collector(collector), m_value(0) {}
 
-void
-UIKeyEventEmitter::send(int value)
-{
+void UIKeyEventEmitter::send(int value) {
   assert(value == 0 || value == 1);
 
-  if (m_value != value)
-  {
+  if (m_value != value) {
     m_value = value;
     m_collector.send(m_value);
   }

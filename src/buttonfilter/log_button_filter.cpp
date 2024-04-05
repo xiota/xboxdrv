@@ -21,35 +21,23 @@
 #include <iostream>
 #include <sstream>
 
-LogButtonFilter*
-LogButtonFilter::from_string(const std::string& str)
-{
+LogButtonFilter* LogButtonFilter::from_string(const std::string& str) {
   return new LogButtonFilter(str);
 }
 
-LogButtonFilter::LogButtonFilter(const std::string& name) :
-  m_name(name)
-{
-}
+LogButtonFilter::LogButtonFilter(const std::string& name) : m_name(name) {}
 
-bool
-LogButtonFilter::filter(bool value)
-{
-  if (m_name.empty())
-  {
+bool LogButtonFilter::filter(bool value) {
+  if (m_name.empty()) {
     std::cout << value << std::endl;
-  }
-  else
-  {
+  } else {
     std::cout << m_name << ": " << value << std::endl;
   }
 
   return value;
 }
 
-std::string
-LogButtonFilter::str() const
-{
+std::string LogButtonFilter::str() const {
   std::ostringstream out;
   out << "log:" << m_name;
   return out.str();

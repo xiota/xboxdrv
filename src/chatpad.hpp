@@ -19,8 +19,9 @@
 #ifndef HEADER_XBOXDRV_CHATPAD_HPP
 #define HEADER_XBOXDRV_CHATPAD_HPP
 
-#include <libusb.h>
 #include <glib.h>
+#include <libusb.h>
+
 #include <memory>
 
 class LinuxUinput;
@@ -63,38 +64,37 @@ enum {
   CHATPAD_KEY_B = 0x42,
   CHATPAD_KEY_N = 0x41,
   CHATPAD_KEY_M = 0x52,
-  CHATPAD_KEY_PERIOD    = 0x53,
-  CHATPAD_KEY_ENTER     = 0x63,
+  CHATPAD_KEY_PERIOD = 0x53,
+  CHATPAD_KEY_ENTER = 0x63,
   CHATPAD_KEY_BACKSPACE = 0x71,
-  CHATPAD_KEY_LEFT      = 0x55,
-  CHATPAD_KEY_SPACEBAR  = 0x54,
-  CHATPAD_KEY_RIGHT     = 0x51,
+  CHATPAD_KEY_LEFT = 0x55,
+  CHATPAD_KEY_SPACEBAR = 0x54,
+  CHATPAD_KEY_RIGHT = 0x51,
 
-  CHATPAD_MOD_SHIFT  = 0x01,
-  CHATPAD_MOD_GREEN  = 0x02,
+  CHATPAD_MOD_SHIFT = 0x01,
+  CHATPAD_MOD_GREEN = 0x02,
   CHATPAD_MOD_ORANGE = 0x04,
   CHATPAD_MOD_PEOPLE = 0x08
 };
 
 enum {
-  CHATPAD_LED_PEOPLE    = 1<<0,
-  CHATPAD_LED_ORANGE    = 1<<1,
-  CHATPAD_LED_GREEN     = 1<<2,
-  CHATPAD_LED_SHIFT     = 1<<3,
-  CHATPAD_LED_BACKLIGHT = 1<<4
+  CHATPAD_LED_PEOPLE = 1 << 0,
+  CHATPAD_LED_ORANGE = 1 << 1,
+  CHATPAD_LED_GREEN = 1 << 2,
+  CHATPAD_LED_SHIFT = 1 << 3,
+  CHATPAD_LED_BACKLIGHT = 1 << 4
 };
 
 enum {
-  CHATPAD_LED_STATUS_PEOPLE    = (1<<0),
-  CHATPAD_LED_STATUS_SHIFT     = (1<<5),
-  CHATPAD_LED_STATUS_ORANGE    = (1<<4),
-  CHATPAD_LED_STATUS_GREEN     = (1<<3),
-  CHATPAD_LED_STATUS_BACKLIGHT = (1<<7)
+  CHATPAD_LED_STATUS_PEOPLE = (1 << 0),
+  CHATPAD_LED_STATUS_SHIFT = (1 << 5),
+  CHATPAD_LED_STATUS_ORANGE = (1 << 4),
+  CHATPAD_LED_STATUS_GREEN = (1 << 3),
+  CHATPAD_LED_STATUS_BACKLIGHT = (1 << 7)
 };
 
-class Chatpad
-{
-private:
+class Chatpad {
+ private:
   enum State {
     kStateInit1,
     kStateInit2,
@@ -112,8 +112,7 @@ private:
 
   State m_init_state;
 
-  struct ChatpadMsg
-  {
+  struct ChatpadMsg {
     uint8_t type;
 
     struct ClockData {
@@ -145,25 +144,24 @@ private:
     uint8_t zero3;
   } __attribute__((__packed__));
 
-private:
+ private:
   libusb_device_handle* m_handle;
   uint16_t m_bcdDevice;
   bool m_no_init;
   bool m_debug;
 
-
   bool m_quit_thread;
-  //std::auto_ptr<boost::thread> m_read_thread;
-  //std::auto_ptr<boost::thread> m_keep_alive_thread;
+  // std::auto_ptr<boost::thread> m_read_thread;
+  // std::auto_ptr<boost::thread> m_keep_alive_thread;
   std::auto_ptr<LinuxUinput> m_uinput;
   int m_keymap[256];
   bool m_state[256];
   unsigned int m_led_state;
   libusb_transfer* m_read_transfer;
 
-public:
-  Chatpad(libusb_device_handle* handle, uint16_t bcdDevice,
-          bool no_init, bool debug);
+ public:
+  Chatpad(libusb_device_handle* handle, uint16_t bcdDevice, bool no_init,
+          bool debug);
   ~Chatpad();
 
   void send_init();
@@ -174,34 +172,32 @@ public:
   void process(const ChatpadKeyMsg& msg);
   void init_uinput();
 
-private:
+ private:
   void send_command();
   void send_timeout(int msec);
-  void send_ctrl(uint8_t request_type, uint8_t request, uint16_t value, uint16_t index,
-                 uint8_t* data_in = NULL, uint16_t length = 0,
+  void send_ctrl(uint8_t request_type, uint8_t request, uint16_t value,
+                 uint16_t index, uint8_t* data_in = NULL, uint16_t length = 0,
                  libusb_transfer_cb_fn callback = NULL, void* userdata = NULL);
 
   void usb_submit_read(int endpoint, int len);
 
-private:
+ private:
   bool on_timeout();
   static gboolean on_timeout_wrap(gpointer data) {
     return static_cast<Chatpad*>(data)->on_timeout();
   }
 
   void on_control(libusb_transfer* transfer);
-  static void on_control_wrap(libusb_transfer* transfer)
-  {
+  static void on_control_wrap(libusb_transfer* transfer) {
     static_cast<Chatpad*>(transfer->user_data)->on_control(transfer);
   }
 
   void on_read_data(libusb_transfer* transfer);
-  static void on_read_data_wrap(libusb_transfer* transfer)
-  {
+  static void on_read_data_wrap(libusb_transfer* transfer) {
     static_cast<Chatpad*>(transfer->user_data)->on_read_data(transfer);
   }
 
-private:
+ private:
   Chatpad(const Chatpad&);
   Chatpad& operator=(const Chatpad&);
 };

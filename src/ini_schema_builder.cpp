@@ -20,41 +20,26 @@
 
 #include "ini_schema.hpp"
 
-INISchemaBuilder::INISchemaBuilder(const INISchema& schema) :
-  m_schema(schema),
-  m_current_section()
-{
-}
+INISchemaBuilder::INISchemaBuilder(const INISchema& schema)
+    : m_schema(schema), m_current_section() {}
 
-void
-INISchemaBuilder::send_section(const std::string& section)
-{
+void INISchemaBuilder::send_section(const std::string& section) {
   m_current_section = section;
 }
 
-void
-INISchemaBuilder::send_pair(const std::string& name, const std::string& value)
-{
+void INISchemaBuilder::send_pair(const std::string& name,
+                                 const std::string& value) {
   INISchemaSection* section = m_schema.get_section(m_current_section);
-  if (!section)
-  {
+  if (!section) {
     throw std::runtime_error("unknown section: '" + m_current_section + "'");
-  }
-  else
-  {
-    if (section->m_callback)
-    {
+  } else {
+    if (section->m_callback) {
       section->m_callback(name, value);
-    }
-    else
-    {
+    } else {
       INIPairSchema* pair = section->get(name);
-      if (!pair)
-      {
+      if (!pair) {
         throw std::runtime_error("unknown name: '" + name + "'");
-      }
-      else
-      {
+      } else {
         pair->call(value);
       }
     }

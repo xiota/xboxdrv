@@ -19,22 +19,22 @@
 #ifndef HEADER_XBOXDRV_MESSAGE_PROCESSOR_HPP
 #define HEADER_XBOXDRV_MESSAGE_PROCESSOR_HPP
 
-#include <boost/function.hpp>
 #include <stdint.h>
+
+#include <boost/function.hpp>
 
 struct XboxGenericMsg;
 class Controller;
 
-class MessageProcessor
-{
-public:
+class MessageProcessor {
+ public:
   MessageProcessor() {}
   virtual ~MessageProcessor() {}
 
-  virtual void send(const XboxGenericMsg& msg, int msec_delta) =0;
-  virtual void set_controller(Controller* controller) =0;
+  virtual void send(const XboxGenericMsg& msg, int msec_delta) = 0;
+  virtual void set_controller(Controller* controller) = 0;
 
-private:
+ private:
   MessageProcessor(const MessageProcessor&);
   MessageProcessor& operator=(const MessageProcessor&);
 };

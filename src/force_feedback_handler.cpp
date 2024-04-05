@@ -18,12 +18,12 @@
 
 #include "force_feedback_handler.hpp"
 
+#include "controller.hpp"
 #include "log.hpp"
 #include "options.hpp"
-#include "controller.hpp"
-
-std::ostream& operator<<(std::ostream& out, const struct ff_envelope& envelope)
-{
+
+std::ostream& operator<<(std::ostream& out,
+                         const struct ff_envelope& envelope) {
   out << "Envelope(attack_length:" << envelope.attack_length
       << ", attack_level:" << envelope.attack_level
       << ", fade_length:" << envelope.fade_length
@@ -31,23 +31,20 @@ std::ostream& operator<<(std::ostream& out, const struct ff_envelope& envelope)
   return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const struct ff_replay& replay)
-{
+std::ostream& operator<<(std::ostream& out, const struct ff_replay& replay) {
   out << "Replay(length:" << replay.length << ", delay:" << replay.delay << ")";
   return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const struct ff_trigger& trigger)
-{
-  out << "Trigger(button:" << trigger.button << ", interval:" << trigger.interval << ")";
+std::ostream& operator<<(std::ostream& out, const struct ff_trigger& trigger) {
+  out << "Trigger(button:" << trigger.button
+      << ", interval:" << trigger.interval << ")";
   return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const struct ff_effect& effect)
-{
+std::ostream& operator<<(std::ostream& out, const struct ff_effect& effect) {
   out << "Effect(";
-  switch (effect.type)
-  {
+  switch (effect.type) {
     case FF_CONSTANT:
       out << "FF_CONSTANT("
           << "level:" << effect.u.constant.level
@@ -68,7 +65,7 @@ std::ostream& operator<<(std::ostream& out, const struct ff_effect& effect)
       out << "FF_RAMP("
           << "start_level:" << effect.u.ramp.start_level
           << ", end_level:" << effect.u.ramp.end_level
-          << ", envelope:" <<  effect.u.ramp.envelope << ")";
+          << ", envelope:" << effect.u.ramp.envelope << ")";
       break;
 
     case FF_SPRING:
@@ -102,46 +99,41 @@ std::ostream& operator<<(std::ostream& out, const struct ff_effect& effect)
       break;
   }
 
-  out << ", direction:" << effect.direction
-      << ", replay:" << effect.replay
+  out << ", direction:" << effect.direction << ", replay:" << effect.replay
       << ", trigger:" << effect.trigger << ")";
 
   return out;
 }
-
-ForceFeedbackEffect::ForceFeedbackEffect() :
-  delay(),
-  length(),
-  start_strong_magnitude(),
-  start_weak_magnitude(),
-  end_strong_magnitude(),
-  end_weak_magnitude(),
-  envelope(),
-  playing(false),
-  count(0),
-  weak_magnitude(0),
-  strong_magnitude(0)
-{
-}
 
-static int clamp(int lhs, int rhs, int v)
-{
+ForceFeedbackEffect::ForceFeedbackEffect()
+    : delay(),
+      length(),
+      start_strong_magnitude(),
+      start_weak_magnitude(),
+      end_strong_magnitude(),
+      end_weak_magnitude(),
+      envelope(),
+      playing(false),
+      count(0),
+      weak_magnitude(0),
+      strong_magnitude(0) {}
+
+static int clamp(int lhs, int rhs, int v) {
   return std::max(lhs, std::min(v, rhs));
 }
 
-ForceFeedbackEffect::ForceFeedbackEffect(const struct ff_effect& effect) :
-  delay(),
-  length(),
-  start_strong_magnitude(),
-  start_weak_magnitude(),
-  end_strong_magnitude(),
-  end_weak_magnitude(),
-  envelope(),
-  playing(false),
-  count(0),
-  weak_magnitude(0),
-  strong_magnitude(0)
-{
+ForceFeedbackEffect::ForceFeedbackEffect(const struct ff_effect& effect)
+    : delay(),
+      length(),
+      start_strong_magnitude(),
+      start_weak_magnitude(),
+      end_strong_magnitude(),
+      end_weak_magnitude(),
+      envelope(),
+      playing(false),
+      count(0),
+      weak_magnitude(0),
+      strong_magnitude(0) {
   // Since we can't excute most effects directly, we have to emulate
   // them, for documentation on effects see:
   //
@@ -153,43 +145,44 @@ ForceFeedbackEffect::ForceFeedbackEffect(const struct ff_effect& effect) :
   // Since documentation is a little lacking, some of the emulation is
   // likely be wrong.
 
-  delay  = effect.replay.delay;
+  delay = effect.replay.delay;
   length = effect.replay.length;
 
-  switch(effect.type)
-  {
+  switch (effect.type) {
     case FF_CONSTANT:
-      start_weak_magnitude   = clamp(0, 0x7fff, abs(effect.u.constant.level));
+      start_weak_magnitude = clamp(0, 0x7fff, abs(effect.u.constant.level));
       start_strong_magnitude = clamp(0, 0x7fff, abs(effect.u.constant.level));
-      end_weak_magnitude     = clamp(0, 0x7fff, abs(effect.u.constant.level));
-      end_strong_magnitude   = clamp(0, 0x7fff, abs(effect.u.constant.level));
+      end_weak_magnitude = clamp(0, 0x7fff, abs(effect.u.constant.level));
+      end_strong_magnitude = clamp(0, 0x7fff, abs(effect.u.constant.level));
 
       envelope = effect.u.constant.envelope;
       break;
 
     case FF_PERIODIC:
-      start_weak_magnitude   = clamp(0, 0x7fff, abs(effect.u.periodic.magnitude));
-      start_strong_magnitude = clamp(0, 0x7fff, abs(effect.u.periodic.magnitude));
-      end_weak_magnitude     = clamp(0, 0x7fff, abs(effect.u.periodic.magnitude));
-      end_strong_magnitude   = clamp(0, 0x7fff, abs(effect.u.periodic.magnitude));
+      start_weak_magnitude = clamp(0, 0x7fff, abs(effect.u.periodic.magnitude));
+      start_strong_magnitude =
+          clamp(0, 0x7fff, abs(effect.u.periodic.magnitude));
+      end_weak_magnitude = clamp(0, 0x7fff, abs(effect.u.periodic.magnitude));
+      end_strong_magnitude = clamp(0, 0x7fff, abs(effect.u.periodic.magnitude));
 
       envelope = effect.u.periodic.envelope;
       break;
 
     case FF_RAMP:
-      start_weak_magnitude   = clamp(0, 0x7fff, abs(effect.u.ramp.start_level));
+      start_weak_magnitude = clamp(0, 0x7fff, abs(effect.u.ramp.start_level));
       start_strong_magnitude = clamp(0, 0x7fff, abs(effect.u.ramp.start_level));
-      end_weak_magnitude     = clamp(0, 0x7fff, abs(effect.u.ramp.end_level));
-      end_strong_magnitude   = clamp(0, 0x7fff, abs(effect.u.ramp.end_level));
+      end_weak_magnitude = clamp(0, 0x7fff, abs(effect.u.ramp.end_level));
+      end_strong_magnitude = clamp(0, 0x7fff, abs(effect.u.ramp.end_level));
 
       envelope = effect.u.ramp.envelope;
       break;
 
     case FF_RUMBLE:
-      start_weak_magnitude   = clamp(0, 0x7fff, effect.u.rumble.weak_magnitude);
-      start_strong_magnitude = clamp(0, 0x7fff, effect.u.rumble.strong_magnitude);
-      end_weak_magnitude     = clamp(0, 0x7fff, effect.u.rumble.weak_magnitude);
-      end_strong_magnitude   = clamp(0, 0x7fff, effect.u.rumble.strong_magnitude);
+      start_weak_magnitude = clamp(0, 0x7fff, effect.u.rumble.weak_magnitude);
+      start_strong_magnitude =
+          clamp(0, 0x7fff, effect.u.rumble.strong_magnitude);
+      end_weak_magnitude = clamp(0, 0x7fff, effect.u.rumble.weak_magnitude);
+      end_strong_magnitude = clamp(0, 0x7fff, effect.u.rumble.strong_magnitude);
       break;
 
     default:
@@ -199,166 +192,133 @@ ForceFeedbackEffect::ForceFeedbackEffect(const struct ff_effect& effect) :
       // case FF_DAMPER
       // case FF_INERTIA:
       log_info("unsupported effect: " << effect);
-      start_weak_magnitude   = 0;
+      start_weak_magnitude = 0;
       start_strong_magnitude = 0;
-      end_weak_magnitude     = 0;
-      end_strong_magnitude   = 0;
+      end_weak_magnitude = 0;
+      end_strong_magnitude = 0;
       break;
   }
 }
 
-static int get_pos(int start, int end, int pos, int len)
-{
+static int get_pos(int start, int end, int pos, int len) {
   int rel = end - start;
   return start + (rel * pos / len);
 }
 
-void
-ForceFeedbackEffect::update(int msec_delta)
-{
-  if (playing)
-  {
-    if(length == 0)
-    {
-      strong_magnitude = (start_strong_magnitude) ? start_strong_magnitude : end_strong_magnitude;
-      weak_magnitude = (start_weak_magnitude) ? start_weak_magnitude : end_weak_magnitude;
-    }
-    else
-    {
+void ForceFeedbackEffect::update(int msec_delta) {
+  if (playing) {
+    if (length == 0) {
+      strong_magnitude = (start_strong_magnitude) ? start_strong_magnitude
+                                                  : end_strong_magnitude;
+      weak_magnitude =
+          (start_weak_magnitude) ? start_weak_magnitude : end_weak_magnitude;
+    } else {
       count += msec_delta;
 
-      if (count > delay)
-      {
+      if (count > delay) {
         int t = count - delay;
-        if (t < envelope.attack_length)
-        { // attack
-          strong_magnitude = get_pos(start_strong_magnitude, end_strong_magnitude, t, length);
-          weak_magnitude   = get_pos(start_weak_magnitude,   end_weak_magnitude,   t, length);
+        if (t < envelope.attack_length) {  // attack
+          strong_magnitude =
+              get_pos(start_strong_magnitude, end_strong_magnitude, t, length);
+          weak_magnitude =
+              get_pos(start_weak_magnitude, end_weak_magnitude, t, length);
 
           // apply envelope
-          strong_magnitude = ((envelope.attack_level * t) + strong_magnitude * (envelope.attack_length - t)) / envelope.attack_length;
-          weak_magnitude   = ((envelope.attack_level * t) + weak_magnitude   * (envelope.attack_length - t)) / envelope.attack_length;
-        }
-        else if  (t < length - envelope.fade_length)
-        { // sustain
-          strong_magnitude = get_pos(start_strong_magnitude, end_strong_magnitude, t, length);
-          weak_magnitude   = get_pos(start_weak_magnitude,   end_weak_magnitude,   t, length);
-        }
-        else if (t < length)
-        { // fade
-          strong_magnitude = get_pos(start_strong_magnitude, end_strong_magnitude, t, length);
-          weak_magnitude   = get_pos(start_weak_magnitude,   end_weak_magnitude,   t, length);
+          strong_magnitude = ((envelope.attack_level * t) +
+                              strong_magnitude * (envelope.attack_length - t)) /
+                             envelope.attack_length;
+          weak_magnitude = ((envelope.attack_level * t) +
+                            weak_magnitude * (envelope.attack_length - t)) /
+                           envelope.attack_length;
+        } else if (t < length - envelope.fade_length) {  // sustain
+          strong_magnitude =
+              get_pos(start_strong_magnitude, end_strong_magnitude, t, length);
+          weak_magnitude =
+              get_pos(start_weak_magnitude, end_weak_magnitude, t, length);
+        } else if (t < length) {  // fade
+          strong_magnitude =
+              get_pos(start_strong_magnitude, end_strong_magnitude, t, length);
+          weak_magnitude =
+              get_pos(start_weak_magnitude, end_weak_magnitude, t, length);
 
           // apply envelope
           int dt = t - (length - envelope.fade_length);
-          strong_magnitude = ((envelope.fade_level * dt) + strong_magnitude * (envelope.fade_length - dt)) / envelope.fade_length;
-          weak_magnitude   = ((envelope.fade_level * dt) + weak_magnitude   * (envelope.fade_length - dt)) / envelope.fade_length;
-        }
-        else
-        { // effect ended
+          strong_magnitude = ((envelope.fade_level * dt) +
+                              strong_magnitude * (envelope.fade_length - dt)) /
+                             envelope.fade_length;
+          weak_magnitude = ((envelope.fade_level * dt) +
+                            weak_magnitude * (envelope.fade_length - dt)) /
+                           envelope.fade_length;
+        } else {  // effect ended
           stop();
         }
       }
     }
-  }
-  else
-  {
-      stop();
+  } else {
+    stop();
   }
 }
 
-void
-ForceFeedbackEffect::play()
-{
-  playing = true;
-}
+void ForceFeedbackEffect::play() { playing = true; }
 
-void
-ForceFeedbackEffect::stop()
-{
+void ForceFeedbackEffect::stop() {
   playing = false;
   count = 0;
-  weak_magnitude   = 0;
+  weak_magnitude = 0;
   strong_magnitude = 0;
 }
-
-ForceFeedbackHandler::ForceFeedbackHandler(Controller* controller) :
-  gain(0xFFFF),
-  max_effects(16),
-  effects(),
-  weak_magnitude(0),
-  strong_magnitude(0),
-  m_controller(controller)
-{
+
+ForceFeedbackHandler::ForceFeedbackHandler(Controller* controller)
+    : gain(0xFFFF),
+      max_effects(16),
+      effects(),
+      weak_magnitude(0),
+      strong_magnitude(0),
+      m_controller(controller) {
   assert(m_controller);
 }
 
-ForceFeedbackHandler::~ForceFeedbackHandler()
-{
+ForceFeedbackHandler::~ForceFeedbackHandler() {}
 
-}
+int ForceFeedbackHandler::get_max_effects() { return max_effects; }
 
-int
-ForceFeedbackHandler::get_max_effects()
-{
-  return max_effects;
-}
-
-void
-ForceFeedbackHandler::upload(const struct ff_effect& effect)
-{
+void ForceFeedbackHandler::upload(const struct ff_effect& effect) {
   log_debug("FF_UPLOAD("
-            << "effect_id:" << effect.id
-            << ", effect_type:" << effect.type
-            << ",\n          "  << effect
-            << ")");
+            << "effect_id:" << effect.id << ", effect_type:" << effect.type
+            << ",\n          " << effect << ")");
   m_controller->upload(effect);
 }
 
-void
-ForceFeedbackHandler::erase(int id)
-{
+void ForceFeedbackHandler::erase(int id) {
   log_debug("FF_ERASE(effect_id:" << id << ")");
   m_controller->erase(id);
 }
 
-void
-ForceFeedbackHandler::play(int id)
-{
+void ForceFeedbackHandler::play(int id) {
   log_debug("FFPlay(effect_id:" << id << ")");
   m_controller->play(id);
 }
 
-void
-ForceFeedbackHandler::stop(int id)
-{
+void ForceFeedbackHandler::stop(int id) {
   log_debug("FFStop(effect_id:" << id << ")");
   m_controller->stop(id);
 }
 
-void
-ForceFeedbackHandler::set_gain(int gain)
-{
+void ForceFeedbackHandler::set_gain(int gain) {
   log_debug("FFGain(g:" << gain << ")");
   m_controller->set_gain(gain);
 }
 
-void
-ForceFeedbackHandler::update(int msec_delta)
-{
-  weak_magnitude   = 0;
+void ForceFeedbackHandler::update(int msec_delta) {
+  weak_magnitude = 0;
   strong_magnitude = 0;
 }
 
-int
-ForceFeedbackHandler::get_weak_magnitude() const
-{
+int ForceFeedbackHandler::get_weak_magnitude() const {
   return weak_magnitude * gain / 0xffff;
 }
 
-int
-ForceFeedbackHandler::get_strong_magnitude() const
-{
+int ForceFeedbackHandler::get_strong_magnitude() const {
   return strong_magnitude * gain / 0xffff;
 }
 

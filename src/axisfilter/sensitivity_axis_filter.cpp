@@ -18,61 +18,54 @@
 
 #include "sensitivity_axis_filter.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <math.h>
+
+#include <boost/tokenizer.hpp>
 #include <sstream>
 
 #include "helper.hpp"
 
-SensitivityAxisFilter*
-SensitivityAxisFilter::from_string(const std::string& str)
-{
+SensitivityAxisFilter* SensitivityAxisFilter::from_string(
+    const std::string& str) {
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  tokenizer tokens(
+      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
 
   float sensitivity = 0.0f;
 
   int j = 0;
-  for(tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i, ++j)
-  {
-    switch(j)
-    {
-      case 0: sensitivity = str2float(*i); break;
-      default: throw std::runtime_error("to many arguments");
+  for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i, ++j) {
+    switch (j) {
+      case 0:
+        sensitivity = str2float(*i);
+        break;
+      default:
+        throw std::runtime_error("to many arguments");
     };
   }
 
   return new SensitivityAxisFilter(sensitivity);
 }
 
-SensitivityAxisFilter::SensitivityAxisFilter(float sensitivity) :
-  m_sensitivity(sensitivity)
-{
-}
+SensitivityAxisFilter::SensitivityAxisFilter(float sensitivity)
+    : m_sensitivity(sensitivity) {}
 
-int
-SensitivityAxisFilter::filter(int value, int min, int max)
-{
+int SensitivityAxisFilter::filter(int value, int min, int max) {
   float pos = to_float(value, min, max);
 
   float t = powf(2, m_sensitivity);
 
   // FIXME: there might be better/more standard ways to accomplish this
-  if (pos > 0)
-  {
+  if (pos > 0) {
     pos = powf(1.0f - powf(1.0f - pos, t), 1 / t);
     return from_float(pos, min, max);
-  }
-  else
-  {
+  } else {
     pos = powf(1.0f - powf(1.0f - -pos, t), 1 / t);
     return from_float(-pos, min, max);
   }
 }
 
-std::string
-SensitivityAxisFilter::str() const
-{
+std::string SensitivityAxisFilter::str() const {
   std::ostringstream out;
   out << "sensitivity:" << m_sensitivity;
   return out.str();

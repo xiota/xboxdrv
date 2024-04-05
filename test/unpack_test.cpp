@@ -16,13 +16,12 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
-
 #include "unpack.hpp"
 
-int main(int argc, char** argv)
-{
-  uint8_t data[] = { 0x04, 0x03, 0x02, 0x01 };
+#include <iostream>
+
+int main(int argc, char** argv) {
+  uint8_t data[] = {0x04, 0x03, 0x02, 0x01};
 
   std::cout << std::hex;
   std::cout << "uint16be: " << unpack::uint16be(data) << std::endl;

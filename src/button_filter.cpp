@@ -29,54 +29,32 @@
 #include "buttonfilter/log_button_filter.hpp"
 #include "buttonfilter/toggle_button_filter.hpp"
 
-ButtonFilterPtr
-ButtonFilter::from_string(const std::string& str)
-{
+ButtonFilterPtr ButtonFilter::from_string(const std::string& str) {
   std::string::size_type p = str.find(":");
   std::string filtername = str.substr(0, p);
   std::string rest;
 
-  if (p != std::string::npos)
-    rest = str.substr(p+1);
+  if (p != std::string::npos) rest = str.substr(p + 1);
 
-  if (filtername == "toggle" || filtername == "tog")
-  {
+  if (filtername == "toggle" || filtername == "tog") {
     return ButtonFilterPtr(new ToggleButtonFilter);
-  }
-  else if (filtername == "invert" || filtername == "inv")
-  {
+  } else if (filtername == "invert" || filtername == "inv") {
     return ButtonFilterPtr(new InvertButtonFilter);
-  }
-  else if (filtername == "const")
-  {
+  } else if (filtername == "const") {
     return ButtonFilterPtr(ConstButtonFilter::from_string(rest));
-  }
-  else if (filtername == "auto" || filtername == "autofire")
-  {
+  } else if (filtername == "auto" || filtername == "autofire") {
     return ButtonFilterPtr(AutofireButtonFilter::from_string(rest));
-  }
-  else if (filtername == "log")
-  {
+  } else if (filtername == "log") {
     return ButtonFilterPtr(LogButtonFilter::from_string(rest));
-  }
-  else if (filtername == "delay")
-  {
+  } else if (filtername == "delay") {
     return ButtonFilterPtr(DelayButtonFilter::from_string(rest));
-  }
-  else if (filtername == "click-press")
-  {
+  } else if (filtername == "click-press") {
     return ButtonFilterPtr(new ClickButtonFilter(ClickButtonFilter::kPress));
-  }
-  else if (filtername == "click-release")
-  {
+  } else if (filtername == "click-release") {
     return ButtonFilterPtr(new ClickButtonFilter(ClickButtonFilter::kRelease));
-  }
-  else if (filtername == "click-both")
-  {
+  } else if (filtername == "click-both") {
     return ButtonFilterPtr(new ClickButtonFilter(ClickButtonFilter::kBoth));
-  }
-  else
-  {
+  } else {
     std::ostringstream out;
     out << "unknown ButtonFilter '" << filtername << "'";
     throw std::runtime_error(out.str());

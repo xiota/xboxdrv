@@ -25,23 +25,23 @@
 
 struct XboxGenericMsg;
 
-class DpadRotationModifier : public Modifier
-{
-public:
-  static DpadRotationModifier* from_string(const std::vector<std::string>& args);
+class DpadRotationModifier : public Modifier {
+ public:
+  static DpadRotationModifier* from_string(
+      const std::vector<std::string>& args);
   static DpadRotationModifier* from_string(const std::string& value);
 
-private:
-  int  m_dpad_rotation;
+ private:
+  int m_dpad_rotation;
 
-public:
+ public:
   DpadRotationModifier(int dpad_rotation);
 
   void update(int msec_delta, XboxGenericMsg& msg);
 
   std::string str() const;
 
-private:
+ private:
   DpadRotationModifier(const DpadRotationModifier&);
   DpadRotationModifier& operator=(const DpadRotationModifier&);
 };

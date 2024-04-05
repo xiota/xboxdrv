@@ -19,8 +19,9 @@
 #ifndef HEADER_XBOXDRV_UI_EVENT_COLLECTOR_HPP
 #define HEADER_XBOXDRV_UI_EVENT_COLLECTOR_HPP
 
-#include <boost/shared_ptr.hpp>
 #include <stdint.h>
+
+#include <boost/shared_ptr.hpp>
 #include <vector>
 
 #include "ui_event_emitter.hpp"
@@ -30,26 +31,25 @@ class UInput;
 
 typedef boost::shared_ptr<UIEventCollector> UIEventCollectorPtr;
 
-class UIEventCollector
-{
-protected:
+class UIEventCollector {
+ protected:
   UInput& m_uinput;
   uint32_t m_device_id;
   int m_type;
   int m_code;
 
-public:
+ public:
   UIEventCollector(UInput& uinput, uint32_t device_id, int type, int code);
   virtual ~UIEventCollector();
 
   uint32_t get_device_id() const { return m_device_id; }
-  int      get_type() const { return m_type; }
-  int      get_code() const { return m_code; }
+  int get_type() const { return m_type; }
+  int get_code() const { return m_code; }
 
   virtual UIEventEmitterPtr create_emitter() = 0;
   virtual void sync() = 0;
 
-private:
+ private:
   UIEventCollector(const UIEventCollector&);
   UIEventCollector& operator=(const UIEventCollector&);
 };

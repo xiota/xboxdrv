@@ -20,44 +20,34 @@
 
 #include <boost/format.hpp>
 
-#include "uinput_message_processor.hpp"
 #include "dummy_message_processor.hpp"
+#include "uinput_message_processor.hpp"
 
-ControllerSlot::ControllerSlot(int id_,
-                               ControllerSlotConfigPtr config_,
+ControllerSlot::ControllerSlot(int id_, ControllerSlotConfigPtr config_,
                                std::vector<ControllerMatchRulePtr> rules_,
-                               int led_status_,
-                               const Options& opts,
-                               UInput* uinput) :
-  m_id(id_),
-  m_config(config_),
-  m_rules(rules_),
-  m_led_status(led_status_),
-  m_thread(),
-  m_opts(opts),
-  m_uinput(uinput)
-{}
+                               int led_status_, const Options& opts,
+                               UInput* uinput)
+    : m_id(id_),
+      m_config(config_),
+      m_rules(rules_),
+      m_led_status(led_status_),
+      m_thread(),
+      m_opts(opts),
+      m_uinput(uinput) {}
 
-void
-ControllerSlot::connect(ControllerPtr controller)
-{
+void ControllerSlot::connect(ControllerPtr controller) {
   assert(!m_thread);
 
   std::auto_ptr<MessageProcessor> message_proc;
-  if (m_uinput)
-  {
+  if (m_uinput) {
     message_proc.reset(new UInputMessageProcessor(*m_uinput, m_config, m_opts));
-  }
-  else
-  {
+  } else {
     message_proc.reset(new DummyMessageProcessor());
   }
   m_thread.reset(new ControllerThread(controller, message_proc, m_opts));
 }
 
-ControllerPtr
-ControllerSlot::disconnect()
-{
+ControllerPtr ControllerSlot::disconnect() {
   assert(m_thread);
 
   ControllerPtr controller = m_thread->get_controller();
@@ -66,9 +56,7 @@ ControllerSlot::disconnect()
   return controller;
 }
 
-bool
-ControllerSlot::is_connected() const
-{
+bool ControllerSlot::is_connected() const {
   return static_cast<bool>(m_thread);
 }
 

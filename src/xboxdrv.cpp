@@ -18,15 +18,16 @@
 
 #include "xboxdrv.hpp"
 
-#include <boost/algorithm/string/join.hpp>
-#include <boost/format.hpp>
 #include <errno.h>
-#include <iostream>
 #include <sched.h>
 #include <signal.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include <boost/algorithm/string/join.hpp>
+#include <boost/format.hpp>
+#include <iostream>
 
 #include "command_line_options.hpp"
 #include "controller_factory.hpp"
@@ -46,14 +47,12 @@
 
 // Some ugly global variables, needed for sigint catching
 bool global_exit_xboxdrv = false;
-
-void
-Xboxdrv::run_list_controller()
-{
+
+void Xboxdrv::run_list_controller() {
   int ret = libusb_init(NULL);
-  if (ret != LIBUSB_SUCCESS)
-  {
-    raise_exception(std::runtime_error, "libusb_init() failed: " << usb_strerror(ret));
+  if (ret != LIBUSB_SUCCESS) {
+    raise_exception(std::runtime_error,
+                    "libusb_init() failed: " << usb_strerror(ret));
   }
 
   libusb_device** list;
@@ -61,43 +60,35 @@ Xboxdrv::run_list_controller()
 
   int id = 0;
   std::cout << " id | wid | idVendor | idProduct | Name" << std::endl;
-  std::cout << "----+-----+----------+-----------+--------------------------------------" << std::endl;
+  std::cout << "----+-----+----------+-----------+-----------------------------"
+               "---------"
+            << std::endl;
 
-  for(ssize_t dev_it = 0; dev_it < num_devices; ++dev_it)
-  {
+  for (ssize_t dev_it = 0; dev_it < num_devices; ++dev_it) {
     libusb_device* dev = list[dev_it];
     libusb_device_descriptor desc;
 
     // FIXME: we silently ignore failures
-    if (libusb_get_device_descriptor(dev, &desc) == LIBUSB_SUCCESS)
-    {
-      for(int i = 0; i < xpad_devices_count; ++i)
-      {
-        if (desc.idVendor  == xpad_devices[i].idVendor &&
-            desc.idProduct == xpad_devices[i].idProduct)
-        {
-          if (xpad_devices[i].type == GAMEPAD_XBOX360_WIRELESS)
-          {
-            for(int wid = 0; wid < 4; ++wid)
-            {
-              std::cout << boost::format(" %2d |  %2d |   0x%04x |    0x%04x | %s (Port: %s)")
-                % id
-                % wid
-                % int(xpad_devices[i].idVendor)
-                % int(xpad_devices[i].idProduct)
-                % xpad_devices[i].name
-                % wid
-                        << std::endl;
+    if (libusb_get_device_descriptor(dev, &desc) == LIBUSB_SUCCESS) {
+      for (int i = 0; i < xpad_devices_count; ++i) {
+        if (desc.idVendor == xpad_devices[i].idVendor &&
+            desc.idProduct == xpad_devices[i].idProduct) {
+          if (xpad_devices[i].type == GAMEPAD_XBOX360_WIRELESS) {
+            for (int wid = 0; wid < 4; ++wid) {
+              std::cout
+                  << boost::format(
+                         " %2d |  %2d |   0x%04x |    0x%04x | %s (Port: %s)") %
+                         id % wid % int(xpad_devices[i].idVendor) %
+                         int(xpad_devices[i].idProduct) % xpad_devices[i].name %
+                         wid
+                  << std::endl;
             }
-          }
-          else
-          {
-            std::cout << boost::format(" %2d |  %2d |   0x%04x |    0x%04x | %s")
-              % id
-              % 0
-              % int(xpad_devices[i].idVendor)
-              % int(xpad_devices[i].idProduct)
-              % xpad_devices[i].name
+          } else {
+            std::cout << boost::format(
+                             " %2d |  %2d |   0x%04x |    0x%04x | %s") %
+                             id % 0 % int(xpad_devices[i].idVendor) %
+                             int(xpad_devices[i].idProduct) %
+                             xpad_devices[i].name
                       << std::endl;
           }
           id += 1;
@@ -107,91 +98,72 @@ Xboxdrv::run_list_controller()
     }
   }
 
-  if (id == 0)
-    std::cout << "\nno controller detected" << std::endl;
+  if (id == 0) std::cout << "\nno controller detected" << std::endl;
 
   libusb_free_device_list(list, 1 /* unref_devices */);
 }
-
-void
-Xboxdrv::run_list_supported_devices()
-{
-  for(int i = 0; i < xpad_devices_count; ++i)
-  {
-    std::cout << boost::format("%s 0x%04x 0x%04x %s\n")
-      % gamepadtype_to_string(xpad_devices[i].type)
-      % int(xpad_devices[i].idVendor)
-      % int(xpad_devices[i].idProduct)
-      % xpad_devices[i].name;
+
+void Xboxdrv::run_list_supported_devices() {
+  for (int i = 0; i < xpad_devices_count; ++i) {
+    std::cout << boost::format("%s 0x%04x 0x%04x %s\n") %
+                     gamepadtype_to_string(xpad_devices[i].type) %
+                     int(xpad_devices[i].idVendor) %
+                     int(xpad_devices[i].idProduct) % xpad_devices[i].name;
   }
 }
-
-bool xpad_device_sorter(const XPadDevice& lhs, const XPadDevice& rhs)
-{
-  if (lhs.idVendor < rhs.idVendor)
-  {
+
+bool xpad_device_sorter(const XPadDevice& lhs, const XPadDevice& rhs) {
+  if (lhs.idVendor < rhs.idVendor) {
     return true;
-  }
-  else if (lhs.idVendor == rhs.idVendor)
-  {
+  } else if (lhs.idVendor == rhs.idVendor) {
     return lhs.idProduct < rhs.idProduct;
-  }
-  else
-  {
+  } else {
     return false;
   }
 }
 
-void
-Xboxdrv::run_list_supported_devices_xpad()
-{
+void Xboxdrv::run_list_supported_devices_xpad() {
   std::vector<XPadDevice> sorted_devices(xpad_devices_count);
   std::copy_n(xpad_devices, xpad_devices_count, sorted_devices.begin());
   std::sort(sorted_devices.begin(), sorted_devices.end(), xpad_device_sorter);
 
-  for(int i = 0; i < xpad_devices_count; ++i)
-  {
-    std::cout << boost::format("{ 0x%04x, 0x%04x, \"%s\", %s },\n")
-      % int(sorted_devices[i].idVendor)
-      % int(sorted_devices[i].idProduct)
-      % sorted_devices[i].name
-      % gamepadtype_to_macro_string(sorted_devices[i].type);
+  for (int i = 0; i < xpad_devices_count; ++i) {
+    std::cout << boost::format("{ 0x%04x, 0x%04x, \"%s\", %s },\n") %
+                     int(sorted_devices[i].idVendor) %
+                     int(sorted_devices[i].idProduct) % sorted_devices[i].name %
+                     gamepadtype_to_macro_string(sorted_devices[i].type);
   }
 }
-
-void
-Xboxdrv::run_help_devices()
-{
+
+void Xboxdrv::run_help_devices() {
   std::cout << " idVendor | idProduct | Name" << std::endl;
-  std::cout << "----------+-----------+---------------------------------" << std::endl;
-  for(int i = 0; i < xpad_devices_count; ++i)
-  {
-    std::cout << boost::format("   0x%04x |    0x%04x | %s")
-      % int(xpad_devices[i].idVendor)
-      % int(xpad_devices[i].idProduct)
-      % xpad_devices[i].name
+  std::cout << "----------+-----------+---------------------------------"
+            << std::endl;
+  for (int i = 0; i < xpad_devices_count; ++i) {
+    std::cout << boost::format("   0x%04x |    0x%04x | %s") %
+                     int(xpad_devices[i].idVendor) %
+                     int(xpad_devices[i].idProduct) % xpad_devices[i].name
               << std::endl;
   }
 }
-
-void
-Xboxdrv::print_copyright() const
-{
+
+void Xboxdrv::print_copyright() const {
   WordWrap wrap(get_terminal_width());
   wrap.para("xboxdrv " PACKAGE_VERSION);
   wrap.para("Copyright © 2008-2011 Ingo Ruhnke <grumbel@gmail.com>");
-  wrap.para("Licensed under GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>");
+  wrap.para(
+      "Licensed under GNU GPL version 3 or later "
+      "<http://gnu.org/licenses/gpl.html>");
   wrap.para("This program comes with ABSOLUTELY NO WARRANTY.");
-  wrap.para("This is free software, and you are welcome to redistribute it under certain "
-            "conditions; see the file COPYING for details.");
+  wrap.para(
+      "This is free software, and you are welcome to redistribute it under "
+      "certain "
+      "conditions; see the file COPYING for details.");
   wrap.newline();
 }
 
-void
-Xboxdrv::run_main(const Options& opts)
-{
-  if (!opts.quiet)
-  {
+void Xboxdrv::run_main(const Options& opts) {
+  if (!opts.quiet) {
     print_copyright();
   }
 
@@ -199,17 +171,13 @@ Xboxdrv::run_main(const Options& opts)
   XboxdrvMain xboxdrv_main(opts);
   xboxdrv_main.run();
 }
-
-void
-Xboxdrv::run_daemon(Options& opts)
-{
-  if (!opts.quiet)
-  {
+
+void Xboxdrv::run_daemon(Options& opts) {
+  if (!opts.quiet) {
     print_copyright();
   }
 
-  if (opts.usb_debug)
-  {
+  if (opts.usb_debug) {
 #if LIBUSB_API_VERSION >= 0x01000106
     libusb_set_option(NULL, LIBUSB_OPTION_LOG_LEVEL, 3);
 #else
@@ -217,47 +185,36 @@ Xboxdrv::run_daemon(Options& opts)
 #endif
   }
 
-  if (opts.get_controller_slot().get_force_feedback())
-  {
-    std::cerr << "Warning: Daemon mode does not support force-feedback, so it has been disabled."
+  if (opts.get_controller_slot().get_force_feedback()) {
+    std::cerr << "Warning: Daemon mode does not support force-feedback, so it "
+                 "has been disabled."
               << std::endl;
     opts.get_controller_slot().set_force_feedback(false);
   }
 
-  if (!opts.detach)
-  {
+  if (!opts.detach) {
     USBSubsystem usb_subsystem;
     XboxdrvDaemon daemon(opts);
     daemon.run();
-  }
-  else
-  {
+  } else {
     pid_t pid = fork();
 
-    if (pid < 0)
-    { // fork error
-      raise_exception(std::runtime_error, "failed to fork(): " << strerror(errno));
-    }
-    else if (pid > 0)
-    { // parent, just exit
+    if (pid < 0) {  // fork error
+      raise_exception(std::runtime_error,
+                      "failed to fork(): " << strerror(errno));
+    } else if (pid > 0) {  // parent, just exit
       _exit(EXIT_SUCCESS);
-    }
-    else
-    { // child, run daemon
+    } else {  // child, run daemon
       pid_t sid = setsid();
 
-      if (sid == static_cast<pid_t>(-1))
-      {
-        raise_exception(std::runtime_error, "failed to setsid(): " << strerror(errno));
-      }
-      else
-      {
-        if (chdir("/") != 0)
-        {
-          raise_exception(std::runtime_error, "failed to chdir(\"/\"): " << strerror(errno));
-        }
-        else
-        {
+      if (sid == static_cast<pid_t>(-1)) {
+        raise_exception(std::runtime_error,
+                        "failed to setsid(): " << strerror(errno));
+      } else {
+        if (chdir("/") != 0) {
+          raise_exception(std::runtime_error,
+                          "failed to chdir(\"/\"): " << strerror(errno));
+        } else {
           USBSubsystem usb_subsystem;
           XboxdrvDaemon daemon(opts);
           daemon.run();
@@ -267,40 +224,33 @@ Xboxdrv::run_daemon(Options& opts)
   }
 }
 
-void
-Xboxdrv::run_list_enums(uint32_t enums)
-{
+void Xboxdrv::run_list_enums(uint32_t enums) {
   const int terminal_width = get_terminal_width();
 
   WordWrap wrap(terminal_width);
 
-  if (enums & Options::LIST_ABS)
-  {
+  if (enums & Options::LIST_ABS) {
     wrap.println("EV_ABS:");
     wrap.para("  ", boost::algorithm::join(evdev_abs_names.get_names(), ", "));
     wrap.newline();
   }
 
-  if (enums & Options::LIST_REL)
-  {
+  if (enums & Options::LIST_REL) {
     wrap.println("EV_REL:");
     wrap.para("  ", boost::algorithm::join(evdev_rel_names.get_names(), ", "));
     wrap.newline();
   }
 
-  if (enums & Options::LIST_KEY)
-  {
+  if (enums & Options::LIST_KEY) {
     wrap.println("EV_KEY:");
     wrap.para("  ", boost::algorithm::join(evdev_key_names.get_names(), ", "));
     wrap.newline();
   }
 
-  if (enums & Options::LIST_X11KEYSYM)
-  {
+  if (enums & Options::LIST_X11KEYSYM) {
     std::vector<std::string> lst;
-    for(X11KeysymEnum::const_iterator i = get_x11keysym_names().begin();
-        i != get_x11keysym_names().end(); ++i)
-    {
+    for (X11KeysymEnum::const_iterator i = get_x11keysym_names().begin();
+         i != get_x11keysym_names().end(); ++i) {
       lst.push_back(i->second);
     }
     wrap.println("X11Keysym:");
@@ -308,11 +258,9 @@ Xboxdrv::run_list_enums(uint32_t enums)
     wrap.newline();
   }
 
-  if (enums & Options::LIST_AXIS)
-  {
+  if (enums & Options::LIST_AXIS) {
     std::vector<std::string> lst;
-    for(int i = 1; i < XBOX_AXIS_MAX; ++i)
-    {
+    for (int i = 1; i < XBOX_AXIS_MAX; ++i) {
       lst.push_back(axis2string(static_cast<XboxAxis>(i)));
     }
     wrap.println("XboxAxis:");
@@ -320,11 +268,9 @@ Xboxdrv::run_list_enums(uint32_t enums)
     wrap.newline();
   }
 
-  if (enums & Options::LIST_BUTTON)
-  {
+  if (enums & Options::LIST_BUTTON) {
     std::vector<std::string> lst;
-    for(int i = 1; i < XBOX_BTN_MAX; ++i)
-    {
+    for (int i = 1; i < XBOX_BTN_MAX; ++i) {
       lst.push_back(btn2string(static_cast<XboxButton>(i)));
     }
     wrap.println("XboxButton:");
@@ -332,20 +278,13 @@ Xboxdrv::run_list_enums(uint32_t enums)
     wrap.newline();
   }
 }
-
-Xboxdrv::Xboxdrv()
-{
-}
 
-Xboxdrv::~Xboxdrv()
-{
-}
+Xboxdrv::Xboxdrv() {}
 
-void
-Xboxdrv::set_scheduling(const Options& opts)
-{
-  if (opts.priority == Options::kPriorityRealtime)
-  {
+Xboxdrv::~Xboxdrv() {}
+
+void Xboxdrv::set_scheduling(const Options& opts) {
+  if (opts.priority == Options::kPriorityRealtime) {
     // try to set realtime priority when root, as user there doesn't
     // seem to be a way to increase the priority
     log_info("enabling realtime priority scheduling");
@@ -360,18 +299,15 @@ Xboxdrv::set_scheduling(const Options& opts)
     // 0 for that, thus we can't change anything with that
 
     int ret;
-    if ((ret = sched_setscheduler(getpid(), policy, &param)) != 0)
-    {
-      raise_exception(std::runtime_error, "sched_setschedparam() failed: " << strerror(errno));
+    if ((ret = sched_setscheduler(getpid(), policy, &param)) != 0) {
+      raise_exception(std::runtime_error,
+                      "sched_setschedparam() failed: " << strerror(errno));
     }
   }
 }
 
-int
-Xboxdrv::main(int argc, char** argv)
-{
-  try
-  {
+int Xboxdrv::main(int argc, char** argv) {
+  try {
     Options opts;
 
     CommandLineParser cmd_parser;
@@ -379,8 +315,7 @@ Xboxdrv::main(int argc, char** argv)
 
     set_scheduling(opts);
 
-    switch(opts.mode)
-    {
+    switch (opts.mode) {
       case Options::PRINT_HELP_DEVICES:
         run_help_devices();
         break;
@@ -421,14 +356,13 @@ Xboxdrv::main(int argc, char** argv)
         run_list_controller();
         break;
     }
-  }
-  catch(const std::exception& err)
-  {
-    std::cout << "\n-- [ ERROR ] ------------------------------------------------------\n"
+  } catch (const std::exception& err) {
+    std::cout << "\n-- [ ERROR ] "
+                 "------------------------------------------------------\n"
               << err.what() << std::endl;
   }
 
   return 0;
 }
-
+
 /* EOF */

@@ -18,8 +18,8 @@
 
 #include "axis_filter.hpp"
 
-#include <stdexcept>
 #include <sstream>
+#include <stdexcept>
 
 #include "axisfilter/calibration_axis_filter.hpp"
 #include "axisfilter/const_axis_filter.hpp"
@@ -29,55 +29,36 @@
 #include "axisfilter/relative_axis_filter.hpp"
 #include "axisfilter/response_curve_axis_filter.hpp"
 #include "axisfilter/sensitivity_axis_filter.hpp"
-
-AxisFilterPtr
-AxisFilter::from_string(const std::string& str)
-{
+
+AxisFilterPtr AxisFilter::from_string(const std::string& str) {
   std::string::size_type p = str.find(':');
   const std::string& filtername = str.substr(0, p);
   std::string rest;
 
-  if (p != std::string::npos)
-    rest = str.substr(p+1);
+  if (p != std::string::npos) rest = str.substr(p + 1);
 
-  if (filtername == "invert" || filtername == "inv")
-  {
+  if (filtername == "invert" || filtername == "inv") {
     return AxisFilterPtr(new InvertAxisFilter);
-  }
-  else if (filtername == "calibration" || filtername == "cal")
-  {
+  } else if (filtername == "calibration" || filtername == "cal") {
     return AxisFilterPtr(CalibrationAxisFilter::from_string(rest));
-  }
-  else if (filtername == "sensitivity" || filtername == "sen")
-  {
+  } else if (filtername == "sensitivity" || filtername == "sen") {
     return AxisFilterPtr(SensitivityAxisFilter::from_string(rest));
-  }
-  else if (filtername == "deadzone" || filtername == "dead")
-  {
+  } else if (filtername == "deadzone" || filtername == "dead") {
     return AxisFilterPtr(DeadzoneAxisFilter::from_string(rest));
-  }
-  else if (filtername == "const")
-  {
+  } else if (filtername == "const") {
     return AxisFilterPtr(ConstAxisFilter::from_string(rest));
-  }
-  else if (filtername == "relative" || filtername == "rel")
-  {
+  } else if (filtername == "relative" || filtername == "rel") {
     return AxisFilterPtr(RelativeAxisFilter::from_string(rest));
-  }
-  else if (filtername == "resp" || filtername == "response" || filtername == "responsecurve")
-  {
+  } else if (filtername == "resp" || filtername == "response" ||
+             filtername == "responsecurve") {
     return AxisFilterPtr(ResponseCurveAxisFilter::from_string(rest));
-  }
-  else if (filtername == "log")
-  {
+  } else if (filtername == "log") {
     return AxisFilterPtr(LogAxisFilter::from_string(rest));
-  }
-  else
-  {
+  } else {
     std::ostringstream out;
     out << "unknown AxisFilter '" << filtername << "'";
     throw std::runtime_error(out.str());
   }
 }
-
+
 /* EOF */

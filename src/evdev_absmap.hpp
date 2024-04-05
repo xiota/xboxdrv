@@ -25,12 +25,12 @@
 
 struct XboxGenericMsg;
 
-class EvdevAbsMap
-{
-public:
+class EvdevAbsMap {
+ public:
   EvdevAbsMap();
 
-  void process(XboxGenericMsg& msg, int code, int value, int min, int max) const;
+  void process(XboxGenericMsg& msg, int code, int value, int min,
+               int max) const;
 
   void bind_plus(int code, XboxAxis axis);
   void bind_minus(int code, XboxAxis axis);
@@ -38,7 +38,7 @@ public:
 
   void clear();
 
-private:
+ private:
   std::map<int, XboxAxis> m_plus_map;
   std::map<int, XboxAxis> m_minus_map;
   std::map<int, XboxAxis> m_both_map;

@@ -32,12 +32,11 @@ struct ff_effect;
 class MessageProcessor;
 struct XboxGenericMsg;
 
-class Controller
-{
-protected:
-  boost::function<void (const XboxGenericMsg&)> m_msg_cb;
-  boost::function<void ()> m_disconnect_cb;
-  boost::function<void ()> m_activation_cb;
+class Controller {
+ protected:
+  boost::function<void(const XboxGenericMsg&)> m_msg_cb;
+  boost::function<void()> m_disconnect_cb;
+  boost::function<void()> m_activation_cb;
   bool m_is_disconnected;
   bool m_is_active;
   udev_device* m_udev_device;
@@ -49,7 +48,7 @@ protected:
   std::vector<uint16_t> m_ff_features;
   int m_num_ff_effects;
 
-public:
+ public:
   Controller();
   virtual ~Controller();
 
@@ -58,8 +57,8 @@ public:
   uint8_t get_led() const { return m_led_status; }
   void set_led(uint8_t status);
 
-  virtual void set_rumble_real(uint8_t left, uint8_t right) =0;
-  virtual void set_led_real(uint8_t status) =0;
+  virtual void set_rumble_real(uint8_t left, uint8_t right) = 0;
+  virtual void set_led_real(uint8_t status) = 0;
 
   virtual void upload(const struct ff_effect& effect);
   virtual void erase(int id);
@@ -75,19 +74,20 @@ public:
       inactive and vice versa. */
   virtual bool is_active() const { return m_is_active; }
   virtual void set_active(bool v);
-  virtual void set_activation_cb(const boost::function<void ()>& callback);
+  virtual void set_activation_cb(const boost::function<void()>& callback);
 
   /** Controllers with a disconnect status have been unplugged and are
       not coming back, thus the Controller object can be destroyed */
   virtual bool is_disconnected() const;
-  virtual void set_disconnect_cb(const boost::function<void ()>& callback);
+  virtual void set_disconnect_cb(const boost::function<void()>& callback);
   virtual void send_disconnect();
 
   virtual std::string get_usbpath() const { return "-1:-1"; }
-  virtual std::string get_usbid() const   { return "-1:-1"; }
-  virtual std::string get_name() const    { return "<not implemented>"; }
+  virtual std::string get_usbid() const { return "-1:-1"; }
+  virtual std::string get_name() const { return "<not implemented>"; }
 
-  void set_message_cb(const boost::function<void(const XboxGenericMsg&)>& msg_cb);
+  void set_message_cb(
+      const boost::function<void(const XboxGenericMsg&)>& msg_cb);
 
   void set_udev_device(udev_device* udev_dev);
   udev_device* get_udev_device() const;
@@ -97,9 +97,9 @@ public:
   const std::vector<uint16_t>& get_ff_features() { return m_ff_features; }
   int get_num_ff_effects() { return m_num_ff_effects; }
 
-private:
-  Controller (const Controller&);
-  Controller& operator= (const Controller&);
+ private:
+  Controller(const Controller&);
+  Controller& operator=(const Controller&);
 };
 
 #endif

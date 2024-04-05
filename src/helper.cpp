@@ -19,230 +19,188 @@
 #include "helper.hpp"
 
 #include <assert.h>
-#include <boost/format.hpp>
-#include <boost/tokenizer.hpp>
-#include <boost/lexical_cast.hpp>
-#include <stdio.h>
-#include <sys/time.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
 #include <errno.h>
+#include <stdio.h>
+#include <sys/ioctl.h>
+#include <sys/time.h>
+#include <unistd.h>
+
+#include <boost/format.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/tokenizer.hpp>
 #include <iostream>
 
 #include "raise_exception.hpp"
-
-int hexstr2int(const std::string& str)
-{
+
+int hexstr2int(const std::string& str) {
   unsigned int value = 0;
-  if (sscanf(str.c_str(), "%x", &value) == 1)
-  {
+  if (sscanf(str.c_str(), "%x", &value) == 1) {
     return value;
-  }
-  else if (sscanf(str.c_str(), "0x%x", &value) == 1)
-  {
+  } else if (sscanf(str.c_str(), "0x%x", &value) == 1) {
     return value;
-  }
-  else
-  {
-    raise_exception(std::runtime_error, "couldn't convert '" << str << "' to int");
+  } else {
+    raise_exception(std::runtime_error,
+                    "couldn't convert '" << str << "' to int");
   }
 }
 
-bool str2bool(std::string const& str)
-{
-  try
-  {
+bool str2bool(std::string const& str) {
+  try {
     return boost::lexical_cast<bool>(str);
-  }
-  catch(boost::bad_lexical_cast const& err)
-  {
+  } catch (boost::bad_lexical_cast const& err) {
     std::ostringstream out;
     out << "str2bool(): couldn't convert '" << str << "' to bool";
     throw std::runtime_error(out.str());
   }
 }
 
-int str2int(std::string const& str)
-{
-  try
-  {
+int str2int(std::string const& str) {
+  try {
     return boost::lexical_cast<int>(str);
-  }
-  catch(boost::bad_lexical_cast const& err)
-  {
+  } catch (boost::bad_lexical_cast const& err) {
     std::ostringstream out;
     out << "str2int(): couldn't convert '" << str << "' to int";
     throw std::runtime_error(out.str());
   }
 }
 
-float str2float(std::string const& str)
-{
-  try
-  {
+float str2float(std::string const& str) {
+  try {
     return boost::lexical_cast<float>(str);
-  }
-  catch(boost::bad_lexical_cast const& err)
-  {
+  } catch (boost::bad_lexical_cast const& err) {
     std::ostringstream out;
     out << "str2float(): couldn't convert '" << str << "' to float";
     throw std::runtime_error(out.str());
   }
 }
-
-std::string raw2str(uint8_t* data, int len)
-{
-  std::ostringstream out;
-  out << "len: " << len
-      << " data: ";
 
-  for(int i = 0; i < len; ++i)
+std::string raw2str(uint8_t* data, int len) {
+  std::ostringstream out;
+  out << "len: " << len << " data: ";
+
+  for (int i = 0; i < len; ++i) {
     out << boost::format("%02x ") % int(data[i]);
+  }
 
   return out.str();
 }
-
-std::string to_lower(const std::string &str)
-{
+
+std::string to_lower(const std::string& str) {
   std::string lower_impl = str;
 
-  for( std::string::iterator i = lower_impl.begin();
-       i != lower_impl.end();
-       ++i )
-  {
+  for (std::string::iterator i = lower_impl.begin(); i != lower_impl.end();
+       ++i) {
     *i = static_cast<char>(tolower(*i));
   }
 
   return lower_impl;
 }
-
-void split_string_at(const std::string& str, char c, std::string* lhs, std::string* rhs)
-{
+
+void split_string_at(const std::string& str, char c, std::string* lhs,
+                     std::string* rhs) {
   std::string::size_type p = str.find(c);
-  if (p == std::string::npos)
-  {
+  if (p == std::string::npos) {
     *lhs = str;
-  }
-  else
-  {
+  } else {
     *lhs = str.substr(0, p);
-    *rhs = str.substr(p+1);
+    *rhs = str.substr(p + 1);
   }
 }
 
-void process_name_value_string(const std::string& str, const boost::function<void (const std::string&, const std::string&)>& func)
-{
+void process_name_value_string(
+    const std::string& str,
+    const boost::function<void(const std::string&, const std::string&)>& func) {
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(str, boost::char_separator<char>(",", "", boost::drop_empty_tokens));
+  tokenizer tokens(
+      str, boost::char_separator<char>(",", "", boost::drop_empty_tokens));
 
-  for(tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i)
-  {
+  for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i) {
     std::string lhs, rhs;
     split_string_at(*i, '=', &lhs, &rhs);
     func(lhs, rhs);
   }
 }
-
-bool is_number(const std::string& str)
-{
-  for(std::string::const_iterator i = str.begin(); i != str.end(); ++i)
-    if (!isdigit(*i))
+
+bool is_number(const std::string& str) {
+  for (std::string::const_iterator i = str.begin(); i != str.end(); ++i) {
+    if (!isdigit(*i)) {
       return false;
+    }
+  }
   return true;
 }
-
-int to_number(int range, const std::string& str)
-{
-  if (str.empty())
-  {
+
+int to_number(int range, const std::string& str) {
+  if (str.empty()) {
     return 0;
-  }
-  else
-  {
-    if (str[str.size() - 1] == '%')
-    {
-      int percent = str2int(str.substr(0, str.size()-1));
+  } else {
+    if (str[str.size() - 1] == '%') {
+      int percent = str2int(str.substr(0, str.size() - 1));
       return range * percent / 100;
-    }
-    else
-    {
+    } else {
       return str2int(str);
     }
   }
 }
-
-uint32_t get_time()
-{
+
+uint32_t get_time() {
   struct timeval tv;
   gettimeofday(&tv, NULL);
-  return tv.tv_sec * 1000 + tv.tv_usec/1000;
+  return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
-
-float to_float_no_range_check(int value, int min, int max)
-{
+
+float to_float_no_range_check(int value, int min, int max) {
   // FIXME: '+1' is kind of a hack to
   // get the center at 0 for the
   // [-32768, 32767] case
-  int center = (max + min + 1)/2;
+  int center = (max + min + 1) / 2;
 
-  if (value < center)
+  if (value < center) {
+    return static_cast<float>(value - center) /
+           static_cast<float>(center - min);
+  } else  // (value >= center)
   {
-    return static_cast<float>(value - center) / static_cast<float>(center - min);
-  }
-  else // (value >= center)
-  {
-    return static_cast<float>(value - center) / static_cast<float>(max - center);
+    return static_cast<float>(value - center) /
+           static_cast<float>(max - center);
   }
 }
 
-float to_float(int value, int min, int max)
-{
-  return Math::clamp(-1.0f,
-                     to_float_no_range_check(value, min, max),
-                     1.0f);
+float to_float(int value, int min, int max) {
+  return Math::clamp(-1.0f, to_float_no_range_check(value, min, max), 1.0f);
 }
 
-int from_float(float value, int min, int max)
-{
+int from_float(float value, int min, int max) {
   return (value + 1.0f) / 2.0f * static_cast<float>(max - min) + min;
 }
-
-int get_terminal_width()
-{
+
+int get_terminal_width() {
   struct winsize w;
-  if (ioctl(0, TIOCGWINSZ, &w) < 0)
-  {
+  if (ioctl(0, TIOCGWINSZ, &w) < 0) {
     return 80;
-  }
-  else
-  {
+  } else {
     return w.ws_col;
   }
 }
 
-pid_t spawn_exe(const std::string& arg0)
-{
+pid_t spawn_exe(const std::string& arg0) {
   std::vector<std::string> args;
   args.push_back(arg0);
   return spawn_exe(args);
 }
 
-pid_t spawn_exe(const std::vector<std::string>& args)
-{
+pid_t spawn_exe(const std::vector<std::string>& args) {
   assert(!args.empty());
 
   pid_t pid = fork();
-  if (pid == 0)
-  {
-    char** argv = static_cast<char**>(malloc(sizeof(char*) * (args.size() + 1)));
-    for(size_t i = 0; i < args.size(); ++i)
-    {
+  if (pid == 0) {
+    char** argv =
+        static_cast<char**>(malloc(sizeof(char*) * (args.size() + 1)));
+    for (size_t i = 0; i < args.size(); ++i) {
       argv[i] = strdup(args[i].c_str());
     }
     argv[args.size()] = NULL;
 
-    if (execvp(args[0].c_str(), argv) == -1)
-    {
+    if (execvp(args[0].c_str(), argv) == -1) {
       log_error(args[0] << ": exec failed: " << strerror(errno));
       _exit(EXIT_FAILURE);
     }
@@ -250,5 +208,5 @@ pid_t spawn_exe(const std::vector<std::string>& args)
 
   return pid;
 }
-
+
 /* EOF */

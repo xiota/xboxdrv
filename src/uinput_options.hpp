@@ -19,16 +19,15 @@
 #ifndef HEADER_XBOXDRV_UINPUT_CFG_HPP
 #define HEADER_XBOXDRV_UINPUT_CFG_HPP
 
-#include "button_map.hpp"
 #include "axis_map.hpp"
+#include "button_map.hpp"
 
-class UInputOptions
-{
-private:
+class UInputOptions {
+ private:
   ButtonMap m_btn_map;
-  AxisMap   m_axis_map;
+  AxisMap m_axis_map;
 
-public:
+ public:
   /** \addtogroup creation Creation Functions
    ** @{*/
   UInputOptions();
@@ -49,10 +48,10 @@ public:
   /** \addtogroup access Access Functions
    ** @{*/
   ButtonMap& get_btn_map();
-  AxisMap&   get_axis_map();
+  AxisMap& get_axis_map();
 
   const ButtonMap& get_btn_map() const;
-  const AxisMap&   get_axis_map() const;
+  const AxisMap& get_axis_map() const;
   /** @}*/
 };
 

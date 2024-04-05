@@ -29,19 +29,21 @@ class AxisEvent;
 class AxisEventHandler;
 
 typedef boost::shared_ptr<AxisEvent> AxisEventPtr;
-
-class AxisEvent
-{
-public:
+
+class AxisEvent {
+ public:
   static AxisEventPtr invalid();
 
-  static AxisEventPtr create_abs(int device_id, int code, int min, int max, int fuzz, int flat);
-  static AxisEventPtr create_rel(int device_id, int code, int repeat = 10, float value = 5);
+  static AxisEventPtr create_abs(int device_id, int code, int min, int max,
+                                 int fuzz, int flat);
+  static AxisEventPtr create_rel(int device_id, int code, int repeat = 10,
+                                 float value = 5);
 
-  /** If an AxisEvent gets created the user has to set min/max with set_axis_range() */
+  /** If an AxisEvent gets created the user has to set min/max with
+   * set_axis_range() */
   static AxisEventPtr from_string(const std::string& str);
 
-public:
+ public:
   AxisEvent(AxisEventHandler* handler, int min = 0, int max = 0);
   ~AxisEvent() {}
 
@@ -55,34 +57,33 @@ public:
 
   std::string str() const;
 
-private:
-  int  m_last_raw_value;
-  int  m_last_send_value;
-  int  m_min;
-  int  m_max;
+ private:
+  int m_last_raw_value;
+  int m_last_send_value;
+  int m_min;
+  int m_max;
   boost::scoped_ptr<AxisEventHandler> m_handler;
   std::vector<AxisFilterPtr> m_filters;
 };
-
-class AxisEventHandler
-{
-protected:
+
+class AxisEventHandler {
+ protected:
   int m_min;
   int m_max;
 
-public:
+ public:
   AxisEventHandler();
   virtual ~AxisEventHandler() {}
 
-  virtual void init(UInput& uinput, int slot, bool extra_devices) =0;
-  virtual void send(UInput& uinput, int value) =0;
-  virtual void update(UInput& uinput, int msec_delta) =0;
+  virtual void init(UInput& uinput, int slot, bool extra_devices) = 0;
+  virtual void send(UInput& uinput, int value) = 0;
+  virtual void update(UInput& uinput, int msec_delta) = 0;
 
   virtual void set_axis_range(int min, int max);
 
-  virtual std::string str() const =0;
+  virtual std::string str() const = 0;
 };
-
+
 #endif
 
 /* EOF */

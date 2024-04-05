@@ -18,30 +18,19 @@
 
 #include "invert_axis_filter.hpp"
 
-int
-InvertAxisFilter::filter(int value, int min, int max)
-{
-  int center = (max + min + 1)/2; // FIXME: '+1' is kind of a hack to
-                                  // get the center at 0 for the
-                                  // [-32768, 32767] case
-  if (value < center)
-  {
+int InvertAxisFilter::filter(int value, int min, int max) {
+  int center = (max + min + 1) / 2;  // FIXME: '+1' is kind of a hack to
+                                     // get the center at 0 for the
+                                     // [-32768, 32767] case
+  if (value < center) {
     return (max - center) * (value - center) / (min - center) + center;
-  }
-  else if (value > center)
-  {
+  } else if (value > center) {
     return (min - center) * (value - center) / (max - center) + center;
-  }
-  else
-  {
+  } else {
     return value;
   }
 }
 
-std::string
-InvertAxisFilter::str() const
-{
-  return "invert";
-}
+std::string InvertAxisFilter::str() const { return "invert"; }
 
 /* EOF */

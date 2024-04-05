@@ -18,39 +18,26 @@
 
 #include "buttonfilter/click_button_filter.hpp"
 
-ClickButtonFilter::ClickButtonFilter(Mode mode) :
-  m_mode(mode),
-  m_last_value(false)
-{
-}
+ClickButtonFilter::ClickButtonFilter(Mode mode)
+    : m_mode(mode), m_last_value(false) {}
 
-bool
-ClickButtonFilter::filter(bool value)
-{
-  if (m_last_value != value)
-  {
+bool ClickButtonFilter::filter(bool value) {
+  if (m_last_value != value) {
     m_last_value = value;
 
-    switch(m_mode)
-    {
+    switch (m_mode) {
       case kPress:
-        if (value)
-        {
+        if (value) {
           return true;
-        }
-        else
-        {
+        } else {
           return false;
         }
         break;
 
       case kRelease:
-        if (!value)
-        {
+        if (!value) {
           return true;
-        }
-        else
-        {
+        } else {
           return false;
         }
         break;
@@ -63,18 +50,13 @@ ClickButtonFilter::filter(bool value)
         assert(!"never reached");
         break;
     }
-  }
-  else
-  {
+  } else {
     return false;
   }
 }
 
-std::string
-ClickButtonFilter::str() const
-{
-  switch(m_mode)
-  {
+std::string ClickButtonFilter::str() const {
+  switch (m_mode) {
     case kPress:
       return "press";
 

@@ -23,45 +23,37 @@
 
 UInputMessageProcessor::UInputMessageProcessor(UInput& uinput,
                                                ControllerSlotConfigPtr config,
-                                               const Options& opts) :
-  m_uinput(uinput),
-  m_config(config),
-  m_oldmsg(),
-  m_config_toggle_button(opts.config_toggle_button),
-  m_rumble_gain(opts.rumble_gain),
-  m_rumble_test(opts.rumble),
-  m_controller()
-{
+                                               const Options& opts)
+    : m_uinput(uinput),
+      m_config(config),
+      m_oldmsg(),
+      m_config_toggle_button(opts.config_toggle_button),
+      m_rumble_gain(opts.rumble_gain),
+      m_rumble_test(opts.rumble),
+      m_controller() {
   memset(&m_oldmsg, 0, sizeof(m_oldmsg));
 }
 
-UInputMessageProcessor::~UInputMessageProcessor()
-{
-}
+UInputMessageProcessor::~UInputMessageProcessor() {}
 
-void
-UInputMessageProcessor::send(const XboxGenericMsg& msg_in, int msec_delta)
-{
-  if (!m_config->empty())
-  {
+void UInputMessageProcessor::send(const XboxGenericMsg& msg_in,
+                                  int msec_delta) {
+  if (!m_config->empty()) {
     XboxGenericMsg msg = msg_in;
 
-    if (m_rumble_test)
-    {
-      log_debug("rumble: " << get_axis(msg, XBOX_AXIS_LT) << " " << get_axis(msg, XBOX_AXIS_RT));
+    if (m_rumble_test) {
+      log_debug("rumble: " << get_axis(msg, XBOX_AXIS_LT) << " "
+                           << get_axis(msg, XBOX_AXIS_RT));
 
-      set_rumble(get_axis(msg, XBOX_AXIS_LT),
-                 get_axis(msg, XBOX_AXIS_RT));
+      set_rumble(get_axis(msg, XBOX_AXIS_LT), get_axis(msg, XBOX_AXIS_RT));
     }
 
     // handling switching of configurations
-    if (m_config_toggle_button != XBOX_BTN_UNKNOWN)
-    {
+    if (m_config_toggle_button != XBOX_BTN_UNKNOWN) {
       bool last = get_button(m_oldmsg, m_config_toggle_button);
-      bool cur  = get_button(msg, m_config_toggle_button);
+      bool cur = get_button(msg, m_config_toggle_button);
 
-      if (cur && cur != last)
-      {
+      if (cur && cur != last) {
         // reset old mapping to zero to not get stuck keys/axis
         m_config->get_config()->get_uinput().reset_all_outputs();
 
@@ -73,18 +65,16 @@ UInputMessageProcessor::send(const XboxGenericMsg& msg_in, int msec_delta)
     }
 
     // run the controller message through all modifier
-    for(std::vector<ModifierPtr>::iterator i = m_config->get_config()->get_modifier().begin();
-        i != m_config->get_config()->get_modifier().end();
-        ++i)
-    {
+    for (std::vector<ModifierPtr>::iterator i =
+             m_config->get_config()->get_modifier().begin();
+         i != m_config->get_config()->get_modifier().end(); ++i) {
       (*i)->update(msec_delta, msg);
     }
 
     m_config->get_config()->get_uinput().update(msec_delta);
 
     // send current Xbox state to uinput
-    if (memcmp(&msg, &m_oldmsg, sizeof(XboxGenericMsg)) != 0)
-    {
+    if (memcmp(&msg, &m_oldmsg, sizeof(XboxGenericMsg)) != 0) {
       // Only send a new event out if something has changed,
       // this is useful since some controllers send events
       // even if nothing has changed, deadzone can cause this
@@ -96,9 +86,7 @@ UInputMessageProcessor::send(const XboxGenericMsg& msg_in, int msec_delta)
   }
 }
 
-void
-UInputMessageProcessor::set_rumble(uint8_t lhs, uint8_t rhs)
-{
+void UInputMessageProcessor::set_rumble(uint8_t lhs, uint8_t rhs) {
   // XXX: STUB!
 #if 0
   if (m_rumble_callback)
@@ -111,15 +99,11 @@ UInputMessageProcessor::set_rumble(uint8_t lhs, uint8_t rhs)
 #endif
 }
 
-void
-UInputMessageProcessor::set_config(int num)
-{
+void UInputMessageProcessor::set_config(int num) {
   m_config->set_current_config(num);
 }
 
-void
-UInputMessageProcessor::set_controller(Controller* controller)
-{
+void UInputMessageProcessor::set_controller(Controller* controller) {
   m_controller = controller;
   // m_config->set_controller(controller);
 }

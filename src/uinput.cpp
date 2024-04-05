@@ -18,152 +18,122 @@
 
 #include "uinput.hpp"
 
-#include <boost/tokenizer.hpp>
-#include <iostream>
 #include <math.h>
-#include <stdexcept>
 #include <stdio.h>
 
-#include "ui_abs_event_collector.hpp"
-#include "ui_key_event_collector.hpp"
-#include "ui_rel_event_collector.hpp"
+#include <boost/tokenizer.hpp>
+#include <iostream>
+#include <stdexcept>
 
 #include "helper.hpp"
 #include "log.hpp"
 #include "raise_exception.hpp"
-
-struct input_id
-UInput::parse_input_id(const std::string& str)
-{
+#include "ui_abs_event_collector.hpp"
+#include "ui_key_event_collector.hpp"
+#include "ui_rel_event_collector.hpp"
+
+struct input_id UInput::parse_input_id(const std::string& str) {
   struct input_id usbid;
 
   // default values
   usbid.bustype = BUS_USB;
-  usbid.vendor  = 0;
+  usbid.vendor = 0;
   usbid.product = 0;
   usbid.version = 0;
 
   // split string at ':'
-  boost::tokenizer<boost::char_separator<char> >
-    tokens(str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  boost::tokenizer<boost::char_separator<char> > tokens(
+      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
   std::vector<std::string> args;
   std::copy(tokens.begin(), tokens.end(), std::back_inserter(args));
 
-  if (args.size() == 2)
-  { // VENDOR:PRODUCT
-    usbid.vendor  = hexstr2int(args[0]);
+  if (args.size() == 2) {  // VENDOR:PRODUCT
+    usbid.vendor = hexstr2int(args[0]);
     usbid.product = hexstr2int(args[1]);
-  }
-  else if (args.size() == 3)
-  { // VENDOR:PRODUCT:VERSION
-    usbid.vendor  = hexstr2int(args[0]);
+  } else if (args.size() == 3) {  // VENDOR:PRODUCT:VERSION
+    usbid.vendor = hexstr2int(args[0]);
     usbid.product = hexstr2int(args[1]);
     usbid.version = hexstr2int(args[2]);
-  }
-  else if (args.size() == 4)
-  { // VENDOR:PRODUCT:VERSION:BUS
-    usbid.vendor  = hexstr2int(args[0]);
+  } else if (args.size() == 4) {  // VENDOR:PRODUCT:VERSION:BUS
+    usbid.vendor = hexstr2int(args[0]);
     usbid.product = hexstr2int(args[1]);
     usbid.version = hexstr2int(args[2]);
     usbid.bustype = hexstr2int(args[3]);
-  }
-  else
-  {
+  } else {
     raise_exception(std::runtime_error, "incorrect number of arguments");
   }
 
   return usbid;
 }
 
-uint32_t
-UInput::parse_device_id(const std::string& str)
-{
-  // FIXME: insert magic to resolve symbolic names, merge with same code in set_device_name
+uint32_t UInput::parse_device_id(const std::string& str) {
+  // FIXME: insert magic to resolve symbolic names, merge with same code in
+  // set_device_name
   std::string::size_type p = str.find('.');
 
   uint16_t device_id;
   uint16_t slot_id;
 
-  if (p == std::string::npos)
-  {
+  if (p == std::string::npos) {
     device_id = str2deviceid(str.substr());
-    slot_id   = SLOTID_AUTO;
-  }
-  else if (p == 0)
-  {
+    slot_id = SLOTID_AUTO;
+  } else if (p == 0) {
     device_id = DEVICEID_AUTO;
-    slot_id   = str2slotid(str.substr(p+1));
-  }
-  else
-  {
+    slot_id = str2slotid(str.substr(p + 1));
+  } else {
     device_id = str2deviceid(str.substr(0, p));
-    slot_id   = str2slotid(str.substr(p+1));
+    slot_id = str2slotid(str.substr(p + 1));
   }
 
   return UInput::create_device_id(slot_id, device_id);
 }
-
-UInput::UInput(bool extra_events) :
-  m_uinput_devs(),
-  m_device_names(),
-  m_device_usbids(),
-  m_collectors(),
-  m_rel_repeat_lst(),
-  m_extra_events(extra_events),
-  m_timeout_id(),
-  m_timer(g_timer_new())
-{
+
+UInput::UInput(bool extra_events)
+    : m_uinput_devs(),
+      m_device_names(),
+      m_device_usbids(),
+      m_collectors(),
+      m_rel_repeat_lst(),
+      m_extra_events(extra_events),
+      m_timeout_id(),
+      m_timer(g_timer_new()) {
   // FIXME: hardcoded timeout is kind of evil
   // FIXME: would be nicer if UInput didn't depend on glib
   m_timeout_id = g_timeout_add(10, &UInput::on_timeout_wrap, this);
 }
 
-UInput::~UInput()
-{
+UInput::~UInput() {
   g_source_remove(m_timeout_id);
   g_timer_destroy(m_timer);
 }
 
-bool
-UInput::on_timeout()
-{
+bool UInput::on_timeout() {
   int msec_delta = static_cast<int>(g_timer_elapsed(m_timer, NULL) * 1000.0f);
   g_timer_reset(m_timer);
   update(msec_delta);
   return true;  // do not remove the callback
 }
 
-struct input_id
-UInput::get_device_usbid(uint32_t device_id) const
-{
+struct input_id UInput::get_device_usbid(uint32_t device_id) const {
   uint16_t slot_id = get_slot_id(device_id);
   uint16_t type_id = get_type_id(device_id);
 
   DeviceUSBId::const_iterator it = m_device_usbids.find(device_id);
-  if (it != m_device_usbids.end())
-  {
+  if (it != m_device_usbids.end()) {
     // found an exact match, return it
     return it->second;
-  }
-  else
-  {
+  } else {
     it = m_device_usbids.find(create_device_id(slot_id, DEVICEID_AUTO));
-    if (it != m_device_usbids.end())
-    {
+    if (it != m_device_usbids.end()) {
       return it->second;
-    }
-    else
-    {
+    } else {
       it = m_device_usbids.find(create_device_id(SLOTID_AUTO, type_id));
-      if (it != m_device_usbids.end())
-      {
+      if (it != m_device_usbids.end()) {
         return it->second;
-      }
-      else
-      {
+      } else {
         struct input_id usbid;
         usbid.bustype = 0;
-        usbid.vendor  = 0;
+        usbid.vendor = 0;
         usbid.product = 0;
         usbid.version = 0;
         return usbid;
@@ -172,28 +142,21 @@ UInput::get_device_usbid(uint32_t device_id) const
   }
 }
 
-std::string
-UInput::get_device_name(uint32_t device_id) const
-{
+std::string UInput::get_device_name(uint32_t device_id) const {
   uint16_t slot_id = get_slot_id(device_id);
   uint16_t type_id = get_type_id(device_id);
 
   DeviceNames::const_iterator it = m_device_names.find(device_id);
-  if (it != m_device_names.end())
-  {
+  if (it != m_device_names.end()) {
     // found an exact match, return it
     return it->second;
-  }
-  else
-  {
+  } else {
     it = m_device_names.find(create_device_id(slot_id, DEVICEID_AUTO));
-    if (it != m_device_names.end())
-    {
+    if (it != m_device_names.end()) {
       // found a match for the slot, build a name and return it
       std::ostringstream str;
       str << it->second;
-      switch(type_id)
-      {
+      switch (type_id) {
         case 0:
         case DEVICEID_JOYSTICK:
           break;
@@ -207,43 +170,33 @@ UInput::get_device_name(uint32_t device_id) const
           break;
 
         default:
-          str << " - " << device_id+1;
+          str << " - " << device_id + 1;
           break;
       }
       return str.str();
-    }
-    else
-    {
+    } else {
       it = m_device_names.find(create_device_id(SLOTID_AUTO, type_id));
 
-      if (it != m_device_names.end())
-      {
+      if (it != m_device_names.end()) {
         // found match for the type, build name and return it
         std::ostringstream str;
         str << it->second;
-        if (slot_id > 0)
-        {
-          str << " #" << (slot_id+1);
+        if (slot_id > 0) {
+          str << " #" << (slot_id + 1);
         }
         return str.str();
-      }
-      else
-      {
+      } else {
         std::ostringstream str;
 
         it = m_device_names.find(create_device_id(SLOTID_AUTO, DEVICEID_AUTO));
 
-        if (it != m_device_names.end())
-        {
+        if (it != m_device_names.end()) {
           str << it->second;
-        }
-        else
-        {
+        } else {
           str << "Xbox Gamepad (userspace driver)";
         }
 
-        switch(type_id)
-        {
+        switch (type_id) {
           case DEVICEID_JOYSTICK:
             break;
 
@@ -256,12 +209,11 @@ UInput::get_device_name(uint32_t device_id) const
             break;
 
           default:
-            str << " - " << device_id+1;
+            str << " - " << device_id + 1;
             break;
         }
-        if (slot_id > 0)
-        {
-          str << " #" << (slot_id+1);
+        if (slot_id > 0) {
+          str << " #" << (slot_id + 1);
         }
         return str.str();
       }
@@ -269,32 +221,23 @@ UInput::get_device_name(uint32_t device_id) const
   }
 }
 
-LinuxUinput*
-UInput::create_uinput_device(uint32_t device_id)
-{
+LinuxUinput* UInput::create_uinput_device(uint32_t device_id) {
   // DEVICEID_AUTO should not happen at this point as the user should
   // have called resolve_device_id()
   assert(device_id != DEVICEID_AUTO);
 
   UInputDevs::iterator it = m_uinput_devs.find(device_id);
-  if (it != m_uinput_devs.end())
-  {
+  if (it != m_uinput_devs.end()) {
     // device already exist, so return it
     return it->second.get();
-  }
-  else
-  {
+  } else {
     log_debug("create device: " << device_id);
     LinuxUinput::DeviceType device_type;
 
-    if (!m_extra_events)
-    {
+    if (!m_extra_events) {
       device_type = LinuxUinput::kGenericDevice;
-    }
-    else
-    {
-      switch (device_id)
-      {
+    } else {
+      switch (device_id) {
         case DEVICEID_JOYSTICK:
           device_type = LinuxUinput::kJoystickDevice;
           break;
@@ -314,86 +257,77 @@ UInput::create_uinput_device(uint32_t device_id)
     }
 
     std::string dev_name = get_device_name(device_id);
-    boost::shared_ptr<LinuxUinput> dev(new LinuxUinput(device_type, dev_name, get_device_usbid(device_id)));
-    m_uinput_devs.insert(std::pair<int, boost::shared_ptr<LinuxUinput> >(device_id, dev));
+    boost::shared_ptr<LinuxUinput> dev(
+        new LinuxUinput(device_type, dev_name, get_device_usbid(device_id)));
+    m_uinput_devs.insert(
+        std::pair<int, boost::shared_ptr<LinuxUinput> >(device_id, dev));
 
-    log_debug("created uinput device: " << device_id << " - '" << dev_name << "'");
+    log_debug("created uinput device: " << device_id << " - '" << dev_name
+                                        << "'");
 
     return dev.get();
   }
 }
 
-UIEventEmitterPtr
-UInput::add_key(uint32_t device_id, int ev_code)
-{
+UIEventEmitterPtr UInput::add_key(uint32_t device_id, int ev_code) {
   LinuxUinput* dev = create_uinput_device(device_id);
   dev->add_key(ev_code);
 
   return create_emitter(device_id, EV_KEY, ev_code);
 }
 
-UIEventEmitterPtr
-UInput::add_rel(uint32_t device_id, int ev_code)
-{
+UIEventEmitterPtr UInput::add_rel(uint32_t device_id, int ev_code) {
   LinuxUinput* dev = create_uinput_device(device_id);
   dev->add_rel(ev_code);
 
   return create_emitter(device_id, EV_REL, ev_code);
 }
 
-UIEventEmitterPtr
-UInput::add_abs(uint32_t device_id, int ev_code, int min, int max, int fuzz, int flat)
-{
+UIEventEmitterPtr UInput::add_abs(uint32_t device_id, int ev_code, int min,
+                                  int max, int fuzz, int flat) {
   LinuxUinput* dev = create_uinput_device(device_id);
   dev->add_abs(ev_code, min, max, fuzz, flat);
 
   return create_emitter(device_id, EV_ABS, ev_code);
 }
 
-void
-UInput::add_ff(uint32_t device_id, uint16_t code)
-{
+void UInput::add_ff(uint32_t device_id, uint16_t code) {
   LinuxUinput* dev = create_uinput_device(device_id);
   dev->add_ff(code);
 }
 
-UIEventEmitterPtr
-UInput::create_emitter(int device_id, int type, int code)
-{
+UIEventEmitterPtr UInput::create_emitter(int device_id, int type, int code) {
   // search for an already existing emitter
-  for(Collectors::iterator i = m_collectors.begin(); i != m_collectors.end(); ++i)
-  {
+  for (Collectors::iterator i = m_collectors.begin(); i != m_collectors.end();
+       ++i) {
     if (static_cast<int>((*i)->get_device_id()) == device_id &&
-        (*i)->get_type() == type &&
-        (*i)->get_code() == code)
-    {
+        (*i)->get_type() == type && (*i)->get_code() == code) {
       return (*i)->create_emitter();
     }
   }
 
   // no emitter found, create a new one
-  switch(type)
-  {
-    case EV_ABS:
-      {
-        UIEventCollectorPtr collector(new UIAbsEventCollector(*this, device_id, type, code));
-        m_collectors.push_back(collector);
-        return collector->create_emitter();
-      }
+  switch (type) {
+    case EV_ABS: {
+      UIEventCollectorPtr collector(
+          new UIAbsEventCollector(*this, device_id, type, code));
+      m_collectors.push_back(collector);
+      return collector->create_emitter();
+    }
 
-    case EV_KEY:
-      {
-        UIEventCollectorPtr collector(new UIKeyEventCollector(*this, device_id, type, code));
-        m_collectors.push_back(collector);
-        return collector->create_emitter();
-      }
+    case EV_KEY: {
+      UIEventCollectorPtr collector(
+          new UIKeyEventCollector(*this, device_id, type, code));
+      m_collectors.push_back(collector);
+      return collector->create_emitter();
+    }
 
-    case EV_REL:
-      {
-        UIEventCollectorPtr collector(new UIRelEventCollector(*this, device_id, type, code));
-        m_collectors.push_back(collector);
-        return collector->create_emitter();
-      }
+    case EV_REL: {
+      UIEventCollectorPtr collector(
+          new UIRelEventCollector(*this, device_id, type, code));
+      m_collectors.push_back(collector);
+      return collector->create_emitter();
+    }
 
     default:
       assert(!"unknown type");
@@ -401,94 +335,79 @@ UInput::create_emitter(int device_id, int type, int code)
   }
 }
 
-void
-UInput::finish()
-{
-  for(UInputDevs::iterator i = m_uinput_devs.begin(); i != m_uinput_devs.end(); ++i)
-  {
+void UInput::finish() {
+  for (UInputDevs::iterator i = m_uinput_devs.begin(); i != m_uinput_devs.end();
+       ++i) {
     i->second->finish();
   }
 }
 
-void
-UInput::send(uint32_t device_id, int ev_type, int ev_code, int value)
-{
+void UInput::send(uint32_t device_id, int ev_type, int ev_code, int value) {
   get_uinput(device_id)->send(ev_type, ev_code, value);
 }
 
-void
-UInput::update(int msec_delta)
-{
-  for(std::map<UIEvent, RelRepeat>::iterator i = m_rel_repeat_lst.begin(); i != m_rel_repeat_lst.end(); ++i)
-  {
+void UInput::update(int msec_delta) {
+  for (std::map<UIEvent, RelRepeat>::iterator i = m_rel_repeat_lst.begin();
+       i != m_rel_repeat_lst.end(); ++i) {
     i->second.time_count += msec_delta;
 
     // FIXME: shouldn't send out events multiple times, but accumulate
     // them instead and send out only once
-    while (i->second.time_count >= i->second.repeat_interval)
-    {
+    while (i->second.time_count >= i->second.repeat_interval) {
       // value can be float, but be can only send out int, so keep
       // track of the rest we don't send
       int i_value = static_cast<int>(i->second.value + truncf(i->second.rest));
       i->second.rest -= truncf(i->second.rest);
       i->second.rest += i->second.value - truncf(i->second.value);
 
-      get_uinput(i->second.code.get_device_id())->send(EV_REL, i->second.code.code, i_value);
+      get_uinput(i->second.code.get_device_id())
+          ->send(EV_REL, i->second.code.code, i_value);
       i->second.time_count -= i->second.repeat_interval;
     }
   }
 
-  for(UInputDevs::iterator i = m_uinput_devs.begin(); i != m_uinput_devs.end(); ++i)
-  {
+  for (UInputDevs::iterator i = m_uinput_devs.begin(); i != m_uinput_devs.end();
+       ++i) {
     i->second->update(msec_delta);
   }
 }
 
-void
-UInput::sync()
-{
-  for(Collectors::iterator i = m_collectors.begin(); i != m_collectors.end(); ++i)
-  {
+void UInput::sync() {
+  for (Collectors::iterator i = m_collectors.begin(); i != m_collectors.end();
+       ++i) {
     (*i)->sync();
   }
 
-  for(UInputDevs::iterator i = m_uinput_devs.begin(); i != m_uinput_devs.end(); ++i)
-  {
+  for (UInputDevs::iterator i = m_uinput_devs.begin(); i != m_uinput_devs.end();
+       ++i) {
     i->second->sync();
   }
 }
 
-void
-UInput::send_rel_repetitive(const UIEvent& code, float value, int repeat_interval)
-{
-  if (repeat_interval < 0)
-  { // remove rel_repeats from list
+void UInput::send_rel_repetitive(const UIEvent& code, float value,
+                                 int repeat_interval) {
+  if (repeat_interval < 0) {  // remove rel_repeats from list
     // FIXME: should send the last value still in the repeater
     m_rel_repeat_lst.erase(code);
     // no need to send a event for rel, as it defaults to 0 anyway
-  }
-  else
-  { // add rel_repeats to list
+  } else {  // add rel_repeats to list
     std::map<UIEvent, RelRepeat>::iterator it = m_rel_repeat_lst.find(code);
 
-    if (it == m_rel_repeat_lst.end())
-    {
+    if (it == m_rel_repeat_lst.end()) {
       RelRepeat rel_rep;
-      rel_rep.code  = code;
+      rel_rep.code = code;
       rel_rep.value = value;
-      rel_rep.rest  = 0.0f;
+      rel_rep.rest = 0.0f;
       rel_rep.time_count = 0;
       rel_rep.repeat_interval = repeat_interval;
       m_rel_repeat_lst.insert(std::pair<UIEvent, RelRepeat>(code, rel_rep));
 
       // Send the event once
       get_uinput(code.get_device_id())->send(EV_REL, code.code, value);
-    }
-    else
-    {
+    } else {
       // FIXME: send old value, store new value for rest
 
-      it->second.code  = code;
+      it->second.code = code;
       it->second.value = value;
       // it->second.time_count = do not touch this
       it->second.repeat_interval = repeat_interval;
@@ -496,16 +415,11 @@ UInput::send_rel_repetitive(const UIEvent& code, float value, int repeat_interva
   }
 }
 
-LinuxUinput*
-UInput::get_uinput(uint32_t device_id) const
-{
+LinuxUinput* UInput::get_uinput(uint32_t device_id) const {
   UInputDevs::const_iterator it = m_uinput_devs.find(device_id);
-  if (it != m_uinput_devs.end())
-  {
+  if (it != m_uinput_devs.end()) {
     return it->second.get();
-  }
-  else
-  {
+  } else {
     assert(0);
     std::ostringstream str;
     str << "Couldn't find uinput device: " << device_id;
@@ -513,64 +427,48 @@ UInput::get_uinput(uint32_t device_id) const
   }
 }
 
-void
-UInput::set_device_usbids(const std::map<uint32_t, struct input_id>& device_usbids)
-{
+void UInput::set_device_usbids(
+    const std::map<uint32_t, struct input_id>& device_usbids) {
   m_device_usbids = device_usbids;
 }
 
-void
-UInput::set_device_names(const std::map<uint32_t, std::string>& device_names)
-{
+void UInput::set_device_names(
+    const std::map<uint32_t, std::string>& device_names) {
   m_device_names = device_names;
 }
 
-void
-UInput::set_controller(int device_id, Controller* controller)
-{
+void UInput::set_controller(int device_id, Controller* controller) {
   get_uinput(device_id)->set_controller(controller);
 }
 
-void
-UInput::enable_force_feedback(int device_id)
-{
+void UInput::enable_force_feedback(int device_id) {
   get_uinput(device_id)->enable_force_feedback();
 }
 
-void
-UInput::set_ff_gain(int device_id, int gain)
-{
+void UInput::set_ff_gain(int device_id, int gain) {
   get_uinput(device_id)->set_ff_gain(gain);
 }
 
-int
-UInput::find_jsdev_number()
-{
-  for(int i = 0; ; ++i)
-  {
+int UInput::find_jsdev_number() {
+  for (int i = 0;; ++i) {
     char filename1[32];
     char filename2[32];
 
     sprintf(filename1, "/dev/input/js%d", i);
     sprintf(filename2, "/dev/js%d", i);
 
-    if (access(filename1, F_OK) != 0 && access(filename2, F_OK) != 0)
-      return i;
+    if (access(filename1, F_OK) != 0 && access(filename2, F_OK) != 0) return i;
   }
 }
 
-int
-UInput::find_evdev_number()
-{
-  for(int i = 0; ; ++i)
-  {
+int UInput::find_evdev_number() {
+  for (int i = 0;; ++i) {
     char filename[32];
 
     sprintf(filename, "/dev/input/event%d", i);
 
-    if (access(filename, F_OK) != 0)
-      return i;
+    if (access(filename, F_OK) != 0) return i;
   }
 }
-
+
 /* EOF */

@@ -18,92 +18,62 @@
 
 #include "button_map.hpp"
 
-ButtonMap::ButtonMap()
-{
-  clear();
-}
+ButtonMap::ButtonMap() { clear(); }
 
-void
-ButtonMap::bind(XboxButton code, ButtonEventPtr event)
-{
+void ButtonMap::bind(XboxButton code, ButtonEventPtr event) {
   btn_map[XBOX_BTN_UNKNOWN][code] = event;
 }
 
-void
-ButtonMap::bind(XboxButton shift_code, XboxButton code, ButtonEventPtr event)
-{
+void ButtonMap::bind(XboxButton shift_code, XboxButton code,
+                     ButtonEventPtr event) {
   btn_map[shift_code][code] = event;
 }
 
-ButtonEventPtr
-ButtonMap::lookup(XboxButton code) const
-{
+ButtonEventPtr ButtonMap::lookup(XboxButton code) const {
   return btn_map[XBOX_BTN_UNKNOWN][code];
 }
 
-ButtonEventPtr
-ButtonMap::lookup(XboxButton shift_code, XboxButton code) const
-{
+ButtonEventPtr ButtonMap::lookup(XboxButton shift_code, XboxButton code) const {
   return btn_map[shift_code][code];
 }
 
-bool
-ButtonMap::send(UInput& uinput, XboxButton code, bool value) const
-{
+bool ButtonMap::send(UInput& uinput, XboxButton code, bool value) const {
   return send(uinput, XBOX_BTN_UNKNOWN, code, value);
 }
 
-bool
-ButtonMap::send(UInput& uinput, XboxButton shift_code, XboxButton code, bool value) const
-{
+bool ButtonMap::send(UInput& uinput, XboxButton shift_code, XboxButton code,
+                     bool value) const {
   const ButtonEventPtr& event = lookup(shift_code, code);
-  if (event)
-  {
+  if (event) {
     event->send(uinput, value);
     return true;
-  }
-  else
-  {
+  } else {
     return false;
   }
 }
 
-void
-ButtonMap::clear()
-{
-  for(int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code)
-  {
-    for(int code = 0; code < XBOX_BTN_MAX; ++code)
-    {
+void ButtonMap::clear() {
+  for (int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code) {
+    for (int code = 0; code < XBOX_BTN_MAX; ++code) {
       btn_map[shift_code][code] = ButtonEvent::invalid();
     }
   }
 }
 
-void
-ButtonMap::init(UInput& uinput, int slot, bool extra_devices) const
-{
-  for(int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code)
-  {
-    for(int code = 0; code < XBOX_BTN_MAX; ++code)
-    {
-      if (btn_map[shift_code][code])
-      {
+void ButtonMap::init(UInput& uinput, int slot, bool extra_devices) const {
+  for (int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code) {
+    for (int code = 0; code < XBOX_BTN_MAX; ++code) {
+      if (btn_map[shift_code][code]) {
         btn_map[shift_code][code]->init(uinput, slot, extra_devices);
       }
     }
   }
 }
 
-void
-ButtonMap::update(UInput& uinput, int msec_delta)
-{
-  for(int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code)
-  {
-    for(int code = 0; code < XBOX_BTN_MAX; ++code)
-    {
-      if (btn_map[shift_code][code])
-      {
+void ButtonMap::update(UInput& uinput, int msec_delta) {
+  for (int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code) {
+    for (int code = 0; code < XBOX_BTN_MAX; ++code) {
+      if (btn_map[shift_code][code]) {
         btn_map[shift_code][code]->update(uinput, msec_delta);
       }
     }

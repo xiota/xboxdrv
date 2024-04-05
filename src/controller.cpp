@@ -23,143 +23,97 @@
 #include "log.hpp"
 #include "message_processor.hpp"
 
-Controller::Controller() :
-  m_msg_cb(),
-  m_disconnect_cb(),
-  m_activation_cb(),
-  m_is_disconnected(false),
-  m_is_active(true),
-  m_udev_device(),
-  m_led_status(0),
-  m_rumble_left(0),
-  m_rumble_right(0),
-  m_ff_features(),
-  m_num_ff_effects(0)
-{
-}
+Controller::Controller()
+    : m_msg_cb(),
+      m_disconnect_cb(),
+      m_activation_cb(),
+      m_is_disconnected(false),
+      m_is_active(true),
+      m_udev_device(),
+      m_led_status(0),
+      m_rumble_left(0),
+      m_rumble_right(0),
+      m_ff_features(),
+      m_num_ff_effects(0) {}
 
-Controller::~Controller()
-{
-  udev_device_unref(m_udev_device);
-}
+Controller::~Controller() { udev_device_unref(m_udev_device); }
 
-void
-Controller::submit_msg(const XboxGenericMsg& msg)
-{
-  if (m_msg_cb)
-  {
+void Controller::submit_msg(const XboxGenericMsg& msg) {
+  if (m_msg_cb) {
     m_msg_cb(msg);
   }
 }
 
-void
-Controller::set_rumble(uint8_t left, uint8_t right)
-{
-  if (m_rumble_left  != left ||
-      m_rumble_right != right)
-  {
-    m_rumble_left  = left;
+void Controller::set_rumble(uint8_t left, uint8_t right) {
+  if (m_rumble_left != left || m_rumble_right != right) {
+    m_rumble_left = left;
     m_rumble_right = right;
 
     set_rumble_real(m_rumble_left, m_rumble_right);
   }
 }
 
-void
-Controller::set_led(uint8_t status)
-{
-  if (m_led_status != status)
-  {
+void Controller::set_led(uint8_t status) {
+  if (m_led_status != status) {
     m_led_status = status;
 
     set_led_real(m_led_status);
   }
 }
 
-void
-Controller::upload(const struct ff_effect& effect)
-{
+void Controller::upload(const struct ff_effect& effect) {
   // not implemented for non-evdev controllers
 }
 
-void
-Controller::erase(int id)
-{
+void Controller::erase(int id) {
   // not implemented for non-evdev controllers
 }
 
-void
-Controller::play(int id)
-{
+void Controller::play(int id) {
   // not implemented for non-evdev controllers
 }
 
-void
-Controller::stop(int id)
-{
+void Controller::stop(int id) {
   // not implemented for non-evdev controllers
 }
 
-void
-Controller::set_gain(int g)
-{
+void Controller::set_gain(int g) {
   // not implemented for non-evdev controllers
 }
 
-void
-Controller::set_udev_device(udev_device* udev_dev)
-{
+void Controller::set_udev_device(udev_device* udev_dev) {
   m_udev_device = udev_dev;
   udev_device_ref(m_udev_device);
 }
 
-void
-Controller::set_message_cb(const boost::function<void(const XboxGenericMsg&)>& msg_cb)
-{
+void Controller::set_message_cb(
+    const boost::function<void(const XboxGenericMsg&)>& msg_cb) {
   m_msg_cb = msg_cb;
 }
 
-udev_device*
-Controller::get_udev_device() const
-{
-  return m_udev_device;
-}
+udev_device* Controller::get_udev_device() const { return m_udev_device; }
 
-void
-Controller::set_active(bool v)
-{
-  if (m_is_active != v)
-  {
+void Controller::set_active(bool v) {
+  if (m_is_active != v) {
     log_debug("activation status: " << v << " " << m_activation_cb);
     m_is_active = v;
-    if (m_activation_cb)
-    {
+    if (m_activation_cb) {
       m_activation_cb();
     }
   }
 }
 
-void
-Controller::set_activation_cb(const boost::function<void ()>& callback)
-{
+void Controller::set_activation_cb(const boost::function<void()>& callback) {
   m_activation_cb = callback;
 }
 
-bool
-Controller::is_disconnected() const
-{
-  return m_is_disconnected;
-}
+bool Controller::is_disconnected() const { return m_is_disconnected; }
 
-void
-Controller::set_disconnect_cb(const boost::function<void ()>& callback)
-{
+void Controller::set_disconnect_cb(const boost::function<void()>& callback) {
   m_disconnect_cb = callback;
 }
 
-void
-Controller::send_disconnect()
-{
+void Controller::send_disconnect() {
   m_is_disconnected = true;
   m_disconnect_cb();
 }

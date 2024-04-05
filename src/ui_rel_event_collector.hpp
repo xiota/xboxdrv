@@ -22,20 +22,19 @@
 #include "ui_event_collector.hpp"
 #include "ui_rel_event_emitter.hpp"
 
-class UIRelEventCollector : public UIEventCollector
-{
-private:
+class UIRelEventCollector : public UIEventCollector {
+ private:
   typedef std::vector<UIRelEventEmitterPtr> Emitters;
   Emitters m_emitters;
 
-public:
+ public:
   UIRelEventCollector(UInput& uinput, uint32_t device_id, int type, int code);
 
   UIEventEmitterPtr create_emitter();
   void send(int value);
   void sync();
 
-private:
+ private:
   UIRelEventCollector(const UIRelEventCollector&);
   UIRelEventCollector& operator=(const UIRelEventCollector&);
 };

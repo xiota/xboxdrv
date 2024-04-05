@@ -20,15 +20,13 @@
 #define HEADER_XBOXDRV_BUTTONEVENT_REL_BUTTON_EVENT_HANDLER_HPP
 
 #include "button_event.hpp"
-
 #include "ui_event_emitter.hpp"
 
-class RelButtonEventHandler : public ButtonEventHandler
-{
-public:
+class RelButtonEventHandler : public ButtonEventHandler {
+ public:
   static RelButtonEventHandler* from_string(const std::string& str);
 
-public:
+ public:
   RelButtonEventHandler(const UIEvent& code);
 
   void init(UInput& uinput, int slot, bool extra_devices);
@@ -37,11 +35,11 @@ public:
 
   std::string str() const;
 
-private:
+ private:
   UIEvent m_code;
 
-  int  m_value;
-  int  m_repeat;
+  int m_value;
+  int m_repeat;
 
   UIEventEmitterPtr m_rel_emitter;
 };

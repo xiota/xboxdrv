@@ -23,13 +23,12 @@
 
 /** Little class around select(), not full featured, just readfds are
     supported right nowx */
-class Select
-{
-private:
+class Select {
+ private:
   int m_nfds;
   fd_set m_readfds;
 
-public:
+ public:
   Select();
 
   void clear();
@@ -38,7 +37,7 @@ public:
 
   int wait();
 
-private:
+ private:
   Select(const Select&);
   Select& operator=(const Select&);
 };

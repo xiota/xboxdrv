@@ -31,29 +31,32 @@ class Controller;
 
 typedef boost::shared_ptr<ControllerSlotConfig> ControllerSlotConfigPtr;
 
-class ControllerSlotConfig
-{
-public:
-  /** Creates a ControllerSlotConfig from the Options object and connects it to UInput */
-  static ControllerSlotConfigPtr create(UInput& uinput, int slot, bool extra_devices,
-                                       const ControllerSlotOptions& opts, Controller* controller);
+class ControllerSlotConfig {
+ public:
+  /** Creates a ControllerSlotConfig from the Options object and connects it to
+   * UInput */
+  static ControllerSlotConfigPtr create(UInput& uinput, int slot,
+                                        bool extra_devices,
+                                        const ControllerSlotOptions& opts,
+                                        Controller* controller);
 
-private:
-  static void create_modifier(const ControllerOptions& options, std::vector<ModifierPtr>* modifier);
+ private:
+  static void create_modifier(const ControllerOptions& options,
+                              std::vector<ModifierPtr>* modifier);
 
-private:
+ private:
   std::vector<ControllerConfigPtr> m_config;
   int m_current_config;
   Controller* m_controller;
 
-public:
+ public:
   ControllerSlotConfig();
 
   void add_config(ControllerConfigPtr config);
 
   void next_config();
   void prev_config();
-  int  config_count() const;
+  int config_count() const;
   void set_current_config(int num);
   int get_current_config() const { return m_current_config; }
 
@@ -62,7 +65,7 @@ public:
 
   bool empty() const { return m_config.empty(); }
 
-private:
+ private:
   ControllerSlotConfig(const ControllerSlotConfig&);
   ControllerSlotConfig& operator=(const ControllerSlotConfig&);
 };

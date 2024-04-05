@@ -19,34 +19,30 @@
 #ifndef HEADER_XBOXDRV_MODIFIER_DPAD_RESTRICTOR_MODIFIER_HPP
 #define HEADER_XBOXDRV_MODIFIER_DPAD_RESTRICTOR_MODIFIER_HPP
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "modifier.hpp"
 
-class DpadRestrictorModifier : public Modifier
-{
-private:
-  enum Mode {
-    kRestrictFourWay,
-    kRestrictXAxis,
-    kRestrictYAxis
-  };
+class DpadRestrictorModifier : public Modifier {
+ private:
+  enum Mode { kRestrictFourWay, kRestrictXAxis, kRestrictYAxis };
 
-public:
-  static DpadRestrictorModifier* from_string(const std::vector<std::string>& args);
+ public:
+  static DpadRestrictorModifier* from_string(
+      const std::vector<std::string>& args);
 
-public:
+ public:
   DpadRestrictorModifier(Mode mode);
 
   void update(int msec_delta, XboxGenericMsg& msg);
   std::string str() const;
 
-private:
+ private:
   Mode m_mode;
   XboxAxis m_last_unpressed_axis;
 
-private:
+ private:
   DpadRestrictorModifier(const DpadRestrictorModifier&);
   DpadRestrictorModifier& operator=(const DpadRestrictorModifier&);
 };

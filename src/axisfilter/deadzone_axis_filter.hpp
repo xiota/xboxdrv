@@ -21,18 +21,17 @@
 
 #include "axis_filter.hpp"
 
-class DeadzoneAxisFilter : public AxisFilter
-{
-public:
+class DeadzoneAxisFilter : public AxisFilter {
+ public:
   static DeadzoneAxisFilter* from_string(const std::string& str);
 
-public:
+ public:
   DeadzoneAxisFilter(int min_deadzone, int max_deathzone, bool smooth);
 
   int filter(int value, int min, int max);
   std::string str() const;
 
-private:
+ private:
   int m_min_deadzone;
   int m_max_deadzone;
   bool m_smooth;

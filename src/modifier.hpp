@@ -25,21 +25,21 @@
 
 class Modifier;
 class Options;
-
+
 typedef boost::shared_ptr<Modifier> ModifierPtr;
 
-class Modifier
-{
-public:
-  static Modifier* from_string(const std::string& name, const std::string& value);
+class Modifier {
+ public:
+  static Modifier* from_string(const std::string& name,
+                               const std::string& value);
 
-public:
+ public:
   virtual ~Modifier() {}
   virtual void update(int msec_delta, XboxGenericMsg& msg) = 0;
 
   virtual std::string str() const = 0;
 };
-
+
 #endif
 
 /* EOF */

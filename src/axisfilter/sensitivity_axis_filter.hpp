@@ -21,18 +21,17 @@
 
 #include "axis_filter.hpp"
 
-class SensitivityAxisFilter : public AxisFilter
-{
-public:
+class SensitivityAxisFilter : public AxisFilter {
+ public:
   static SensitivityAxisFilter* from_string(const std::string& str);
 
-public:
+ public:
   SensitivityAxisFilter(float sensitivity);
 
   int filter(int value, int min, int max);
   std::string str() const;
 
-private:
+ private:
   float m_sensitivity;
 };
 

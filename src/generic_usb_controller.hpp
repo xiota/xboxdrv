@@ -21,24 +21,24 @@
 
 #include <libusb.h>
 
-#include "xboxmsg.hpp"
 #include "usb_controller.hpp"
+#include "xboxmsg.hpp"
 
-class GenericUSBController : public USBController
-{
-private:
+class GenericUSBController : public USBController {
+ private:
   int m_interface;
   int m_endpoint;
 
-public:
-  GenericUSBController(libusb_device* dev, int interface, int endpoint, bool try_detach);
+ public:
+  GenericUSBController(libusb_device* dev, int interface, int endpoint,
+                       bool try_detach);
   ~GenericUSBController();
 
   void set_rumble_real(uint8_t left, uint8_t right);
   void set_led_real(uint8_t status);
   bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
 
-private:
+ private:
   GenericUSBController(const GenericUSBController&);
   GenericUSBController& operator=(const GenericUSBController&);
 };

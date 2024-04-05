@@ -22,48 +22,28 @@
 
 #include "helper.hpp"
 
-DelayButtonFilter*
-DelayButtonFilter::from_string(const std::string& str)
-{
+DelayButtonFilter* DelayButtonFilter::from_string(const std::string& str) {
   return new DelayButtonFilter(str2int(str));
 }
-
-DelayButtonFilter::DelayButtonFilter(int delay) :
-  m_delay(delay),
-  m_time(0)
-{
-}
 
-bool
-DelayButtonFilter::filter(bool value)
-{
-  if (value)
-  {
-    if (m_time < m_delay)
-    {
+DelayButtonFilter::DelayButtonFilter(int delay) : m_delay(delay), m_time(0) {}
+
+bool DelayButtonFilter::filter(bool value) {
+  if (value) {
+    if (m_time < m_delay) {
       return false;
-    }
-    else
-    {
+    } else {
       return true;
     }
-  }
-  else
-  {
+  } else {
     m_time = 0;
     return false;
   }
 }
 
-void
-DelayButtonFilter::update(int msec_delta)
-{
-  m_time += msec_delta;
-}
+void DelayButtonFilter::update(int msec_delta) { m_time += msec_delta; }
 
-std::string
-DelayButtonFilter::str() const
-{
+std::string DelayButtonFilter::str() const {
   std::ostringstream os;
   os << "delay:" << m_delay;
   return os.str();

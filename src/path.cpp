@@ -20,38 +20,27 @@
 
 namespace path {
 
-std::string dirname(const std::string& filename)
-{
+std::string dirname(const std::string& filename) {
   std::string::size_type p = filename.rfind('/');
-  if (p == std::string::npos)
-  {
+  if (p == std::string::npos) {
     return "./";
-  }
-  else
-  {
-    return filename.substr(0, p+1);
+  } else {
+    return filename.substr(0, p + 1);
   }
 }
 
-std::string join(const std::string& lhs, const std::string& rhs)
-{
-  if (lhs.empty())
-  {
+std::string join(const std::string& lhs, const std::string& rhs) {
+  if (lhs.empty()) {
     return rhs;
-  }
-  else
-  {
-    if (lhs[lhs.size()-1] == '/')
-    {
+  } else {
+    if (lhs[lhs.size() - 1] == '/') {
       return lhs + rhs;
-    }
-    else
-    {
+    } else {
       return lhs + '/' + rhs;
     }
   }
 }
 
-} // namespace path
+}  // namespace path
 
 /* EOF */

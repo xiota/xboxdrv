@@ -20,15 +20,13 @@
 #define HEADER_XBOXDRV_BUTTONEVENT_KEY_BUTTON_EVENT_HANDLER_HPP
 
 #include "button_event.hpp"
-
 #include "ui_event_sequence.hpp"
 
-class KeyButtonEventHandler : public ButtonEventHandler
-{
-public:
+class KeyButtonEventHandler : public ButtonEventHandler {
+ public:
   static KeyButtonEventHandler* from_string(const std::string& str);
 
-public:
+ public:
   KeyButtonEventHandler();
   KeyButtonEventHandler(int deviceid, int code);
 
@@ -38,7 +36,7 @@ public:
 
   std::string str() const;
 
-private:
+ private:
   bool m_state;
   UIEventSequence m_codes;
   UIEventSequence m_secondary_codes;

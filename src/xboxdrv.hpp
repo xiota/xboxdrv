@@ -26,10 +26,9 @@
 struct XPadDevice;
 class Options;
 class Controller;
-
-class Xboxdrv
-{
-private:
+
+class Xboxdrv {
+ private:
   void run_main(const Options& opts);
   void run_daemon(Options& opts);
   void run_list_supported_devices();
@@ -40,16 +39,16 @@ private:
 
   void print_copyright() const;
 
-public:
+ public:
   Xboxdrv();
   ~Xboxdrv();
 
   int main(int argc, char** argv);
 
-private:
+ private:
   void set_scheduling(const Options& opts);
 };
-
+
 #endif
 
 /* EOF */

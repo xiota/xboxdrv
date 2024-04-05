@@ -25,84 +25,71 @@
 #include <string>
 #include <vector>
 
-template<class Enum>
-class EnumBox
-{
-protected:
+template <class Enum>
+class EnumBox {
+ protected:
   std::string m_name;
   std::map<Enum, std::string> m_enum2string;
   std::map<std::string, Enum> m_string2enum;
 
-protected:
-  EnumBox(const std::string& name) :
-    m_name(name),
-    m_enum2string(),
-    m_string2enum()
-  {
-  }
+ protected:
+  EnumBox(const std::string& name)
+      : m_name(name), m_enum2string(), m_string2enum() {}
 
   virtual ~EnumBox() {}
 
-  void add(Enum i, const std::string& name)
-  {
+  void add(Enum i, const std::string& name) {
     m_enum2string[i] = name;
     m_string2enum[name] = i;
   }
 
-public:
+ public:
   typedef typename std::map<Enum, std::string>::iterator iterator;
   typedef typename std::map<Enum, std::string>::const_iterator const_iterator;
 
   const_iterator begin() const { return m_enum2string.begin(); }
-  const_iterator end()   const { return m_enum2string.end();   }
+  const_iterator end() const { return m_enum2string.end(); }
 
   iterator begin() { return m_enum2string.begin(); }
-  iterator end()   { return m_enum2string.end();   }
+  iterator end() { return m_enum2string.end(); }
 
-  Enum operator[](const std::string& str) const
-  {
-    typename std::map<std::string, Enum>::const_iterator i = m_string2enum.find(str);
-    if (i == m_string2enum.end())
-    {
+  Enum operator[](const std::string& str) const {
+    typename std::map<std::string, Enum>::const_iterator i =
+        m_string2enum.find(str);
+    if (i == m_string2enum.end()) {
       std::ostringstream out;
-      out << "couldn't convert '" << str << "' to enum, not a member of " << m_name << std::endl;
+      out << "couldn't convert '" << str << "' to enum, not a member of "
+          << m_name << std::endl;
       throw std::runtime_error(out.str());
-    }
-    else
-    {
+    } else {
       return i->second;
     }
   }
 
   std::string operator[](Enum v) const {
-    typename std::map<Enum, std::string>::const_iterator i = m_enum2string.find(v);
-    if (i == m_enum2string.end())
-    {
+    typename std::map<Enum, std::string>::const_iterator i =
+        m_enum2string.find(v);
+    if (i == m_enum2string.end()) {
       std::ostringstream out;
-      out << "couldn't convert '" << v << "' to string, not a member of " << m_name << std::endl;
+      out << "couldn't convert '" << v << "' to string, not a member of "
+          << m_name << std::endl;
       throw std::runtime_error(out.str());
-    }
-    else
-    {
+    } else {
       return i->second;
     }
   }
 
-  typename std::vector<Enum> get_values() const
-  {
+  typename std::vector<Enum> get_values() const {
     std::vector<Enum> lst;
-    for(const_iterator i = begin(); i != end(); ++i)
-    {
+    for (const_iterator i = begin(); i != end(); ++i) {
       lst.push_back(i->first);
     }
     return lst;
   }
 
-  std::vector<std::string> get_names() const
-  {
+  std::vector<std::string> get_names() const {
     typename std::vector<std::string> lst;
-    for(const_iterator i = begin(); i != end(); ++i)
-    {
+    for (const_iterator i = begin(); i != end(); ++i) {
       lst.push_back(i->second);
     }
     return lst;

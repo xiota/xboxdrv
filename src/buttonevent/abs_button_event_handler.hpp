@@ -20,15 +20,13 @@
 #define HEADER_XBOXDRV_BUTTONEVENT_ABS_BUTTON_EVENT_HANDLER_HPP
 
 #include "button_event.hpp"
-
 #include "ui_event_emitter.hpp"
 
-class AbsButtonEventHandler : public ButtonEventHandler
-{
-public:
+class AbsButtonEventHandler : public ButtonEventHandler {
+ public:
   static AbsButtonEventHandler* from_string(const std::string& str);
 
-public:
+ public:
   AbsButtonEventHandler(int code);
 
   void init(UInput& uinput, int slot, bool extra_devices);
@@ -37,7 +35,7 @@ public:
 
   std::string str() const;
 
-private:
+ private:
   UIEvent m_code;
   int m_value;
 

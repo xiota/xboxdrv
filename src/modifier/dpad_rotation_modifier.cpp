@@ -18,100 +18,73 @@
 
 #include "modifier/dpad_rotation_modifier.hpp"
 
-#include <stdexcept>
 #include <sstream>
+#include <stdexcept>
 
 #include "helper.hpp"
-
-DpadRotationModifier*
-DpadRotationModifier::from_string(const std::vector<std::string>& args)
-{
-  if (args.size() != 1)
-  {
-    throw std::runtime_error("DpadRotationModifier expects exactly one argument");
-  }
-  else
-  {
+
+DpadRotationModifier* DpadRotationModifier::from_string(
+    const std::vector<std::string>& args) {
+  if (args.size() != 1) {
+    throw std::runtime_error(
+        "DpadRotationModifier expects exactly one argument");
+  } else {
     return DpadRotationModifier::from_string(args[0]);
   }
 }
 
-DpadRotationModifier*
-DpadRotationModifier::from_string(const std::string& value)
-{
+DpadRotationModifier* DpadRotationModifier::from_string(
+    const std::string& value) {
   int degree = str2int(value);
   degree /= 45;
   degree %= 8;
-  if (degree < 0)
-    degree += 8;
+  if (degree < 0) degree += 8;
 
   return new DpadRotationModifier(degree);
 }
-
-DpadRotationModifier::DpadRotationModifier(int dpad_rotation) :
-  m_dpad_rotation(dpad_rotation)
-{
-}
 
-void
-DpadRotationModifier::update(int msec_delta, XboxGenericMsg& msg)
-{
-  int up    = get_button(msg, XBOX_DPAD_UP);
-  int down  = get_button(msg, XBOX_DPAD_DOWN);
-  int left  = get_button(msg, XBOX_DPAD_LEFT);
+DpadRotationModifier::DpadRotationModifier(int dpad_rotation)
+    : m_dpad_rotation(dpad_rotation) {}
+
+void DpadRotationModifier::update(int msec_delta, XboxGenericMsg& msg) {
+  int up = get_button(msg, XBOX_DPAD_UP);
+  int down = get_button(msg, XBOX_DPAD_DOWN);
+  int left = get_button(msg, XBOX_DPAD_LEFT);
   int right = get_button(msg, XBOX_DPAD_RIGHT);
 
   // -1: not pressed, 0: up, 1: up/right, ...
   int direction = -1;
-  if (up && !down && !left && !right)
-  {
+  if (up && !down && !left && !right) {
     direction = 0;
-  }
-  else if (up && !down && !left && right)
-  {
+  } else if (up && !down && !left && right) {
     direction = 1;
-  }
-  else if (!up && !down && !left && right)
-  {
+  } else if (!up && !down && !left && right) {
     direction = 2;
-  }
-  else if (!up && down && !left && right)
-  {
+  } else if (!up && down && !left && right) {
     direction = 3;
-  }
-  else if (!up && down && !left && !right)
-  {
+  } else if (!up && down && !left && !right) {
     direction = 4;
-  }
-  else if (!up && down && left && !right)
-  {
+  } else if (!up && down && left && !right) {
     direction = 5;
-  }
-  else if (!up && !down && left && !right)
-  {
+  } else if (!up && !down && left && !right) {
     direction = 6;
-  }
-  else if (up && !down && left && !right)
-  {
+  } else if (up && !down && left && !right) {
     direction = 7;
   }
 
-  if (direction != -1)
-  {
+  if (direction != -1) {
     direction += m_dpad_rotation;
     direction %= 8;
-    if (direction < 0)
-      direction += 8;
+    if (direction < 0) direction += 8;
 
     // set everything to zero
-    set_button(msg, XBOX_DPAD_UP,    0);
-    set_button(msg, XBOX_DPAD_DOWN,  0);
-    set_button(msg, XBOX_DPAD_LEFT,  0);
+    set_button(msg, XBOX_DPAD_UP, 0);
+    set_button(msg, XBOX_DPAD_DOWN, 0);
+    set_button(msg, XBOX_DPAD_LEFT, 0);
     set_button(msg, XBOX_DPAD_RIGHT, 0);
 
     // apply the given direction
-    switch(direction)
-    {
+    switch (direction) {
       case 0:
         set_button(msg, XBOX_DPAD_UP, 1);
         break;
@@ -151,9 +124,7 @@ DpadRotationModifier::update(int msec_delta, XboxGenericMsg& msg)
   }
 }
 
-std::string
-DpadRotationModifier::str() const
-{
+std::string DpadRotationModifier::str() const {
   std::ostringstream out;
   out << "dpad-rotation:" << m_dpad_rotation;
   return out.str();

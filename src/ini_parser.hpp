@@ -23,9 +23,8 @@
 
 class INIBuilder;
 
-class INIParser
-{
-private:
+class INIParser {
+ private:
   std::istream& m_in;
   INIBuilder& m_builder;
   std::string m_context;
@@ -33,14 +32,14 @@ private:
   int m_column;
   int m_current_char;
 
-public:
+ public:
   INIParser(std::istream& in, INIBuilder& builder, const std::string& context);
 
   void run();
 
-private:
+ private:
   void error(const std::string& message);
-  int  peek();
+  int peek();
   void next();
   bool accept(char c);
   void expect(char c);
@@ -53,9 +52,9 @@ private:
   void eat_rest_of_line();
   std::string get_section();
   void whitespace();
-  int  getchar();
+  int getchar();
 
-private:
+ private:
   INIParser(const INIParser&);
   INIParser& operator=(const INIParser&);
 };

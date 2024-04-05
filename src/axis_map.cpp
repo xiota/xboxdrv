@@ -18,72 +18,46 @@
 
 #include "axis_map.hpp"
 
-AxisMap::AxisMap() :
-  m_axis_map()
-{
-  clear();
-}
+AxisMap::AxisMap() : m_axis_map() { clear(); }
 
-void
-AxisMap::bind(XboxAxis code, AxisEventPtr event)
-{
+void AxisMap::bind(XboxAxis code, AxisEventPtr event) {
   m_axis_map[XBOX_BTN_UNKNOWN][code] = event;
 }
 
-void
-AxisMap::bind(XboxButton shift_code, XboxAxis code, AxisEventPtr event)
-{
+void AxisMap::bind(XboxButton shift_code, XboxAxis code, AxisEventPtr event) {
   m_axis_map[shift_code][code] = event;
 }
 
-AxisEventPtr
-AxisMap::lookup(XboxAxis code) const
-{
+AxisEventPtr AxisMap::lookup(XboxAxis code) const {
   return m_axis_map[XBOX_BTN_UNKNOWN][code];
 }
 
-AxisEventPtr
-AxisMap::lookup(XboxButton shift_code, XboxAxis code) const
-{
+AxisEventPtr AxisMap::lookup(XboxButton shift_code, XboxAxis code) const {
   return m_axis_map[shift_code][code];
 }
 
-void
-AxisMap::clear()
-{
-  for(int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code)
-  {
-    for(int code = 0; code < XBOX_AXIS_MAX; ++code)
-    {
+void AxisMap::clear() {
+  for (int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code) {
+    for (int code = 0; code < XBOX_AXIS_MAX; ++code) {
       m_axis_map[shift_code][code] = AxisEvent::invalid();
     }
   }
 }
 
-void
-AxisMap::init(UInput& uinput, int slot, bool extra_devices) const
-{
-  for(int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code)
-  {
-    for(int code = 0; code < XBOX_AXIS_MAX; ++code)
-    {
-      if (m_axis_map[shift_code][code])
-      {
+void AxisMap::init(UInput& uinput, int slot, bool extra_devices) const {
+  for (int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code) {
+    for (int code = 0; code < XBOX_AXIS_MAX; ++code) {
+      if (m_axis_map[shift_code][code]) {
         m_axis_map[shift_code][code]->init(uinput, slot, extra_devices);
       }
     }
   }
 }
 
-void
-AxisMap::update(UInput& uinput, int msec_delta)
-{
-  for(int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code)
-  {
-    for(int code = 0; code < XBOX_AXIS_MAX; ++code)
-    {
-      if (m_axis_map[shift_code][code])
-      {
+void AxisMap::update(UInput& uinput, int msec_delta) {
+  for (int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code) {
+    for (int code = 0; code < XBOX_AXIS_MAX; ++code) {
+      if (m_axis_map[shift_code][code]) {
         m_axis_map[shift_code][code]->update(uinput, msec_delta);
       }
     }

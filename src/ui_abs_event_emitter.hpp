@@ -23,18 +23,17 @@
 
 class UIAbsEventCollector;
 
-class UIAbsEventEmitter : public UIEventEmitter
-{
-private:
+class UIAbsEventEmitter : public UIEventEmitter {
+ private:
   UIAbsEventCollector& m_collector;
   int m_value;
 
-public:
+ public:
   UIAbsEventEmitter(UIAbsEventCollector& collector);
 
   void send(int value);
 
-private:
+ private:
   UIAbsEventEmitter(const UIAbsEventEmitter&);
   UIAbsEventEmitter& operator=(const UIAbsEventEmitter&);
 };

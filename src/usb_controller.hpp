@@ -20,15 +20,15 @@
 #define HEADER_XBOXDRV_USB_CONTROLLER_HPP
 
 #include <libusb.h>
-#include <string>
+
 #include <memory>
 #include <set>
+#include <string>
 
 #include "controller.hpp"
 
-class USBController : public Controller
-{
-protected:
+class USBController : public Controller {
+ protected:
   libusb_device* m_dev;
   libusb_device_handle* m_handle;
 
@@ -39,7 +39,7 @@ protected:
   std::string m_usbid;
   std::string m_name;
 
-public:
+ public:
   USBController(libusb_device* dev);
   virtual ~USBController();
 
@@ -49,37 +49,34 @@ public:
 
   virtual bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
 
-  int  usb_find_ep(int direction, uint8_t if_class, uint8_t if_subclass, uint8_t if_protocol);
+  int usb_find_ep(int direction, uint8_t if_class, uint8_t if_subclass,
+                  uint8_t if_protocol);
 
   void usb_claim_interface(int ifnum, bool try_detach);
 
   void usb_submit_read(int endpoint, int len);
 
   void usb_write(int endpoint, uint8_t* data, int len);
-  void usb_control(uint8_t bmRequestType, uint8_t  bRequest,
-                   uint16_t wValue, uint16_t wIndex,
-                   uint8_t* data, uint16_t len);
+  void usb_control(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue,
+                   uint16_t wIndex, uint8_t* data, uint16_t len);
 
-private:
-  void on_read_data(libusb_transfer *transfer);
-  static void on_read_data_wrap(libusb_transfer *transfer)
-  {
+ private:
+  void on_read_data(libusb_transfer* transfer);
+  static void on_read_data_wrap(libusb_transfer* transfer) {
     static_cast<USBController*>(transfer->user_data)->on_read_data(transfer);
   }
 
-  void on_write_data(libusb_transfer *transfer);
-  static void on_write_data_wrap(libusb_transfer *transfer)
-  {
+  void on_write_data(libusb_transfer* transfer);
+  static void on_write_data_wrap(libusb_transfer* transfer) {
     static_cast<USBController*>(transfer->user_data)->on_write_data(transfer);
   }
 
   void on_control(libusb_transfer* transfer);
-  static void on_control_wrap(libusb_transfer* transfer)
-  {
+  static void on_control_wrap(libusb_transfer* transfer) {
     static_cast<USBController*>(transfer->user_data)->on_control(transfer);
   }
 
-private:
+ private:
   USBController(const USBController&);
   USBController& operator=(const USBController&);
 };

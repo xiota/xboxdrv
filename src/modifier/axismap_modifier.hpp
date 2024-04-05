@@ -21,27 +21,25 @@
 
 #include "axis_filter.hpp"
 #include "modifier.hpp"
-
-struct AxisMapping
-{
-  static AxisMapping from_string(const std::string& lhs, const std::string& rhs);
+
+struct AxisMapping {
+  static AxisMapping from_string(const std::string& lhs,
+                                 const std::string& rhs);
 
   XboxAxis lhs;
   XboxAxis rhs;
-  bool     invert;
+  bool invert;
   std::vector<AxisFilterPtr> filters;
 
-  AxisMapping() :
-    lhs(XBOX_AXIS_UNKNOWN),
-    rhs(XBOX_AXIS_UNKNOWN),
-    invert(false),
-    filters()
-  {}
+  AxisMapping()
+      : lhs(XBOX_AXIS_UNKNOWN),
+        rhs(XBOX_AXIS_UNKNOWN),
+        invert(false),
+        filters() {}
 };
-
-class AxismapModifier : public Modifier
-{
-public:
+
+class AxismapModifier : public Modifier {
+ public:
   AxismapModifier();
 
   void update(int msec_delta, XboxGenericMsg& msg);
@@ -53,10 +51,10 @@ public:
 
   bool empty() const { return m_axismap.empty(); }
 
-public:
+ public:
   std::vector<AxisMapping> m_axismap;
 };
-
+
 #endif
 
 /* EOF */

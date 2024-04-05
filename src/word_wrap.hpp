@@ -21,12 +21,11 @@
 
 #include <string>
 
-class WordWrap
-{
-private:
+class WordWrap {
+ private:
   const int m_terminal_width;
 
-public:
+ public:
   WordWrap(int terminal_width);
 
   void para(const std::string& str) const;
@@ -34,7 +33,7 @@ public:
   void println(const std::string& str);
   void newline();
 
-private:
+ private:
   WordWrap(const WordWrap&);
   WordWrap& operator=(const WordWrap&);
 };

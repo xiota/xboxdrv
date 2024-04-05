@@ -22,12 +22,11 @@
 #include "axis_event.hpp"
 #include "xboxmsg.hpp"
 
-class AxisMap
-{
-private:
+class AxisMap {
+ private:
   AxisEventPtr m_axis_map[XBOX_BTN_MAX][XBOX_AXIS_MAX];
 
-public:
+ public:
   AxisMap();
 
   void bind(XboxAxis code, AxisEventPtr event);

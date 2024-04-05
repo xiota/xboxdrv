@@ -20,29 +20,20 @@
 
 #include "uinput.hpp"
 
-UIAbsEventCollector::UIAbsEventCollector(UInput& uinput, uint32_t device_id, int type, int code) :
-  UIEventCollector(uinput, device_id, type, code),
-  m_emitters()
-{
-}
+UIAbsEventCollector::UIAbsEventCollector(UInput& uinput, uint32_t device_id,
+                                         int type, int code)
+    : UIEventCollector(uinput, device_id, type, code), m_emitters() {}
 
-UIEventEmitterPtr
-UIAbsEventCollector::create_emitter()
-{
+UIEventEmitterPtr UIAbsEventCollector::create_emitter() {
   UIAbsEventEmitterPtr emitter(new UIAbsEventEmitter(*this));
   m_emitters.push_back(emitter);
   return m_emitters.back();
 }
 
-void
-UIAbsEventCollector::send(int value)
-{
+void UIAbsEventCollector::send(int value) {
   m_uinput.send(get_device_id(), get_type(), get_code(), value);
 }
 
-void
-UIAbsEventCollector::sync()
-{
-}
+void UIAbsEventCollector::sync() {}
 
 /* EOF */

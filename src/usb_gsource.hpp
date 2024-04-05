@@ -20,31 +20,30 @@
 #define HEADER_XBOXDRV_USB_GSOURCE_HPP
 
 #include <glib.h>
+
 #include <list>
 
 class USBGSource;
 
-struct GUSBSource
-{
+struct GUSBSource {
   GSource source;
   USBGSource* usb_source;
 };
 
-class USBGSource
-{
-private:
+class USBGSource {
+ private:
   GSourceFuncs m_source_funcs;
   GUSBSource* m_source;
   gint m_source_id;
   std::list<GPollFD*> m_pollfds;
 
-public:
+ public:
   USBGSource();
   ~USBGSource();
 
   void attach(GMainContext* context);
 
-private:
+ private:
   gboolean on_source();
 
   // libusb callbacks
@@ -59,16 +58,17 @@ private:
     static_cast<USBGSource*>(userdata)->on_usb_pollfd_added(fd, events);
   }
 
-  static void on_usb_pollfd_removed_wrap(int fd,  void* userdata) {
+  static void on_usb_pollfd_removed_wrap(int fd, void* userdata) {
     static_cast<USBGSource*>(userdata)->on_usb_pollfd_removed(fd);
   }
 
   // glib callbacks
   static gboolean on_source_prepare(GSource* source, gint* timeout_);
   static gboolean on_source_check(GSource* source);
-  static gboolean on_source_dispatch(GSource* source, GSourceFunc callback, gpointer userdata);
+  static gboolean on_source_dispatch(GSource* source, GSourceFunc callback,
+                                     gpointer userdata);
 
-private:
+ private:
   USBGSource(const USBGSource&);
   USBGSource& operator=(const USBGSource&);
 };

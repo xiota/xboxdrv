@@ -21,9 +21,8 @@
 
 #include "axis_filter.hpp"
 
-class InvertAxisFilter : public AxisFilter
-{
-public:
+class InvertAxisFilter : public AxisFilter {
+ public:
   InvertAxisFilter() {}
   ~InvertAxisFilter() {}
 

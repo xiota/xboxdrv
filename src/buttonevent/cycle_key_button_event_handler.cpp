@@ -22,68 +22,56 @@
 #include <stdexcept>
 
 #include "helper.hpp"
-#include "ui_event_sequence.hpp"
 #include "raise_exception.hpp"
+#include "ui_event_sequence.hpp"
 
-std::map<std::string, CycleKeySequencePtr> CycleKeyButtonEventHandler::s_lookup_table;
+std::map<std::string, CycleKeySequencePtr>
+    CycleKeyButtonEventHandler::s_lookup_table;
 
 namespace {
 
-CycleKeyButtonEventHandler::Direction
-direction_from_string(const std::string& value)
-{
-  if (value == "forward")
-  {
+CycleKeyButtonEventHandler::Direction direction_from_string(
+    const std::string& value) {
+  if (value == "forward") {
     return CycleKeyButtonEventHandler::kForward;
-  }
-  else if (value == "backward")
-  {
+  } else if (value == "backward") {
     return CycleKeyButtonEventHandler::kBackward;
-  }
-  else if (value == "none")
-  {
+  } else if (value == "none") {
     return CycleKeyButtonEventHandler::kNone;
-  }
-  else
-  {
-    raise_exception(std::runtime_error, "allowed values are 'forward', 'backward' and 'none'");
+  } else {
+    raise_exception(std::runtime_error,
+                    "allowed values are 'forward', 'backward' and 'none'");
   }
 }
 
-} // namespace
+}  // namespace
 
-CycleKeyButtonEventHandler*
-CycleKeyButtonEventHandler::from_string(const std::string& value, bool wrap_around)
-{
+CycleKeyButtonEventHandler* CycleKeyButtonEventHandler::from_string(
+    const std::string& value, bool wrap_around) {
   return from_string_named(":" + value, wrap_around);
 }
 
-CycleKeyButtonEventHandler*
-CycleKeyButtonEventHandler::from_string_named(const std::string& value, bool wrap_around)
-{
+CycleKeyButtonEventHandler* CycleKeyButtonEventHandler::from_string_named(
+    const std::string& value, bool wrap_around) {
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(value, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  tokenizer tokens(
+      value, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
   std::vector<std::string> args(tokens.begin(), tokens.end());
 
-  if (args.size() < 2)
-  {
+  if (args.size() < 2) {
     raise_exception(std::runtime_error, "need at least two arguments");
-  }
-  else
-  {
+  } else {
     std::string name = args[0];
-    CycleKeySequencePtr sequence = CycleKeySequence::from_range(args.begin()+1, args.end(), wrap_around);
+    CycleKeySequencePtr sequence =
+        CycleKeySequence::from_range(args.begin() + 1, args.end(), wrap_around);
 
     // if name is empty, don't put it in the lookup table
-    if (!name.empty())
-    {
-      if (lookup(name) != 0)
-      {
+    if (!name.empty()) {
+      if (lookup(name) != 0) {
         raise_exception(std::runtime_error, "duplicate name entry");
-      }
-      else
-      {
-        s_lookup_table.insert(std::pair<std::string, CycleKeySequencePtr>(name, sequence));
+      } else {
+        s_lookup_table.insert(
+            std::pair<std::string, CycleKeySequencePtr>(name, sequence));
       }
     }
 
@@ -91,78 +79,58 @@ CycleKeyButtonEventHandler::from_string_named(const std::string& value, bool wra
   }
 }
 
-CycleKeyButtonEventHandler*
-CycleKeyButtonEventHandler::from_string_ref(const std::string& value)
-{
+CycleKeyButtonEventHandler* CycleKeyButtonEventHandler::from_string_ref(
+    const std::string& value) {
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(value, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  tokenizer tokens(
+      value, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
   std::vector<std::string> args(tokens.begin(), tokens.end());
 
-  if (args.size() > 0)
-  {
+  if (args.size() > 0) {
     std::string name = args[0];
-    Direction direction = (args.size() > 1) ? direction_from_string(args[1]) : kBackward;
-    bool press    = (args.size() > 2) ? str2bool(args[2]) : true;
+    Direction direction =
+        (args.size() > 1) ? direction_from_string(args[1]) : kBackward;
+    bool press = (args.size() > 2) ? str2bool(args[2]) : true;
 
-    CycleKeySequencePtr cycle_sequence = CycleKeyButtonEventHandler::lookup(name);
-    if (!cycle_sequence)
-    {
+    CycleKeySequencePtr cycle_sequence =
+        CycleKeyButtonEventHandler::lookup(name);
+    if (!cycle_sequence) {
       raise_exception(std::runtime_error, "unknown cycle sequence: " << name);
-    }
-    else
-    {
+    } else {
       return new CycleKeyButtonEventHandler(cycle_sequence, direction, press);
     }
-  }
-  else
-  {
+  } else {
     raise_exception(std::runtime_error, "need at least one arguments");
   }
 }
 
-CycleKeySequencePtr
-CycleKeyButtonEventHandler::lookup(const std::string& name)
-{
-  std::map<std::string, CycleKeySequencePtr>::iterator it = s_lookup_table.find(name);
-  if (it == s_lookup_table.end())
-  {
+CycleKeySequencePtr CycleKeyButtonEventHandler::lookup(
+    const std::string& name) {
+  std::map<std::string, CycleKeySequencePtr>::iterator it =
+      s_lookup_table.find(name);
+  if (it == s_lookup_table.end()) {
     return CycleKeySequencePtr();
-  }
-  else
-  {
+  } else {
     return it->second;
   }
 }
-
-CycleKeyButtonEventHandler::CycleKeyButtonEventHandler(CycleKeySequencePtr sequence,
-                                                       Direction direction,
-                                                       bool send_press) :
-  m_sequence(sequence),
-  m_direction(direction),
-  m_send_press(send_press)
-{
-}
 
-void
-CycleKeyButtonEventHandler::init(UInput& uinput, int slot, bool extra_devices)
-{
+CycleKeyButtonEventHandler::CycleKeyButtonEventHandler(
+    CycleKeySequencePtr sequence, Direction direction, bool send_press)
+    : m_sequence(sequence), m_direction(direction), m_send_press(send_press) {}
+
+void CycleKeyButtonEventHandler::init(UInput& uinput, int slot,
+                                      bool extra_devices) {
   // CycleKeySequence will make sure that init() is only called once
   m_sequence->init(uinput, slot, extra_devices);
 }
 
-void
-CycleKeyButtonEventHandler::send(UInput& uinput, bool value)
-{
-  if (value)
-  {
-    if (m_send_press && m_sequence->has_current_key())
-    {
+void CycleKeyButtonEventHandler::send(UInput& uinput, bool value) {
+  if (value) {
+    if (m_send_press && m_sequence->has_current_key()) {
       m_sequence->send(uinput, value);
-    }
-    else
-    {
-      switch(m_direction)
-      {
+    } else {
+      switch (m_direction) {
         case kBackward:
           m_sequence->prev_key();
           break;
@@ -175,30 +143,19 @@ CycleKeyButtonEventHandler::send(UInput& uinput, bool value)
           break;
       }
 
-      if (m_send_press)
-      {
+      if (m_send_press) {
         m_sequence->send(uinput, value);
       }
     }
-  }
-  else
-  {
-    if (m_send_press)
-    {
+  } else {
+    if (m_send_press) {
       m_sequence->send(uinput, value);
     }
   }
 }
 
-void
-CycleKeyButtonEventHandler::update(UInput& uinput, int msec_delta)
-{
-}
+void CycleKeyButtonEventHandler::update(UInput& uinput, int msec_delta) {}
 
-std::string
-CycleKeyButtonEventHandler::str() const
-{
-  return "cycle-key";
-}
+std::string CycleKeyButtonEventHandler::str() const { return "cycle-key"; }
 
 /* EOF */

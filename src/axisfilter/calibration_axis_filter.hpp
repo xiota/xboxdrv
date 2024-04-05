@@ -21,18 +21,17 @@
 
 #include "axis_filter.hpp"
 
-class CalibrationAxisFilter : public AxisFilter
-{
-public:
+class CalibrationAxisFilter : public AxisFilter {
+ public:
   static CalibrationAxisFilter* from_string(const std::string& str);
 
-public:
+ public:
   CalibrationAxisFilter(int min, int center, int max);
 
   int filter(int value, int min, int max);
   std::string str() const;
 
-private:
+ private:
   int m_min;
   int m_center;
   int m_max;

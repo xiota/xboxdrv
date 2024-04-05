@@ -22,22 +22,21 @@
 #include "button_filter.hpp"
 
 /** */
-class ClickButtonFilter : public ButtonFilter
-{
-public:
+class ClickButtonFilter : public ButtonFilter {
+ public:
   enum Mode { kPress, kRelease, kBoth };
 
-public:
+ public:
   ClickButtonFilter(Mode mode);
 
   bool filter(bool value);
   std::string str() const;
 
-private:
+ private:
   Mode m_mode;
   bool m_last_value;
 
-private:
+ private:
   ClickButtonFilter(const ClickButtonFilter&);
   ClickButtonFilter& operator=(const ClickButtonFilter&);
 };

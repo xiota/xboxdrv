@@ -22,45 +22,37 @@
 #include <sstream>
 
 #include "helper.hpp"
-
-RelativeAxisFilter*
-RelativeAxisFilter::from_string(const std::string& str)
-{
+
+RelativeAxisFilter* RelativeAxisFilter::from_string(const std::string& str) {
   int speed = 20000;
 
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  tokenizer tokens(
+      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
   int idx = 0;
-  for(tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx)
-  {
-    switch(idx)
-    {
-      case 0: speed = str2int(*t); break;
-      default: throw std::runtime_error("to many arguments"); break;
+  for (tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx) {
+    switch (idx) {
+      case 0:
+        speed = str2int(*t);
+        break;
+      default:
+        throw std::runtime_error("to many arguments");
+        break;
     }
   }
 
   return new RelativeAxisFilter(speed);
 }
-
-RelativeAxisFilter::RelativeAxisFilter(int speed) :
-  m_speed(speed),
-  m_float_speed(0.0f),
-  m_value(0),
-  m_state(0)
-{
-}
 
-void
-RelativeAxisFilter::update(int msec_delta)
-{
+RelativeAxisFilter::RelativeAxisFilter(int speed)
+    : m_speed(speed), m_float_speed(0.0f), m_value(0), m_state(0) {}
+
+void RelativeAxisFilter::update(int msec_delta) {
   m_state += m_float_speed * m_value * msec_delta / 1000.0f;
   m_state = Math::clamp(-1.0f, m_state, 1.0f);
 }
 
-int
-RelativeAxisFilter::filter(int value, int min, int max)
-{
+int RelativeAxisFilter::filter(int value, int min, int max) {
   m_value = to_float(value, min, max);
 
   m_float_speed = to_float_no_range_check(m_speed, min, max);
@@ -68,12 +60,10 @@ RelativeAxisFilter::filter(int value, int min, int max)
   return from_float(m_state, min, max);
 }
 
-std::string
-RelativeAxisFilter::str() const
-{
+std::string RelativeAxisFilter::str() const {
   std::ostringstream out;
   out << "relativeaxis:" << m_speed;
   return out.str();
 }
-
+
 /* EOF */

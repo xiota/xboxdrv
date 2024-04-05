@@ -23,19 +23,19 @@
 
 #include "modifier.hpp"
 
-class FourWayRestrictorModifier : public Modifier
-{
-public:
-  static FourWayRestrictorModifier* from_string(const std::vector<std::string>& args);
+class FourWayRestrictorModifier : public Modifier {
+ public:
+  static FourWayRestrictorModifier* from_string(
+      const std::vector<std::string>& args);
 
-public:
+ public:
   FourWayRestrictorModifier(XboxAxis xaxis, XboxAxis yaxis);
 
   void update(int msec_delta, XboxGenericMsg& msg);
 
   std::string str() const;
 
-private:
+ private:
   const XboxAxis m_xaxis;
   const XboxAxis m_yaxis;
 };

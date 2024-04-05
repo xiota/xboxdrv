@@ -20,15 +20,13 @@
 #define HEADER_XBOXDRV_AXISEVENT_KEY_AXIS_EVENT_HANDLER_HPP
 
 #include "axis_event.hpp"
-
 #include "ui_event_sequence.hpp"
 
-class KeyAxisEventHandler : public AxisEventHandler
-{
-public:
+class KeyAxisEventHandler : public AxisEventHandler {
+ public:
   static KeyAxisEventHandler* from_string(const std::string& str);
 
-public:
+ public:
   KeyAxisEventHandler();
 
   void init(UInput& uinput, int slot, bool extra_devices);
@@ -37,12 +35,12 @@ public:
 
   std::string str() const;
 
-private:
+ private:
   void send_up(UInput& uinput, int value);
   void send_down(UInput& uinput, int value);
-  int  get_zone(int value) const;
+  int get_zone(int value) const;
 
-private:
+ private:
   int m_old_value;
 
   // Array is terminated by -1

@@ -19,23 +19,22 @@
 #ifndef HEADER_XBOXDRV_UI_ABS_EVENT_COLLECTOR_CPP
 #define HEADER_XBOXDRV_UI_ABS_EVENT_COLLECTOR_CPP
 
-#include "ui_event_collector.hpp"
 #include "ui_abs_event_emitter.hpp"
+#include "ui_event_collector.hpp"
 
-class UIAbsEventCollector : public UIEventCollector
-{
-private:
+class UIAbsEventCollector : public UIEventCollector {
+ private:
   typedef std::vector<UIAbsEventEmitterPtr> Emitters;
   Emitters m_emitters;
 
-public:
+ public:
   UIAbsEventCollector(UInput& uinput, uint32_t device_id, int type, int code);
 
   UIEventEmitterPtr create_emitter();
   void send(int value);
   void sync();
 
-private:
+ private:
   UIAbsEventCollector(const UIAbsEventCollector&);
   UIAbsEventCollector& operator=(const UIAbsEventCollector&);
 };

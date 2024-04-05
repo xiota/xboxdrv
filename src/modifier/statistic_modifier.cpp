@@ -23,49 +23,36 @@
 
 #include "../xboxmsg.hpp"
 
-StatisticModifier*
-StatisticModifier::from_string(const std::vector<std::string>& args)
-{
+StatisticModifier* StatisticModifier::from_string(
+    const std::vector<std::string>& args) {
   return new StatisticModifier;
 }
-
-StatisticModifier::StatisticModifier() :
-  m_button_state(XBOX_BTN_MAX),
-  m_press_count(XBOX_BTN_MAX)
-{
-}
 
-StatisticModifier::~StatisticModifier()
-{
-  print_stats();
-}
+StatisticModifier::StatisticModifier()
+    : m_button_state(XBOX_BTN_MAX), m_press_count(XBOX_BTN_MAX) {}
 
-void
-StatisticModifier::print_stats()
-{
+StatisticModifier::~StatisticModifier() { print_stats(); }
+
+void StatisticModifier::print_stats() {
   std::cout << "Button Press Statistics\n"
             << "=======================\n\n";
 
   std::cout << boost::format("%12s | %5d") % "Name" % "Count" << std::endl;
   std::cout << "-------------+---------" << std::endl;
-  for(int btn = 1; btn < XBOX_BTN_MAX; ++btn)
-  {
-    std::cout << boost::format("%12s : %5d")
-      % btn2string(static_cast<XboxButton>(btn)) % m_press_count[btn]
+  for (int btn = 1; btn < XBOX_BTN_MAX; ++btn) {
+    std::cout << boost::format("%12s : %5d") %
+                     btn2string(static_cast<XboxButton>(btn)) %
+                     m_press_count[btn]
               << std::endl;
   }
 }
 
-void
-StatisticModifier::update(int msec_delta, XboxGenericMsg& msg)
-{
-  for(int btn = 1; btn < static_cast<int>(XBOX_BTN_MAX); ++btn)
-  {
+void StatisticModifier::update(int msec_delta, XboxGenericMsg& msg) {
+  for (int btn = 1; btn < static_cast<int>(XBOX_BTN_MAX); ++btn) {
     bool state = get_button(msg, static_cast<XboxButton>(btn));
 
     // state changed and button is pressed
-    if (state != m_button_state[btn] && state)
-    {
+    if (state != m_button_state[btn] && state) {
       m_press_count[btn] += 1;
     }
 
@@ -73,10 +60,6 @@ StatisticModifier::update(int msec_delta, XboxGenericMsg& msg)
   }
 }
 
-std::string
-StatisticModifier::str() const
-{
-  return "stat";
-}
+std::string StatisticModifier::str() const { return "stat"; }
 
 /* EOF */

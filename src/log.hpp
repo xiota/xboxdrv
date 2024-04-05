@@ -19,16 +19,15 @@
 #ifndef HEADER_XBOXDRV_LOG_HPP
 #define HEADER_XBOXDRV_LOG_HPP
 
-#include <string>
 #include <sstream>
+#include <string>
 
 /** Takes __PRETTY_FUNCTION__ and tries to shorten it to the form:
     Classname::function() */
 std::string log_pretty_print(const std::string& str);
 
-class Logger
-{
-public:
+class Logger {
+ public:
   enum LogLevel {
     /** things that shouldn't happen (i.e. a catched exceptions) */
     kError,
@@ -48,73 +47,74 @@ public:
     kTemp
   };
 
-private:
+ private:
   LogLevel m_log_level;
 
-public:
+ public:
   Logger();
   void incr_log_level(LogLevel level);
   void set_log_level(LogLevel level);
   LogLevel get_log_level() const;
   void append(LogLevel level, const std::string& str);
   void append_unchecked(LogLevel level, const std::string& str);
-
 };
 
-#define log_debug(text) do { \
-  if (g_logger.get_log_level() >= Logger::kDebug) \
-  { \
-    std::ostringstream x6ac1c382;             \
-    x6ac1c382 << log_pretty_print(__PRETTY_FUNCTION__) << ": " << text; \
-    g_logger.append_unchecked(Logger::kDebug, x6ac1c382.str()); \
-  } \
-} while(false)
+#define log_debug(text)                                                   \
+  do {                                                                    \
+    if (g_logger.get_log_level() >= Logger::kDebug) {                     \
+      std::ostringstream x6ac1c382;                                       \
+      x6ac1c382 << log_pretty_print(__PRETTY_FUNCTION__) << ": " << text; \
+      g_logger.append_unchecked(Logger::kDebug, x6ac1c382.str());         \
+    }                                                                     \
+  } while (false)
 
-#define log_info(text) do { \
-  if (g_logger.get_log_level() >= Logger::kInfo) \
-  { \
-    std::ostringstream x6ac1c382;             \
-    x6ac1c382 << log_pretty_print(__PRETTY_FUNCTION__) << ": " << text; \
-    g_logger.append_unchecked(Logger::kInfo, x6ac1c382.str()); \
-  } \
-} while(false)
+#define log_info(text)                                                    \
+  do {                                                                    \
+    if (g_logger.get_log_level() >= Logger::kInfo) {                      \
+      std::ostringstream x6ac1c382;                                       \
+      x6ac1c382 << log_pretty_print(__PRETTY_FUNCTION__) << ": " << text; \
+      g_logger.append_unchecked(Logger::kInfo, x6ac1c382.str());          \
+    }                                                                     \
+  } while (false)
 
-#define log_warn(text) do { \
-  if (g_logger.get_log_level() >= Logger::kWarning) \
-  { \
-    std::ostringstream x6ac1c382;             \
-    x6ac1c382 << log_pretty_print(__PRETTY_FUNCTION__) << ": " << text; \
-    g_logger.append_unchecked(Logger::kWarning, x6ac1c382.str()); \
-  } \
-} while(false)
+#define log_warn(text)                                                    \
+  do {                                                                    \
+    if (g_logger.get_log_level() >= Logger::kWarning) {                   \
+      std::ostringstream x6ac1c382;                                       \
+      x6ac1c382 << log_pretty_print(__PRETTY_FUNCTION__) << ": " << text; \
+      g_logger.append_unchecked(Logger::kWarning, x6ac1c382.str());       \
+    }                                                                     \
+  } while (false)
 
-#define log_error(text) do { \
-  if (g_logger.get_log_level() >= Logger::kError) \
-  { \
-    std::ostringstream x6ac1c382;             \
-    x6ac1c382 << log_pretty_print(__PRETTY_FUNCTION__) << ": " << text; \
-    g_logger.append_unchecked(Logger::kError, x6ac1c382.str()); \
-  } \
-} while(false)
+#define log_error(text)                                                   \
+  do {                                                                    \
+    if (g_logger.get_log_level() >= Logger::kError) {                     \
+      std::ostringstream x6ac1c382;                                       \
+      x6ac1c382 << log_pretty_print(__PRETTY_FUNCTION__) << ": " << text; \
+      g_logger.append_unchecked(Logger::kError, x6ac1c382.str());         \
+    }                                                                     \
+  } while (false)
 
 /** Write an empty debug message, thus only class and function
     name are visible, log level is ignored, messages are always
     printed. Use for temporary messages in development that should not
     be part of final release. */
-#define log_tmp_trace() do { \
-    std::ostringstream x6ac1c382; \
-    x6ac1c382 << log_pretty_print(__PRETTY_FUNCTION__); \
+#define log_tmp_trace()                                        \
+  do {                                                         \
+    std::ostringstream x6ac1c382;                              \
+    x6ac1c382 << log_pretty_print(__PRETTY_FUNCTION__);        \
     g_logger.append_unchecked(Logger::kTemp, x6ac1c382.str()); \
-} while(false)
+  } while (false)
 
 /** Write an debug message, while ignoring the log level. Use for
     temporary messages in development that should not be part of final
     release. */
-#define log_tmp(text) do { \
-    std::ostringstream x6ac1c382; \
+#define log_tmp(text)                                                   \
+  do {                                                                  \
+    std::ostringstream x6ac1c382;                                       \
     x6ac1c382 << log_pretty_print(__PRETTY_FUNCTION__) << ": " << text; \
-    g_logger.append_unchecked(Logger::kTemp, x6ac1c382.str()); \
-} while(false)
+    g_logger.append_unchecked(Logger::kTemp, x6ac1c382.str());          \
+  } while (false)
 
 extern Logger g_logger;
 

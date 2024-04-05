@@ -23,13 +23,12 @@
 
 #include "usb_controller.hpp"
 
-class Playstation3USBController : public USBController
-{
-private:
+class Playstation3USBController : public USBController {
+ private:
   int endpoint_in;
   int endpoint_out;
 
-public:
+ public:
   Playstation3USBController(libusb_device* dev, bool try_detach);
   ~Playstation3USBController();
 
@@ -38,7 +37,7 @@ public:
 
   bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
 
-private:
+ private:
   Playstation3USBController(const Playstation3USBController&);
   Playstation3USBController& operator=(const Playstation3USBController&);
 };

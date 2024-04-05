@@ -20,15 +20,15 @@
 #define HEADER_FIRESTORM_DUAL_CONTROLLER_HPP
 
 #include <libusb.h>
-#include "xboxmsg.hpp"
+
 #include "usb_controller.hpp"
-
-class FirestormDualController : public USBController
-{
-private:
+#include "xboxmsg.hpp"
+
+class FirestormDualController : public USBController {
+ private:
   bool is_vsb;
 
-public:
+ public:
   FirestormDualController(libusb_device* dev, bool is_vsb, bool try_detach);
   ~FirestormDualController();
 
@@ -37,15 +37,15 @@ public:
 
   bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
 
-private:
+ private:
   bool parse_default(uint8_t* data, int len, XboxGenericMsg* msg_out);
   bool parse_vsb(uint8_t* data, int len, XboxGenericMsg* msg_out);
 
-private:
+ private:
   FirestormDualController(const FirestormDualController&);
   FirestormDualController& operator=(const FirestormDualController&);
 };
-
+
 #endif
 
 /* EOF */

@@ -18,62 +18,55 @@
 
 #include "exec_button_event_handler.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <errno.h>
 #include <string.h>
 #include <sys/wait.h>
 
+#include <boost/tokenizer.hpp>
+
 #include "log.hpp"
 
-ExecButtonEventHandler*
-ExecButtonEventHandler::from_string(const std::string& str)
-{
+ExecButtonEventHandler* ExecButtonEventHandler::from_string(
+    const std::string& str) {
   std::vector<std::string> args;
 
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  tokenizer tokens(
+      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
 
   std::copy(tokens.begin(), tokens.end(), std::back_inserter(args));
 
   return new ExecButtonEventHandler(args);
 }
 
-ExecButtonEventHandler::ExecButtonEventHandler(const std::vector<std::string>& args) :
-  m_args(args)
-{
-}
+ExecButtonEventHandler::ExecButtonEventHandler(
+    const std::vector<std::string>& args)
+    : m_args(args) {}
 
-void
-ExecButtonEventHandler::init(UInput& uinput, int slot, bool extra_devices)
-{
+void ExecButtonEventHandler::init(UInput& uinput, int slot,
+                                  bool extra_devices) {
   // nothing to do
 }
 
-void
-ExecButtonEventHandler::send(UInput& uinput, bool value)
-{
-  if (!value)
-  {
+void ExecButtonEventHandler::send(UInput& uinput, bool value) {
+  if (!value) {
     return;
   }
 
   pid_t tmp_pid = fork();
-  if (tmp_pid == 0)
-  {
+  if (tmp_pid == 0) {
     // Double fork to reap the child and disown the execed process
     pid_t pid = fork();
 
-    if (pid == 0)
-    {
-      char** argv = static_cast<char**>(malloc(sizeof(char*) * (m_args.size() + 1)));
-      for(size_t i = 0; i < m_args.size(); ++i)
-      {
+    if (pid == 0) {
+      char** argv =
+          static_cast<char**>(malloc(sizeof(char*) * (m_args.size() + 1)));
+      for (size_t i = 0; i < m_args.size(); ++i) {
         argv[i] = strdup(m_args[i].c_str());
       }
       argv[m_args.size()] = NULL;
 
-      if (execvp(m_args[0].c_str(), argv) == -1)
-      {
+      if (execvp(m_args[0].c_str(), argv) == -1) {
         log_error("exec failed: " << strerror(errno));
         _exit(EXIT_FAILURE);
       }
@@ -85,10 +78,6 @@ ExecButtonEventHandler::send(UInput& uinput, bool value)
   waitpid(tmp_pid, NULL, 0);
 }
 
-std::string
-ExecButtonEventHandler::str() const
-{
-  return "exec";
-}
+std::string ExecButtonEventHandler::str() const { return "exec"; }
 
 /* EOF */

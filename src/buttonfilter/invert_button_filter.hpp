@@ -21,9 +21,8 @@
 
 #include "button_filter.hpp"
 
-class InvertButtonFilter : public ButtonFilter
-{
-public:
+class InvertButtonFilter : public ButtonFilter {
+ public:
   InvertButtonFilter() {}
 
   void update(int msec_delta) {}

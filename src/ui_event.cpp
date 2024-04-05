@@ -22,109 +22,82 @@
 #include "helper.hpp"
 #include "uinput.hpp"
 
-bool
-UIEvent::is_mouse_button(int ev_code)
-{
-  return  (ev_code >= BTN_MOUSE && ev_code <= BTN_TASK);
+bool UIEvent::is_mouse_button(int ev_code) {
+  return (ev_code >= BTN_MOUSE && ev_code <= BTN_TASK);
 }
 
-bool
-UIEvent::is_keyboard_button(int ev_code)
-{
-  return (ev_code < 256);
-}
+bool UIEvent::is_keyboard_button(int ev_code) { return (ev_code < 256); }
 
-UIEvent
-UIEvent::create(int device_id, int type, int code)
-{
+UIEvent UIEvent::create(int device_id, int type, int code) {
   UIEvent ev;
   ev.m_slot_id = SLOTID_AUTO;
   ev.m_device_id = device_id;
   ev.m_device_id_resolved = false;
-  ev.type      = type;
-  ev.code      = code;
+  ev.type = type;
+  ev.code = code;
   return ev;
 }
 
-UIEvent
-UIEvent::from_string(const std::string& str)
-{
-  switch(get_event_type(str))
-  {
-    case EV_REL: return str2rel_event(str); break;
-    case EV_ABS: return str2abs_event(str); break;
-    case EV_KEY: return str2key_event(str); break;
-    default: throw std::runtime_error("unknown event type");
+UIEvent UIEvent::from_string(const std::string& str) {
+  switch (get_event_type(str)) {
+    case EV_REL:
+      return str2rel_event(str);
+      break;
+    case EV_ABS:
+      return str2abs_event(str);
+      break;
+    case EV_KEY:
+      return str2key_event(str);
+      break;
+    default:
+      throw std::runtime_error("unknown event type");
   }
 }
 
-UIEvent
-UIEvent::invalid()
-{
+UIEvent UIEvent::invalid() {
   UIEvent ev;
   ev.m_slot_id = SLOTID_AUTO;
   ev.m_device_id = DEVICEID_INVALID;
   ev.m_device_id_resolved = false;
-  ev.type      = -1;
-  ev.code      = -1;
+  ev.type = -1;
+  ev.code = -1;
   return ev;
 }
 
-bool
-UIEvent::operator<(const UIEvent& rhs)  const
-{
-  if (m_device_id == rhs.m_device_id)
-  {
-    if (type == rhs.type)
-    {
+bool UIEvent::operator<(const UIEvent& rhs) const {
+  if (m_device_id == rhs.m_device_id) {
+    if (type == rhs.type) {
       return code < rhs.code;
-    }
-    else if (type > rhs.type)
-    {
+    } else if (type > rhs.type) {
       return false;
-    }
-    else // if (type < rhs.type)
+    } else  // if (type < rhs.type)
     {
       return true;
     }
-  }
-  else if (m_device_id > rhs.m_device_id)
-  {
+  } else if (m_device_id > rhs.m_device_id) {
     return false;
-  }
-  else // if (device_id < rhs.device_id)
+  } else  // if (device_id < rhs.device_id)
   {
     return true;
   }
 }
 
-void
-UIEvent::resolve_device_id(int slot, bool extra_devices)
-{
+void UIEvent::resolve_device_id(int slot, bool extra_devices) {
   assert(!m_device_id_resolved);
 
-  if (m_slot_id == SLOTID_AUTO)
-  {
+  if (m_slot_id == SLOTID_AUTO) {
     m_slot_id = slot;
   }
 
-  if (m_device_id == DEVICEID_AUTO)
-  {
-    if (extra_devices)
-    {
-      switch(type)
-      {
+  if (m_device_id == DEVICEID_AUTO) {
+    if (extra_devices) {
+      switch (type) {
         case EV_KEY:
-          if (is_mouse_button(code))
-          {
+          if (is_mouse_button(code)) {
             m_device_id = DEVICEID_MOUSE;
-          }
-          else if (is_keyboard_button(code))
-          {
+          } else if (is_keyboard_button(code)) {
             m_device_id = DEVICEID_KEYBOARD;
-          }
-          else
-          {
+          } else {
             m_device_id = DEVICEID_JOYSTICK;
           }
           break;
@@ -137,9 +110,7 @@ UIEvent::resolve_device_id(int slot, bool extra_devices)
           m_device_id = DEVICEID_JOYSTICK;
           break;
       }
-    }
-    else
-    {
+    } else {
       m_device_id = DEVICEID_JOYSTICK;
     }
   }
@@ -147,74 +118,52 @@ UIEvent::resolve_device_id(int slot, bool extra_devices)
   m_device_id_resolved = true;
 }
 
-uint32_t
-UIEvent::get_device_id() const
-{
+uint32_t UIEvent::get_device_id() const {
   assert(m_device_id_resolved);
 
   return UInput::create_device_id(m_slot_id, m_device_id);
 }
 
-int str2deviceid(const std::string& device)
-{
-  if (device == "auto" || device.empty())
-  {
+int str2deviceid(const std::string& device) {
+  if (device == "auto" || device.empty()) {
     return DEVICEID_AUTO;
-  }
-  else if (device == "mouse")
-  {
+  } else if (device == "mouse") {
     return DEVICEID_MOUSE;
-  }
-  else if (device == "keyboard" || device == "key")
-  {
+  } else if (device == "keyboard" || device == "key") {
     return DEVICEID_KEYBOARD;
-  }
-  else if (device == "joystick" || device == "joy")
-  {
+  } else if (device == "joystick" || device == "joy") {
     return DEVICEID_JOYSTICK;
-  }
-  else
-  {
+  } else {
     return str2int(device);
   }
 }
 
-int str2slotid(const std::string& slot)
-{
-  if (slot == "auto" || slot.empty())
-  {
+int str2slotid(const std::string& slot) {
+  if (slot == "auto" || slot.empty()) {
     return SLOTID_AUTO;
-  }
-  else
-  {
+  } else {
     return str2int(slot);
   }
 }
 
-void split_event_name(const std::string& str, std::string* event_str, int* slot_id, int* device_id)
-{
+void split_event_name(const std::string& str, std::string* event_str,
+                      int* slot_id, int* device_id) {
   std::string::size_type p = str.find('@');
-  if (p == std::string::npos)
-  {
+  if (p == std::string::npos) {
     *event_str = str;
-    *slot_id   = SLOTID_AUTO;
+    *slot_id = SLOTID_AUTO;
     *device_id = DEVICEID_AUTO;
-  }
-  else
-  {
+  } else {
     *event_str = str.substr(0, p);
-    std::string device = str.substr(p+1);
+    std::string device = str.substr(p + 1);
 
     p = device.find(".");
 
-    if (p == std::string::npos)
-    {
-      *slot_id   = SLOTID_AUTO;
+    if (p == std::string::npos) {
+      *slot_id = SLOTID_AUTO;
       *device_id = str2deviceid(device);
-    }
-    else
-    {
-      *slot_id   = str2slotid(device.substr(p+1));
+    } else {
+      *slot_id = str2slotid(device.substr(p + 1));
       *device_id = str2deviceid(device.substr(0, p));
     }
   }

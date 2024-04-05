@@ -21,16 +21,15 @@
 
 #include "message_processor.hpp"
 
-class DummyMessageProcessor : public MessageProcessor
-{
-private:
-public:
+class DummyMessageProcessor : public MessageProcessor {
+ private:
+ public:
   DummyMessageProcessor();
 
   void send(const XboxGenericMsg& msg, int msec_delta);
   virtual void set_controller(Controller* controller);
 
-private:
+ private:
   DummyMessageProcessor(const DummyMessageProcessor&);
   DummyMessageProcessor& operator=(const DummyMessageProcessor&);
 };

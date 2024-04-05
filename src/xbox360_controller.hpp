@@ -20,6 +20,7 @@
 #define HEADER_XBOX360_CONTROLLER_HPP
 
 #include <libusb.h>
+
 #include <memory>
 #include <string>
 
@@ -28,11 +29,10 @@
 class Chatpad;
 class Headset;
 struct XPadDevice;
-
-class Xbox360Controller : public USBController
-{
-private:
-  XPadDevice*        dev_type;
+
+class Xbox360Controller : public USBController {
+ private:
+  XPadDevice* dev_type;
 
   int endpoint_in;
   int endpoint_out;
@@ -43,25 +43,22 @@ private:
   uint8_t m_rumble_left;
   uint8_t m_rumble_right;
 
-public:
-  Xbox360Controller(libusb_device* dev,
-                    bool chatpad, bool chatpad_no_init, bool chatpad_debug,
-                    bool headset,
-                    bool headset_debug,
+ public:
+  Xbox360Controller(libusb_device* dev, bool chatpad, bool chatpad_no_init,
+                    bool chatpad_debug, bool headset, bool headset_debug,
                     const std::string& headset_dump,
-                    const std::string& headset_play,
-                    bool try_detach);
+                    const std::string& headset_play, bool try_detach);
   ~Xbox360Controller();
 
   void set_rumble_real(uint8_t left, uint8_t right);
   void set_led_real(uint8_t status);
   bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
 
-private:
-  Xbox360Controller (const Xbox360Controller&);
-  Xbox360Controller& operator= (const Xbox360Controller&);
+ private:
+  Xbox360Controller(const Xbox360Controller&);
+  Xbox360Controller& operator=(const Xbox360Controller&);
 };
-
+
 #endif
 
 /* EOF */

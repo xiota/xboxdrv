@@ -21,35 +21,23 @@
 #include <iostream>
 #include <sstream>
 
-LogAxisFilter*
-LogAxisFilter::from_string(const std::string& str)
-{
+LogAxisFilter* LogAxisFilter::from_string(const std::string& str) {
   return new LogAxisFilter(str);
 }
 
-LogAxisFilter::LogAxisFilter(const std::string& name) :
-  m_name(name)
-{
-}
+LogAxisFilter::LogAxisFilter(const std::string& name) : m_name(name) {}
 
-int
-LogAxisFilter::filter(int value, int min, int max)
-{
-  if (m_name.empty())
-  {
+int LogAxisFilter::filter(int value, int min, int max) {
+  if (m_name.empty()) {
     std::cout << value << std::endl;
-  }
-  else
-  {
+  } else {
     std::cout << m_name << ": " << value << std::endl;
   }
 
   return value;
 }
 
-std::string
-LogAxisFilter::str() const
-{
+std::string LogAxisFilter::str() const {
   std::ostringstream out;
   out << "log:" << m_name;
   return out.str();

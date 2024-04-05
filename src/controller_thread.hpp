@@ -19,12 +19,13 @@
 #ifndef HEADER_XBOXDRV_XBOXDRV_THREAD_HPP
 #define HEADER_XBOXDRV_XBOXDRV_THREAD_HPP
 
-#include <boost/shared_ptr.hpp>
 #include <glib.h>
 
+#include <boost/shared_ptr.hpp>
+
+#include "controller_ptr.hpp"
 #include "controller_slot_config.hpp"
 #include "controller_slot_ptr.hpp"
-#include "controller_ptr.hpp"
 
 class Options;
 class MessageProcessor;
@@ -35,28 +36,29 @@ typedef boost::shared_ptr<ControllerThread> ControllerThreadPtr;
 
 /** ControllerThread handles a single Controller, reads it messages
     and passes it to the MessageProcessor */
-class ControllerThread // FIXME: find a better name,ControllerLoop?!
+class ControllerThread  // FIXME: find a better name,ControllerLoop?!
 {
-private:
+ private:
   ControllerPtr m_controller;
   std::auto_ptr<MessageProcessor> m_processor;
 
-  XboxGenericMsg m_oldrealmsg; /// last data read from the device
+  XboxGenericMsg m_oldrealmsg;  /// last data read from the device
 
-  int  m_timeout;
+  int m_timeout;
   bool m_print_messages;
   guint m_timeout_id;
   GTimer* m_timer;
 
-public:
-  ControllerThread(ControllerPtr controller, std::auto_ptr<MessageProcessor> processor,
+ public:
+  ControllerThread(ControllerPtr controller,
+                   std::auto_ptr<MessageProcessor> processor,
                    const Options& opts);
   ~ControllerThread();
 
   MessageProcessor* get_message_proc() const { return m_processor.get(); }
   ControllerPtr get_controller() const { return m_controller; }
 
-private:
+ private:
   void on_message(const XboxGenericMsg& msg);
 
   bool on_timeout();
@@ -64,7 +66,7 @@ private:
     return static_cast<ControllerThread*>(data)->on_timeout();
   }
 
-private:
+ private:
   ControllerThread(const ControllerThread&);
   ControllerThread& operator=(const ControllerThread&);
 };
@@ -72,4 +74,3 @@ private:
 #endif
 
 /* EOF */
-

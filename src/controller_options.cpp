@@ -18,22 +18,20 @@
 
 #include "controller_options.hpp"
 
-ControllerOptions::ControllerOptions() :
-  uinput(),
-  modifier(),
-  buttonmap(new ButtonmapModifier),
-  axismap(new AxismapModifier),
-  deadzone(0),
-  deadzone_trigger(0),
-  square_axis(false),
-  four_way_restrictor(0),
-  dpad_rotation(0),
+ControllerOptions::ControllerOptions()
+    : uinput(),
+      modifier(),
+      buttonmap(new ButtonmapModifier),
+      axismap(new AxismapModifier),
+      deadzone(0),
+      deadzone_trigger(0),
+      square_axis(false),
+      four_way_restrictor(0),
+      dpad_rotation(0),
 
-  calibration_map(),
-  sensitivity_map(),
-  relative_axis_map(),
-  autofire_map()
-{
-}
+      calibration_map(),
+      sensitivity_map(),
+      relative_axis_map(),
+      autofire_map() {}
 
 /* EOF */

@@ -20,22 +20,14 @@
 
 #include "controller_options.hpp"
 
-ControllerConfig::ControllerConfig(UInput& uinput, int slot, bool extra_devices, const ControllerOptions& opts) :
-  m_modifier(),
-  m_uinput(uinput, slot, extra_devices, opts.uinput)
-{
-}
+ControllerConfig::ControllerConfig(UInput& uinput, int slot, bool extra_devices,
+                                   const ControllerOptions& opts)
+    : m_modifier(), m_uinput(uinput, slot, extra_devices, opts.uinput) {}
 
-std::vector<ModifierPtr>&
-ControllerConfig::get_modifier()
-{
+std::vector<ModifierPtr>& ControllerConfig::get_modifier() {
   return m_modifier;
 }
 
-UInputConfig&
-ControllerConfig::get_uinput()
-{
-  return m_uinput;
-}
+UInputConfig& ControllerConfig::get_uinput() { return m_uinput; }
 
 /* EOF */

@@ -29,27 +29,27 @@ struct XboxMsg;
 
 class UInputOptions;
 
-class UInputConfig
-{
-private:
+class UInputConfig {
+ private:
   UInput& m_uinput;
 
   ButtonMap m_btn_map;
-  AxisMap   m_axis_map;
+  AxisMap m_axis_map;
 
-  int  axis_state[XBOX_AXIS_MAX];
+  int axis_state[XBOX_AXIS_MAX];
   bool button_state[XBOX_BTN_MAX];
   bool last_button_state[XBOX_BTN_MAX];
 
-public:
-  UInputConfig(UInput& uinput, int slot, bool extra_devices, const UInputOptions& opts);
+ public:
+  UInputConfig(UInput& uinput, int slot, bool extra_devices,
+               const UInputOptions& opts);
 
   void send(XboxGenericMsg& msg);
   void update(int msec_delta);
 
   void reset_all_outputs();
 
-private:
+ private:
   void send(Xbox360Msg& msg);
   void send(XboxMsg& msg);
   void send(Playstation3USBMsg& msg);
@@ -57,7 +57,7 @@ private:
   void send_button(XboxButton code, bool value);
   void send_axis(XboxAxis code, int32_t value);
 
-private:
+ private:
   UInputConfig(const UInputConfig&);
   UInputConfig& operator=(const UInputConfig&);
 };

@@ -20,41 +20,39 @@
 #define HEADER_XBOXDRV_UI_EVENT_HPP
 
 #include <stdint.h>
+
 #include <string>
 
 enum {
-  DEVICEID_INVALID  = static_cast<uint16_t>(-5),
+  DEVICEID_INVALID = static_cast<uint16_t>(-5),
   DEVICEID_KEYBOARD = static_cast<uint16_t>(-4),
-  DEVICEID_MOUSE    = static_cast<uint16_t>(-3),
+  DEVICEID_MOUSE = static_cast<uint16_t>(-3),
   DEVICEID_JOYSTICK = static_cast<uint16_t>(-2),
-  DEVICEID_AUTO     = static_cast<uint16_t>(-1)
+  DEVICEID_AUTO = static_cast<uint16_t>(-1)
 };
 
-enum {
-  SLOTID_AUTO = static_cast<uint16_t>(-1)
-};
+enum { SLOTID_AUTO = static_cast<uint16_t>(-1) };
 
-class UIEvent
-{
-public:
+class UIEvent {
+ public:
   static UIEvent create(int device_id, int type, int code);
   static UIEvent from_string(const std::string& str);
   static UIEvent invalid();
 
-public:
+ public:
   static bool is_mouse_button(int ev_code);
   static bool is_keyboard_button(int ev_code);
 
-public:
+ public:
   void resolve_device_id(int slot, bool extra_devices);
-  bool operator<(const UIEvent& rhs)  const;
+  bool operator<(const UIEvent& rhs) const;
 
   int type;
   int code;
 
   uint32_t get_device_id() const;
 
-private:
+ private:
   uint16_t m_slot_id;
   uint16_t m_device_id;
   bool m_device_id_resolved;
@@ -66,7 +64,8 @@ private:
     in: "BTN_A@mouse.2"
     out: "BTN_A", 3, DEVICEID_MOUSE
  */
-void split_event_name(const std::string& str, std::string* event_str, int* slot_id, int* device_id);
+void split_event_name(const std::string& str, std::string* event_str,
+                      int* slot_id, int* device_id);
 
 int str2deviceid(const std::string& device);
 int str2slotid(const std::string& slot);

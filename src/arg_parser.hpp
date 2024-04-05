@@ -19,65 +19,45 @@
 #ifndef HEADER_ARG_PARSER_HPP
 #define HEADER_ARG_PARSER_HPP
 
-#include <vector>
 #include <string>
-
-class ArgParser
-{
-private:
-  struct Option
-  {
+#include <vector>
+
+class ArgParser {
+ private:
+  struct Option {
     int key;
-    char        short_option;
+    char short_option;
     std::string long_option;
     std::string help;
     std::string argument;
     bool visible;
 
-    Option() :
-      key(),
-      short_option(),
-      long_option(),
-      help(),
-      argument(),
-      visible()
-    {}
+    Option()
+        : key(), short_option(), long_option(), help(), argument(), visible() {}
   };
 
-public:
-  struct ParsedOption
-  {
+ public:
+  struct ParsedOption {
     int key;
     std::string option;
     std::string argument;
 
-    ParsedOption() :
-      key(-1),
-      option(),
-      argument()
-    {}
+    ParsedOption() : key(-1), option(), argument() {}
 
-    ParsedOption(int key_, const std::string& option_, const std::string& argument_) :
-      key(key_),
-      option(option_),
-      argument(argument_)
-    {}
+    ParsedOption(int key_, const std::string& option_,
+                 const std::string& argument_)
+        : key(key_), option(option_), argument(argument_) {}
   };
 
-  enum {
-    REST_ARG  = -1,
-    TEXT      = -4,
-    USAGE     = -5,
-    PSEUDO    = -6
-  };
+  enum { REST_ARG = -1, TEXT = -4, USAGE = -5, PSEUDO = -6 };
 
-private:
+ private:
   std::string programm;
 
   typedef std::vector<Option> Options;
   Options options;
 
-public:
+ public:
   typedef std::vector<ParsedOption> ParsedOptions;
 
   ArgParser();
@@ -87,30 +67,28 @@ public:
   ArgParser& add_pseudo(const std::string& left, const std::string& doc);
   ArgParser& add_newline();
 
-  ArgParser& add_option(int key,
-                        char short_option,
+  ArgParser& add_option(int key, char short_option,
                         const std::string& long_option,
-                        const std::string& argument,
-                        const std::string& help,
+                        const std::string& argument, const std::string& help,
                         bool visible = true);
 
   ParsedOptions parse_args(int argc, char** argv);
   void print_help(std::ostream& out) const;
 
   bool next();
-  int  get_key();
+  int get_key();
   std::string get_argument();
 
-private:
+ private:
   void read_option(int id, const std::string& argument);
 
   /** Find the Option structure that matches \a short_option */
   Option* lookup_short_option(char short_option);
 
   /** Find the Option structure that matches \a long_option */
-  Option* lookup_long_option (const std::string& long_option);
+  Option* lookup_long_option(const std::string& long_option);
 };
-
+
 #endif
 
 /* EOF */

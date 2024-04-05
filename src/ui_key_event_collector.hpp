@@ -19,27 +19,26 @@
 #ifndef HEADER_XBOXDRV_UI_KEY_EVENT_COLLECTOR_HPP
 #define HEADER_XBOXDRV_UI_KEY_EVENT_COLLECTOR_HPP
 
+#include <vector>
+
 #include "ui_event_collector.hpp"
 #include "ui_key_event_emitter.hpp"
 
-#include <vector>
-
-class UIKeyEventCollector : public UIEventCollector
-{
-private:
+class UIKeyEventCollector : public UIEventCollector {
+ private:
   typedef std::vector<UIKeyEventEmitterPtr> Emitters;
   Emitters m_emitters;
 
   int m_value;
 
-public:
+ public:
   UIKeyEventCollector(UInput& uinput, uint32_t device_id, int type, int code);
 
   UIEventEmitterPtr create_emitter();
   void send(int value);
   void sync();
 
-private:
+ private:
   UIKeyEventCollector(const UIKeyEventCollector&);
   UIKeyEventCollector& operator=(const UIKeyEventCollector&);
 };

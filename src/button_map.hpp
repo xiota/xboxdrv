@@ -22,12 +22,11 @@
 #include "button_event.hpp"
 #include "xboxmsg.hpp"
 
-class ButtonMap
-{
-private:
+class ButtonMap {
+ private:
   ButtonEventPtr btn_map[XBOX_BTN_MAX][XBOX_BTN_MAX];
 
-public:
+ public:
   ButtonMap();
 
   void bind(XboxButton code, ButtonEventPtr event);
@@ -39,7 +38,8 @@ public:
   void init(UInput& uinput, int slot, bool extra_devices) const;
 
   bool send(UInput& uinput, XboxButton code, bool value) const;
-  bool send(UInput& uinput, XboxButton shift_code, XboxButton code, bool value) const;
+  bool send(UInput& uinput, XboxButton shift_code, XboxButton code,
+            bool value) const;
   void update(UInput& uinput, int msec_delta);
 
   void clear();

@@ -19,10 +19,11 @@
 #ifndef HEADER_XBOXDRV_OPTIONS_HPP
 #define HEADER_XBOXDRV_OPTIONS_HPP
 
-#include <string>
-#include <map>
-#include <vector>
 #include <linux/input.h>
+
+#include <map>
+#include <string>
+#include <vector>
 
 #include "controller_options.hpp"
 #include "controller_slot_options.hpp"
@@ -30,49 +31,46 @@
 #include "uinput_options.hpp"
 #include "xpad_device.hpp"
 
-class Options
-{
-public:
-  enum { RUN_DEFAULT,
-         RUN_DAEMON,
-         RUN_LIST_CONTROLLER,
-         RUN_LIST_SUPPORTED_DEVICES,
-         RUN_LIST_SUPPORTED_DEVICES_XPAD,
-         PRINT_VERSION,
-         PRINT_HELP,
-         PRINT_HELP_DEVICES,
-         PRINT_ENUMS,
-         PRINT_LED_HELP
+class Options {
+ public:
+  enum {
+    RUN_DEFAULT,
+    RUN_DAEMON,
+    RUN_LIST_CONTROLLER,
+    RUN_LIST_SUPPORTED_DEVICES,
+    RUN_LIST_SUPPORTED_DEVICES_XPAD,
+    PRINT_VERSION,
+    PRINT_HELP,
+    PRINT_HELP_DEVICES,
+    PRINT_ENUMS,
+    PRINT_LED_HELP
   } mode;
 
   enum {
-    LIST_ALL       = ~0,
-    LIST_ABS       = (1<<0),
-    LIST_REL       = (1<<1),
-    LIST_KEY       = (1<<2),
-    LIST_X11KEYSYM = (1<<3),
-    LIST_AXIS      = (1<<4),
-    LIST_BUTTON    = (1<<5)
+    LIST_ALL = ~0,
+    LIST_ABS = (1 << 0),
+    LIST_REL = (1 << 1),
+    LIST_KEY = (1 << 2),
+    LIST_X11KEYSYM = (1 << 3),
+    LIST_AXIS = (1 << 4),
+    LIST_BUTTON = (1 << 5)
   };
 
-  enum Priority {
-    kPriorityNormal,
-    kPriorityRealtime
-  };
+  enum Priority { kPriorityNormal, kPriorityRealtime };
 
   // General program options
   bool silent;
   bool quiet;
   bool rumble;
-  int  rumble_l;
-  int  rumble_r;
-  int  rumble_gain;
-  int  controller_id;
-  int  wireless_id;
+  int rumble_l;
+  int rumble_r;
+  int rumble_gain;
+  int controller_id;
+  int wireless_id;
   bool instant_exit;
   bool no_uinput;
   bool detach_kernel_driver;
-  int  timeout;
+  int timeout;
   Priority priority;
 
   GamepadType gamepad_type;
@@ -108,10 +106,10 @@ public:
   // daemon options
   bool detach;
   enum DBusSubsystemMode {
-    kDBusDisabled, /// disable dbus
-    kDBusAuto,     /// choice system or session bus on uid
-    kDBusSystem,   /// chose system bus
-    kDBusSession   /// chose session bus
+    kDBusDisabled,  /// disable dbus
+    kDBusAuto,      /// choice system or session bus on uid
+    kDBusSystem,    /// chose system bus
+    kDBusSession    /// chose session bus
   };
   DBusSubsystemMode dbus;
   std::string pid_file;
@@ -136,34 +134,27 @@ public:
 
   bool usb_debug;
 
-  struct GenericUSBSpec
-  {
-  private:
-    void apply_pair(const std::string& name,
-                    const std::string& value);
+  struct GenericUSBSpec {
+   private:
+    void apply_pair(const std::string& name, const std::string& value);
 
-    GenericUSBSpec() :
-      m_vendor_id(-1),
-      m_product_id(-1),
-      m_interface(-1),
-      m_endpoint(-1),
-      m_packetsize(-1)
-    {}
+    GenericUSBSpec()
+        : m_vendor_id(-1),
+          m_product_id(-1),
+          m_interface(-1),
+          m_endpoint(-1),
+          m_packetsize(-1) {}
 
-  public:
+   public:
     static GenericUSBSpec from_string(const std::string& str);
 
-    GenericUSBSpec(int vendor_id_,
-                   int product_id_,
-                   int interface_,
-                   int endpoint_,
-                   int packetsize_) :
-      m_vendor_id(vendor_id_),
-      m_product_id(product_id_),
-      m_interface(interface_),
-      m_endpoint(endpoint_),
-      m_packetsize(packetsize_)
-    {}
+    GenericUSBSpec(int vendor_id_, int product_id_, int interface_,
+                   int endpoint_, int packetsize_)
+        : m_vendor_id(vendor_id_),
+          m_product_id(product_id_),
+          m_interface(interface_),
+          m_endpoint(endpoint_),
+          m_packetsize(packetsize_) {}
 
     int m_vendor_id;
     int m_product_id;
@@ -174,7 +165,7 @@ public:
 
   std::vector<GenericUSBSpec> m_generic_usb_specs;
 
-public:
+ public:
   Options();
 
   ControllerSlotOptions& get_controller_slot();

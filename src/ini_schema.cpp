@@ -19,208 +19,164 @@
 #include "ini_schema.hpp"
 
 #include <sstream>
-
-class INIPairSchemaBoolCallback : public INIPairSchema
-{
-private:
-  boost::function<void ()> m_true_callback;
-  boost::function<void ()> m_false_callback;
 
-public:
-  INIPairSchemaBoolCallback(boost::function<void ()> true_callback,
-                            boost::function<void ()> false_callback) :
-    m_true_callback(true_callback),
-    m_false_callback(false_callback)
-  {}
+class INIPairSchemaBoolCallback : public INIPairSchema {
+ private:
+  boost::function<void()> m_true_callback;
+  boost::function<void()> m_false_callback;
 
-  void call(const std::string& value)
-  {
+ public:
+  INIPairSchemaBoolCallback(boost::function<void()> true_callback,
+                            boost::function<void()> false_callback)
+      : m_true_callback(true_callback), m_false_callback(false_callback) {}
+
+  void call(const std::string& value) {
     bool v = false;
-    if (value == "yes" || value == "true" || value == "1")
-    {
+    if (value == "yes" || value == "true" || value == "1") {
       v = true;
-    }
-    else if (value == "no" || value == "false" || value == "0")
-    {
+    } else if (value == "no" || value == "false" || value == "0") {
       v = false;
-    }
-    else
-    {
+    } else {
       throw std::runtime_error("unable to convert '" + value + "' to bool");
     }
 
-    if (v)
-    {
-      if (m_true_callback) m_true_callback();
-    }
-    else
-    {
-      if (m_false_callback) m_false_callback();
+    if (v) {
+      if (m_true_callback) {
+        m_true_callback();
+      }
+    } else {
+      if (m_false_callback) {
+        m_false_callback();
+      }
     }
   }
 
-  std::string str() const
-  {
+  std::string str() const {
     // FIXME: implement me
     return "<not implemented>";
   }
 };
-
-class INIPairSchemaBool : public INIPairSchema
-{
-private:
+
+class INIPairSchemaBool : public INIPairSchema {
+ private:
   bool* m_data;
 
-public:
+ public:
   INIPairSchemaBool(bool* data) : m_data(data) {}
-  void call(const std::string& value)
-  {
-    if (value == "yes" || value == "true" || value == "1")
-    {
+  void call(const std::string& value) {
+    if (value == "yes" || value == "true" || value == "1") {
       *m_data = true;
-    }
-    else if (value == "no" || value == "false" || value == "0")
-    {
+    } else if (value == "no" || value == "false" || value == "0") {
       *m_data = false;
-    }
-    else
-    {
+    } else {
       throw std::runtime_error("unable to convert '" + value + "' to bool");
     }
   }
 
-  std::string str() const
-  {
-    if (m_data)
-    {
+  std::string str() const {
+    if (m_data) {
       return "true";
-    }
-    else
-    {
+    } else {
       return "false";
     }
   }
 
-private:
+ private:
   INIPairSchemaBool(const INIPairSchemaBool&);
   INIPairSchemaBool& operator=(const INIPairSchemaBool&);
 };
-
-class INIPairSchemaInt : public INIPairSchema
-{
-private:
+
+class INIPairSchemaInt : public INIPairSchema {
+ private:
   int* m_data;
 
-public:
+ public:
   INIPairSchemaInt(int* data) : m_data(data) {}
-  void call(const std::string& value)
-  {
-    *m_data = atoi(value.c_str());
-  }
+  void call(const std::string& value) { *m_data = atoi(value.c_str()); }
 
-  std::string str() const
-  {
+  std::string str() const {
     std::ostringstream out;
     out << *m_data;
     return out.str();
   }
 
-private:
+ private:
   INIPairSchemaInt(const INIPairSchemaInt&);
   INIPairSchemaInt& operator=(const INIPairSchemaInt&);
 };
-
-class INIPairSchemaFloat : public INIPairSchema
-{
-private:
+
+class INIPairSchemaFloat : public INIPairSchema {
+ private:
   float* m_data;
 
-public:
+ public:
   INIPairSchemaFloat(float* data) : m_data(data) {}
-  void call(const std::string& value)
-  {
-    *m_data = atoi(value.c_str());
-  }
+  void call(const std::string& value) { *m_data = atoi(value.c_str()); }
 
-  std::string str() const
-  {
+  std::string str() const {
     std::ostringstream out;
     out << *m_data;
     return out.str();
   }
 
-private:
+ private:
   INIPairSchemaFloat(const INIPairSchemaFloat&);
   INIPairSchemaFloat& operator=(const INIPairSchemaFloat&);
 };
-
-class INIPairSchemaString : public INIPairSchema
-{
-private:
+
+class INIPairSchemaString : public INIPairSchema {
+ private:
   std::string* m_data;
 
-public:
+ public:
   INIPairSchemaString(std::string* data) : m_data(data) {}
-  void call(const std::string& value)
-  {
-    *m_data = value;
-  }
+  void call(const std::string& value) { *m_data = value; }
 
-  std::string str() const
-  {
+  std::string str() const {
     // FIXME: implement proper escaping
     return *m_data;
   }
 
-private:
+ private:
   INIPairSchemaString(const INIPairSchemaString&);
   INIPairSchemaString& operator=(const INIPairSchemaString&);
 };
-
-class INIPairSchemaCallback : public INIPairSchema
-{
-private:
-  boost::function<void (const std::string&)> m_callback;
 
-public:
-  INIPairSchemaCallback(boost::function<void (const std::string&)> callback) :
-    m_callback(callback)
-  {}
+class INIPairSchemaCallback : public INIPairSchema {
+ private:
+  boost::function<void(const std::string&)> m_callback;
 
-  void call(const std::string& value)
-  {
-    if (m_callback)
+ public:
+  INIPairSchemaCallback(boost::function<void(const std::string&)> callback)
+      : m_callback(callback) {}
+
+  void call(const std::string& value) {
+    if (m_callback) {
       m_callback(value);
+    }
   }
 
-  std::string str() const
-  {
+  std::string str() const {
     // FIXME: implement me
     return "<not implemented>";
   }
 };
-
-INISchemaSection::INISchemaSection(boost::function<void (const std::string&, const std::string&)> callback) :
-  m_schema(),
-  m_callback(callback)
-{
-}
 
-INISchemaSection::~INISchemaSection()
-{
-  for(Schema::iterator i = m_schema.begin(); i != m_schema.end(); ++i)
-  {
+INISchemaSection::INISchemaSection(
+    boost::function<void(const std::string&, const std::string&)> callback)
+    : m_schema(), m_callback(callback) {}
+
+INISchemaSection::~INISchemaSection() {
+  for (Schema::iterator i = m_schema.begin(); i != m_schema.end(); ++i) {
     delete i->second;
   }
 }
 
-INISchemaSection&
-INISchemaSection::add(const std::string& name, INIPairSchema* schema)
-{
+INISchemaSection& INISchemaSection::add(const std::string& name,
+                                        INIPairSchema* schema) {
   Schema::iterator i = m_schema.find(name);
 
-  if (i != m_schema.end())
-  {
+  if (i != m_schema.end()) {
     delete i->second;
   }
 
@@ -229,100 +185,75 @@ INISchemaSection::add(const std::string& name, INIPairSchema* schema)
   return *this;
 }
 
-INISchemaSection&
-INISchemaSection::operator()(const std::string& name, bool*  value)
-{
+INISchemaSection& INISchemaSection::operator()(const std::string& name,
+                                               bool* value) {
   add(name, new INIPairSchemaBool(value));
   return *this;
 }
 
-INISchemaSection&
-INISchemaSection::operator()(const std::string& name, int*   value)
-{
+INISchemaSection& INISchemaSection::operator()(const std::string& name,
+                                               int* value) {
   add(name, new INIPairSchemaInt(value));
   return *this;
 }
 
-INISchemaSection&
-INISchemaSection::operator()(const std::string& name, float* value)
-{
+INISchemaSection& INISchemaSection::operator()(const std::string& name,
+                                               float* value) {
   add(name, new INIPairSchemaFloat(value));
   return *this;
 }
 
-INISchemaSection&
-INISchemaSection::operator()(const std::string& name, std::string* value)
-{
+INISchemaSection& INISchemaSection::operator()(const std::string& name,
+                                               std::string* value) {
   add(name, new INIPairSchemaString(value));
   return *this;
 }
 
-INISchemaSection&
-INISchemaSection::operator()(const std::string& name,
-                             boost::function<void ()> true_callback,
-                             boost::function<void ()> false_callback)
-{
+INISchemaSection& INISchemaSection::operator()(
+    const std::string& name, boost::function<void()> true_callback,
+    boost::function<void()> false_callback) {
   add(name, new INIPairSchemaBoolCallback(true_callback, false_callback));
   return *this;
 }
 
-INISchemaSection&
-INISchemaSection::operator()(const std::string& name, boost::function<void (const std::string&)> callback)
-{
+INISchemaSection& INISchemaSection::operator()(
+    const std::string& name,
+    boost::function<void(const std::string&)> callback) {
   add(name, new INIPairSchemaCallback(callback));
   return *this;
 }
 
-INIPairSchema*
-INISchemaSection::get(const std::string& name) const
-{
+INIPairSchema* INISchemaSection::get(const std::string& name) const {
   Schema::const_iterator i = m_schema.find(name);
-  if (i == m_schema.end())
-  {
+  if (i == m_schema.end()) {
     return 0;
-  }
-  else
-  {
+  } else {
     return i->second;
   }
 }
 
-void
-INISchemaSection::save(std::ostream& out)
-{
-  for(Schema::iterator i = m_schema.begin(); i != m_schema.end(); ++i)
-  {
+void INISchemaSection::save(std::ostream& out) {
+  for (Schema::iterator i = m_schema.begin(); i != m_schema.end(); ++i) {
     out << i->first << " = " << i->second->str() << std::endl;
   }
 }
-
-INISchema::INISchema() :
-  m_sections()
-{
-}
 
-INISchema::~INISchema()
-{
-  clear();
-}
+INISchema::INISchema() : m_sections() {}
 
-void
-INISchema::clear()
-{
-  for(Sections::iterator i = m_sections.begin(); i != m_sections.end(); ++i)
-  {
+INISchema::~INISchema() { clear(); }
+
+void INISchema::clear() {
+  for (Sections::iterator i = m_sections.begin(); i != m_sections.end(); ++i) {
     delete i->second;
   }
   m_sections.clear();
 }
 
-INISchemaSection&
-INISchema::section(const std::string& name,
-                   boost::function<void (const std::string&, const std::string&)> callback)
-{
+INISchemaSection& INISchema::section(
+    const std::string& name,
+    boost::function<void(const std::string&, const std::string&)> callback) {
   Sections::iterator i = m_sections.find(name);
-  if (i != m_sections.end())
-  {
+  if (i != m_sections.end()) {
     delete i->second;
   }
 
@@ -331,25 +262,17 @@ INISchema::section(const std::string& name,
   return *sec;
 }
 
-INISchemaSection*
-INISchema::get_section(const std::string& name) const
-{
+INISchemaSection* INISchema::get_section(const std::string& name) const {
   Sections::const_iterator i = m_sections.find(name);
-  if (i != m_sections.end())
-  {
+  if (i != m_sections.end()) {
     return i->second;
-  }
-  else
-  {
+  } else {
     return 0;
   }
 }
 
-void
-INISchema::save(std::ostream& out)
-{
-  for(Sections::iterator i = m_sections.begin(); i != m_sections.end(); ++i)
-  {
+void INISchema::save(std::ostream& out) {
+  for (Sections::iterator i = m_sections.begin(); i != m_sections.end(); ++i) {
     out << "[" << i->first << "]" << std::endl;
     i->second->save(out);
     out << std::endl;

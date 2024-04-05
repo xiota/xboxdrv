@@ -19,19 +19,19 @@
 #ifndef HEADER_XBOXDRV_EVDEV_CONTROLLER_HPP
 #define HEADER_XBOXDRV_EVDEV_CONTROLLER_HPP
 
-#include <linux/input.h>
-#include <string>
 #include <glib.h>
-#include <queue>
+#include <linux/input.h>
 
-#include "evdev_absmap.hpp"
+#include <queue>
+#include <string>
+
 #include "controller.hpp"
+#include "evdev_absmap.hpp"
 
 class EvdevAbsMap;
 
-class EvdevController : public Controller
-{
-private:
+class EvdevController : public Controller {
+ private:
   int m_fd;
   GIOChannel* m_io_channel;
 
@@ -50,11 +50,9 @@ private:
 
   XboxGenericMsg m_msg;
 
-public:
-  EvdevController(const std::string& filename,
-                  const EvdevAbsMap&  absmap,
-                  const std::map<int, XboxButton>& keyMap,
-                  bool grab,
+ public:
+  EvdevController(const std::string& filename, const EvdevAbsMap& absmap,
+                  const std::map<int, XboxButton>& keyMap, bool grab,
                   bool debug);
   ~EvdevController();
 
@@ -72,20 +70,18 @@ public:
   /** @param timeout   timeout in msec, 0 means forever */
   bool read(XboxGenericMsg& msg, int timeout);
 
-private:
+ private:
   bool parse(const struct input_event& ev, XboxGenericMsg& msg_inout) const;
   void read_data_to_buffer();
 
-  gboolean on_read_data(GIOChannel* source,
-                        GIOCondition condition);
-  static gboolean on_read_data_wrap(GIOChannel* source,
-                                    GIOCondition condition,
-                                    gpointer userdata)
-  {
-    return static_cast<EvdevController*>(userdata)->on_read_data(source, condition);
+  gboolean on_read_data(GIOChannel* source, GIOCondition condition);
+  static gboolean on_read_data_wrap(GIOChannel* source, GIOCondition condition,
+                                    gpointer userdata) {
+    return static_cast<EvdevController*>(userdata)->on_read_data(source,
+                                                                 condition);
   }
 
-private:
+ private:
   EvdevController(const EvdevController&);
   EvdevController& operator=(const EvdevController&);
 };

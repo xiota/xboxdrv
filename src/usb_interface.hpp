@@ -20,46 +20,47 @@
 #define HEADER_XBOXDRV_USB_INTERFACE_HPP
 
 #include <libusb.h>
+
 #include <boost/function.hpp>
 #include <map>
 
 struct USBReadCallback;
 struct USBWriteCallback;
 
-class USBInterface
-{
-private:
+class USBInterface {
+ private:
   libusb_device_handle* m_handle;
   int m_interface;
   typedef std::map<int, libusb_transfer*> Endpoints;
   Endpoints m_endpoints;
 
-public:
-  USBInterface(libusb_device_handle* handle, int interface, bool try_detach = false);
+ public:
+  USBInterface(libusb_device_handle* handle, int interface,
+               bool try_detach = false);
   ~USBInterface();
 
   void submit_read(int endpoint, int len,
-                   const boost::function<bool (uint8_t*, int)>& callback);
+                   const boost::function<bool(uint8_t*, int)>& callback);
   void cancel_read(int endpoint);
 
   // FIXME: could add a prepare_write() that does what submit_write()
   // does, but uses the callback to fill the data instead of getting
   // it as argument
   void submit_write(int endpoint, uint8_t* data, int len,
-                    const boost::function<bool (libusb_transfer*)>& callback);
+                    const boost::function<bool(libusb_transfer*)>& callback);
   void cancel_write(int endpoint);
 
-private:
+ private:
   void cancel_transfer(int endpoint);
 
-  void on_read_data(USBReadCallback* callback, libusb_transfer *transfer);
-  void on_write_data(USBWriteCallback* callback, libusb_transfer *transfer);
+  void on_read_data(USBReadCallback* callback, libusb_transfer* transfer);
+  void on_write_data(USBWriteCallback* callback, libusb_transfer* transfer);
 
-private:
-  static void on_read_data_wrap(libusb_transfer *transfer);
-  static void on_write_data_wrap(libusb_transfer *transfer);
+ private:
+  static void on_read_data_wrap(libusb_transfer* transfer);
+  static void on_write_data_wrap(libusb_transfer* transfer);
 
-private:
+ private:
   USBInterface(const USBInterface&);
   USBInterface& operator=(const USBInterface&);
 };

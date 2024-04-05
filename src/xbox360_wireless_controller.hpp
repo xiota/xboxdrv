@@ -20,6 +20,7 @@
 #define HEADER_XBOX360_WIRELESS_CONTROLLER_HPP
 
 #include <libusb.h>
+
 #include <string>
 
 #include "usb_controller.hpp"
@@ -27,16 +28,16 @@
 struct XboxGenericMsg;
 struct XPadDevice;
 
-class Xbox360WirelessController : public USBController
-{
-private:
-  int  m_endpoint;
-  int  m_interface;
-  int  m_battery_status;
+class Xbox360WirelessController : public USBController {
+ private:
+  int m_endpoint;
+  int m_interface;
+  int m_battery_status;
   std::string m_serial;
 
-public:
-  Xbox360WirelessController(libusb_device* dev, int controller_id, bool try_detach);
+ public:
+  Xbox360WirelessController(libusb_device* dev, int controller_id,
+                            bool try_detach);
   virtual ~Xbox360WirelessController();
 
   bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
@@ -45,9 +46,9 @@ public:
   void set_led_real(uint8_t status);
   uint8_t get_battery_status() const;
 
-private:
-  Xbox360WirelessController (const Xbox360WirelessController&);
-  Xbox360WirelessController& operator= (const Xbox360WirelessController&);
+ private:
+  Xbox360WirelessController(const Xbox360WirelessController&);
+  Xbox360WirelessController& operator=(const Xbox360WirelessController&);
 };
 
 #endif

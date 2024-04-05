@@ -20,31 +20,31 @@
 #define HEADER_XBOXDRV_HEADSET_HPP
 
 #include <libusb.h>
+
 #include <string>
 
 #include "usb_interface.hpp"
 
-class Headset
-{
-private:
+class Headset {
+ private:
   libusb_device_handle* m_handle;
   std::auto_ptr<USBInterface> m_interface;
 
   std::auto_ptr<std::ofstream> m_fout;
   std::auto_ptr<std::ifstream> m_fin;
 
-public:
+ public:
   Headset(libusb_device_handle* handle, bool debug);
   ~Headset();
 
   void play_file(const std::string& play_filename);
   void record_file(const std::string& dump_filename);
 
-private:
+ private:
   bool send_data(libusb_transfer* transfer);
   bool receive_data(uint8_t* data, int len);
 
-private:
+ private:
   Headset(const Headset&);
   Headset& operator=(const Headset&);
 };

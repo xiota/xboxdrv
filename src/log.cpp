@@ -22,18 +22,13 @@
 
 Logger g_logger;
 
-std::string log_pretty_print(const std::string& str)
-{
+std::string log_pretty_print(const std::string& str) {
   // FIXME: very basic, might not work with complex return types
   std::string::size_type function_start = 0;
-  for(std::string::size_type i = 0; i < str.size(); ++i)
-  {
-    if (str[i] == ' ')
-    {
-      function_start = i+1;
-    }
-    else if (str[i] == '(')
-    {
+  for (std::string::size_type i = 0; i < str.size(); ++i) {
+    if (str[i] == ' ') {
+      function_start = i + 1;
+    } else if (str[i] == '(') {
       return str.substr(function_start, i - function_start) + "()";
     }
   }
@@ -41,51 +36,42 @@ std::string log_pretty_print(const std::string& str)
   return str.substr(function_start);
 }
 
-Logger::Logger() :
-  m_log_level(kWarning)
-{}
+Logger::Logger() : m_log_level(kWarning) {}
 
-void
-Logger::incr_log_level(LogLevel level)
-{
-  if (get_log_level() < level)
-  {
+void Logger::incr_log_level(LogLevel level) {
+  if (get_log_level() < level) {
     set_log_level(level);
   }
 }
 
-void
-Logger::set_log_level(LogLevel level)
-{
-  m_log_level = level;
-}
+void Logger::set_log_level(LogLevel level) { m_log_level = level; }
 
-Logger::LogLevel
-Logger::get_log_level() const
-{
-  return m_log_level;
-}
+Logger::LogLevel Logger::get_log_level() const { return m_log_level; }
 
-void
-Logger::append_unchecked(LogLevel level, const std::string& str)
-{
-  switch(level)
-  {
-    case kError:   std::cout << "[ERROR] "; break;
-    case kWarning: std::cout << "[WARN]  "; break;
-    case kInfo:    std::cout << "[INFO]  "; break;
-    case kDebug:   std::cout << "[DEBUG] "; break;
-    case kTemp:    std::cout << "[TEMP]  "; break;
+void Logger::append_unchecked(LogLevel level, const std::string& str) {
+  switch (level) {
+    case kError:
+      std::cout << "[ERROR] ";
+      break;
+    case kWarning:
+      std::cout << "[WARN]  ";
+      break;
+    case kInfo:
+      std::cout << "[INFO]  ";
+      break;
+    case kDebug:
+      std::cout << "[DEBUG] ";
+      break;
+    case kTemp:
+      std::cout << "[TEMP]  ";
+      break;
   }
 
   std::cout << str << std::endl;
 }
 
-void
-Logger::append(LogLevel level, const std::string& str)
-{
-  if (m_log_level >= level)
-  {
+void Logger::append(LogLevel level, const std::string& str) {
+  if (m_log_level >= level) {
     append_unchecked(level, str);
   }
 }

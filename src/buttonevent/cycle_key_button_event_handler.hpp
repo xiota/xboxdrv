@@ -22,18 +22,18 @@
 #include <map>
 
 #include "button_event.hpp"
+#include "buttonevent/cycle_key_sequence.hpp"
 #include "ui_event_sequence.hpp"
 
-#include "buttonevent/cycle_key_sequence.hpp"
-
-class CycleKeyButtonEventHandler : public ButtonEventHandler
-{
-private:
+class CycleKeyButtonEventHandler : public ButtonEventHandler {
+ private:
   static std::map<std::string, CycleKeySequencePtr> s_lookup_table;
 
-public:
-  static CycleKeyButtonEventHandler* from_string(const std::string& str, bool wrap_around);
-  static CycleKeyButtonEventHandler* from_string_named(const std::string& str, bool wrap_around);
+ public:
+  static CycleKeyButtonEventHandler* from_string(const std::string& str,
+                                                 bool wrap_around);
+  static CycleKeyButtonEventHandler* from_string_named(const std::string& str,
+                                                       bool wrap_around);
 
   /**
       Syntax: "{direction}:{press}"
@@ -46,28 +46,28 @@ public:
   */
   static CycleKeyButtonEventHandler* from_string_ref(const std::string& value);
 
-
   static CycleKeySequencePtr lookup(const std::string& name);
 
-public:
+ public:
   enum Direction { kForward, kBackward, kNone };
 
-private:
+ private:
   CycleKeySequencePtr m_sequence;
   Direction m_direction;
   bool m_send_press;
 
-private:
-  CycleKeyButtonEventHandler(CycleKeySequencePtr sequence, Direction direction, bool send_press);
+ private:
+  CycleKeyButtonEventHandler(CycleKeySequencePtr sequence, Direction direction,
+                             bool send_press);
 
-public:
+ public:
   void init(UInput& uinput, int slot, bool extra_devices);
   void send(UInput& uinput, bool value);
   void update(UInput& uinput, int msec_delta);
 
   std::string str() const;
 
-private:
+ private:
   CycleKeyButtonEventHandler(const CycleKeyButtonEventHandler&);
   CycleKeyButtonEventHandler& operator=(const CycleKeyButtonEventHandler&);
 };

@@ -20,16 +20,16 @@
 #define HEADER_SAITEK_P3600_CONTROLLER_HPP
 
 #include <libusb.h>
-#include "xboxmsg.hpp"
+
 #include "usb_controller.hpp"
-
-class SaitekP3600Controller : public USBController
-{
-private:
+#include "xboxmsg.hpp"
+
+class SaitekP3600Controller : public USBController {
+ private:
   int left_rumble;
   int right_rumble;
 
-public:
+ public:
   SaitekP3600Controller(libusb_device* dev, bool try_detach);
   ~SaitekP3600Controller();
 
@@ -38,11 +38,11 @@ public:
 
   bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
 
-private:
+ private:
   SaitekP3600Controller(const SaitekP3600Controller&);
   SaitekP3600Controller& operator=(const SaitekP3600Controller&);
 };
-
+
 #endif
 
 /* EOF */

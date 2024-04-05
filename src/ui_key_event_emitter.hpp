@@ -23,18 +23,17 @@
 
 class UIKeyEventCollector;
 
-class UIKeyEventEmitter : public UIEventEmitter
-{
-private:
+class UIKeyEventEmitter : public UIEventEmitter {
+ private:
   UIKeyEventCollector& m_collector;
   bool m_value;
 
-public:
+ public:
   UIKeyEventEmitter(UIKeyEventCollector& collector);
 
   void send(int value);
 
-private:
+ private:
   UIKeyEventEmitter(const UIKeyEventEmitter&);
   UIKeyEventEmitter& operator=(const UIKeyEventEmitter&);
 };

@@ -22,24 +22,24 @@
 extern "C" {
 #include <libudev.h>
 }
-#include <boost/scoped_ptr.hpp>
 #include <glib.h>
 
+#include <boost/scoped_ptr.hpp>
+
+#include "controller_ptr.hpp"
 #include "controller_slot_config.hpp"
 #include "controller_slot_ptr.hpp"
-#include "controller_ptr.hpp"
 
 class Options;
 class UInput;
 class USBGSource;
 struct XPadDevice;
 
-class XboxdrvDaemon
-{
-private:
+class XboxdrvDaemon {
+ private:
   static XboxdrvDaemon* s_current;
 
-private:
+ private:
   const Options& m_opts;
   GMainLoop* m_gmain;
 
@@ -51,11 +51,11 @@ private:
 
   std::auto_ptr<UInput> m_uinput;
 
-private:
+ private:
   static void on_sigint(int);
   static XboxdrvDaemon* current() { return s_current; }
 
-public:
+ public:
   XboxdrvDaemon(const Options& opts);
   ~XboxdrvDaemon();
 
@@ -64,7 +64,7 @@ public:
   std::string status();
   void shutdown();
 
-private:
+ private:
   void create_pid_file();
   void init_uinput();
 
@@ -72,8 +72,7 @@ private:
 
   void process_match(struct udev_device* device);
   void print_info(struct udev_device* device);
-  void launch_controller_thread(udev_device* dev,
-                                const XPadDevice& dev_type,
+  void launch_controller_thread(udev_device* dev, const XPadDevice& dev_type,
                                 uint8_t busnum, uint8_t devnum);
   int get_free_slot_count() const;
 
@@ -86,7 +85,7 @@ private:
   void on_controller_disconnect();
   void on_controller_activate();
 
-private:
+ private:
   static gboolean on_controller_disconnect_wrap(gpointer data) {
     static_cast<XboxdrvDaemon*>(data)->on_controller_disconnect();
     return false;
@@ -97,7 +96,7 @@ private:
     return false;
   }
 
-private:
+ private:
   XboxdrvDaemon(const XboxdrvDaemon&);
   XboxdrvDaemon& operator=(const XboxdrvDaemon&);
 };

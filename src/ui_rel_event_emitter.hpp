@@ -23,17 +23,16 @@
 
 class UIRelEventCollector;
 
-class UIRelEventEmitter : public UIEventEmitter
-{
-private:
+class UIRelEventEmitter : public UIEventEmitter {
+ private:
   UIRelEventCollector& m_collector;
 
-public:
+ public:
   UIRelEventEmitter(UIRelEventCollector& collector);
 
   void send(int value);
 
-private:
+ private:
   UIRelEventEmitter(const UIRelEventEmitter&);
   UIRelEventEmitter& operator=(const UIRelEventEmitter&);
 };

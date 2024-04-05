@@ -28,14 +28,13 @@ class CycleKeySequence;
 
 typedef boost::shared_ptr<CycleKeySequence> CycleKeySequencePtr;
 
-class CycleKeySequence
-{
-public:
-  static CycleKeySequencePtr from_range(std::vector<std::string>::const_iterator beg,
-                                        std::vector<std::string>::const_iterator end,
-                                        bool wrap_around);
+class CycleKeySequence {
+ public:
+  static CycleKeySequencePtr from_range(
+      std::vector<std::string>::const_iterator beg,
+      std::vector<std::string>::const_iterator end, bool wrap_around);
 
-private:
+ private:
   typedef std::vector<UIEventSequence> Keys;
   Keys m_keys;
 
@@ -50,7 +49,7 @@ private:
   /** the last key that was send out */
   int m_last_key;
 
-public:
+ public:
   CycleKeySequence(const Keys& keys, bool wrap_around);
 
   bool has_current_key() const { return m_current_key != -1; }
@@ -61,7 +60,7 @@ public:
   void init(UInput& uinput, int slot, bool extra_devices);
   void send(UInput& uinput, bool value);
 
-private:
+ private:
   CycleKeySequence(const CycleKeySequence&);
   CycleKeySequence& operator=(const CycleKeySequence&);
 };

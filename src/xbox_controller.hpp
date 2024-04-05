@@ -25,13 +25,12 @@
 
 struct XPadDevice;
 
-class XboxController : public USBController
-{
-private:
+class XboxController : public USBController {
+ private:
   int m_endpoint_in;
   int m_endpoint_out;
 
-public:
+ public:
   XboxController(libusb_device* dev, bool try_detach);
   virtual ~XboxController();
 
@@ -39,9 +38,9 @@ public:
   void set_led_real(uint8_t status);
   bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
 
-private:
-  XboxController (const XboxController&);
-  XboxController& operator= (const XboxController&);
+ private:
+  XboxController(const XboxController&);
+  XboxController& operator=(const XboxController&);
 };
 
 #endif

@@ -21,21 +21,20 @@
 
 #include "axis_filter.hpp"
 
-class ConstAxisFilter : public AxisFilter
-{
-public:
+class ConstAxisFilter : public AxisFilter {
+ public:
   static ConstAxisFilter* from_string(const std::string& rest);
 
-public:
+ public:
   ConstAxisFilter(int value);
 
   int filter(int value, int min, int max);
   std::string str() const;
 
-private:
+ private:
   int m_value;
 
-private:
+ private:
   ConstAxisFilter(const ConstAxisFilter&);
   ConstAxisFilter& operator=(const ConstAxisFilter&);
 };

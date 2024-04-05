@@ -19,36 +19,23 @@
 #include "pretty_printer.hpp"
 
 #include <iostream>
-
+
 PrettyPrinter::PrettyPrinter(int terminal_width_)
-  : terminal_width(terminal_width_)
-{
-}
+    : terminal_width(terminal_width_) {}
 
-void
-PrettyPrinter::print(const std::string& str)
-{
-  print("", "", str);
-}
+void PrettyPrinter::print(const std::string& str) { print("", "", str); }
 
-void
-PrettyPrinter::print(const std::string& indent_str, const std::string& left, const std::string& str)
-{
+void PrettyPrinter::print(const std::string& indent_str,
+                          const std::string& left, const std::string& str) {
   const int width = terminal_width - indent_str.size() - 1;
 
-  if (!left.empty())
-  {
-    if (left.size() < indent_str.size())
-    {
+  if (!left.empty()) {
+    if (left.size() < indent_str.size()) {
       std::cout << left << std::string(indent_str.size() - left.size(), ' ');
-    }
-    else
-    {
+    } else {
       std::cout << left << '\n' << indent_str;
     }
-  }
-  else
-  {
+  } else {
     std::cout << indent_str;
   }
 
@@ -59,28 +46,23 @@ PrettyPrinter::print(const std::string& indent_str, const std::string& left, con
   int word_begin_column = 0;
   enum { SPACE, WORD } state = isspace(str[0]) ? SPACE : WORD;
 
-  for(std::string::size_type i = start; i < str.size(); ++i)
-  {
+  for (std::string::size_type i = start; i < str.size(); ++i) {
     const int word_length = i - word_begin;
 
-    { // flush a word or a space sequence to stdout when a state change occurs
-      switch(state)
-      {
+    {  // flush a word or a space sequence to stdout when a state change occurs
+      switch (state) {
         case SPACE:
-          if (!isspace(str[i]))
-          { // flush
+          if (!isspace(str[i])) {  // flush
             state = WORD;
 
-            if (word_begin_column == 0)
-            {
+            if (word_begin_column == 0) {
               // ignore space at the start of a new line
 
               word_begin = i;
               word_begin_column = 0;
-            }
-            else
-            {
-              //std::cout << "(" << i - word_begin << "," << word_begin_column << ")";
+            } else {
+              // std::cout << "(" << i - word_begin << "," << word_begin_column
+              // << ")";
 
               std::cout << str.substr(word_begin, i - word_begin);
 
@@ -91,11 +73,11 @@ PrettyPrinter::print(const std::string& indent_str, const std::string& left, con
           break;
 
         case WORD:
-          if (isspace(str[i]))
-          { // flush
+          if (isspace(str[i])) {  // flush
             state = SPACE;
 
-            //std::cout << "(" << i - word_begin << "," << word_begin_column << ")";
+            // std::cout << "(" << i - word_begin << "," << word_begin_column <<
+            // ")";
 
             std::cout << str.substr(word_begin, i - word_begin);
             word_begin = i;
@@ -105,15 +87,12 @@ PrettyPrinter::print(const std::string& indent_str, const std::string& left, con
       }
     }
 
-    { // process the current character
-      if (str[i] == '\n')
-      {
+    {  // process the current character
+      if (str[i] == '\n') {
         std::cout << '\n' << indent_str;
-        word_begin = i+1;
+        word_begin = i + 1;
         word_begin_column = 0;
-      }
-      else if (word_begin_column + word_length >= width)
-      {
+      } else if (word_begin_column + word_length >= width) {
         std::cout << '\n' << indent_str;
         word_begin_column = 0;
       }
@@ -124,25 +103,24 @@ PrettyPrinter::print(const std::string& indent_str, const std::string& left, con
   std::cout << std::endl;
 }
 
-
 #ifdef __TEST__
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
   PrettyPrinter printer(16, get_terminal_width() - 16);
 
-  printer.print(" -h, --help",
-                "This program is free software: you can redistribute it and/or modify "
-                "it under the terms of the GNU General Public License as published by "
-                "the Free Software Foundation, either version 3 of the License, or "
-                "(at your option) any later version.\n"
-                "\n"
-                "\n"
-                "You should have received a copy of the GNU General Public License "
-                "along with this program.");
+  printer.print(
+      " -h, --help",
+      "This program is free software: you can redistribute it and/or modify "
+      "it under the terms of the GNU General Public License as published by "
+      "the Free Software Foundation, either version 3 of the License, or "
+      "(at your option) any later version.\n"
+      "\n"
+      "\n"
+      "You should have received a copy of the GNU General Public License "
+      "along with this program.");
   return 0;
 }
 
 #endif
-
+
 /* EOF */

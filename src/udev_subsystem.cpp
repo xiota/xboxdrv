@@ -22,30 +22,22 @@
 
 #include "raise_exception.hpp"
 
-UdevSubsystem::UdevSubsystem() :
-  m_udev(),
-  m_monitor(),
-  m_process_match_cb()
-{
+UdevSubsystem::UdevSubsystem() : m_udev(), m_monitor(), m_process_match_cb() {
   m_udev = udev_new();
-  if (!m_udev)
-  {
+  if (!m_udev) {
     raise_exception(std::runtime_error, "udev init failure");
   }
 }
 
-UdevSubsystem::~UdevSubsystem()
-{
-  if (m_monitor)
-  {
+UdevSubsystem::~UdevSubsystem() {
+  if (m_monitor) {
     udev_monitor_unref(m_monitor);
   }
   udev_unref(m_udev);
 }
 
-void
-UdevSubsystem::set_device_callback(const boost::function<void (udev_device*)>& process_match_cb)
-{
+void UdevSubsystem::set_device_callback(
+    const boost::function<void(udev_device*)>& process_match_cb) {
   assert(process_match_cb);
   assert(!m_process_match_cb);
 
@@ -53,23 +45,24 @@ UdevSubsystem::set_device_callback(const boost::function<void (udev_device*)>& p
 
   // Setup udev monitor and enumerate
   m_monitor = udev_monitor_new_from_netlink(m_udev, "udev");
-  udev_monitor_filter_add_match_subsystem_devtype(m_monitor, "usb", "usb_device");
+  udev_monitor_filter_add_match_subsystem_devtype(m_monitor, "usb",
+                                                  "usb_device");
   udev_monitor_enable_receiving(m_monitor);
 
   // FIXME: won't we get devices twice that have been plugged in at
   // this point? once from the enumeration, once from the monitor
   enumerate_udev_devices();
 
-  GIOChannel* udev_channel = g_io_channel_unix_new(udev_monitor_get_fd(m_monitor));
-  g_io_add_watch(udev_channel,
-                 static_cast<GIOCondition>(G_IO_IN | G_IO_PRI | G_IO_ERR | G_IO_HUP),
-                 &UdevSubsystem::on_udev_data_wrap, this);
+  GIOChannel* udev_channel =
+      g_io_channel_unix_new(udev_monitor_get_fd(m_monitor));
+  g_io_add_watch(
+      udev_channel,
+      static_cast<GIOCondition>(G_IO_IN | G_IO_PRI | G_IO_ERR | G_IO_HUP),
+      &UdevSubsystem::on_udev_data_wrap, this);
   g_io_channel_unref(udev_channel);
 }
 
-void
-UdevSubsystem::enumerate_udev_devices()
-{
+void UdevSubsystem::enumerate_udev_devices() {
   assert(m_process_match_cb);
 
   // Enumerate over all devices already connected to the computer
@@ -84,8 +77,7 @@ UdevSubsystem::enumerate_udev_devices()
   struct udev_list_entry* dev_list_entry;
 
   devices = udev_enumerate_get_list_entry(enumerate);
-  udev_list_entry_foreach(dev_list_entry, devices)
-  {
+  udev_list_entry_foreach(dev_list_entry, devices) {
     // name is path, value is NULL
     const char* path = udev_list_entry_get_name(dev_list_entry);
 
@@ -93,8 +85,7 @@ UdevSubsystem::enumerate_udev_devices()
 
     // manually filter for devtype, as udev enumerate can't do it by itself
     const char* devtype = udev_device_get_devtype(device);
-    if (devtype && strcmp(devtype, "usb_device") == 0)
-    {
+    if (devtype && strcmp(devtype, "usb_device") == 0) {
       m_process_match_cb(device);
     }
     udev_device_unref(device);
@@ -102,49 +93,34 @@ UdevSubsystem::enumerate_udev_devices()
   udev_enumerate_unref(enumerate);
 }
 
-bool
-UdevSubsystem::on_udev_data(GIOChannel* channel, GIOCondition condition)
-{
-  if (condition == G_IO_OUT)
-  {
+bool UdevSubsystem::on_udev_data(GIOChannel* channel, GIOCondition condition) {
+  if (condition == G_IO_OUT) {
     log_error("data can be written");
-  }
-  else if (condition == G_IO_PRI)
-  {
+  } else if (condition == G_IO_PRI) {
     log_error("data can be read");
-  }
-  else if (condition == G_IO_ERR)
-  {
+  } else if (condition == G_IO_ERR) {
     log_error("data error");
-  }
-  else if (condition != G_IO_IN)
-  {
+  } else if (condition != G_IO_IN) {
     log_error("unknown condition: " << condition);
-  }
-  else
-  {
+  } else {
     log_info("trying to read data from udev");
 
     log_info("trying to read data from udev monitor");
     struct udev_device* device = udev_monitor_receive_device(m_monitor);
     log_info("got data from udev monitor");
 
-    if (!device)
-    {
-      // seem to be normal, do we get this when the given device is filtered out?
+    if (!device) {
+      // seem to be normal, do we get this when the given device is filtered
+      // out?
       log_debug("udev device couldn't be read: " << device);
-    }
-    else
-    {
+    } else {
       const char* action = udev_device_get_action(device);
 
-      if (g_logger.get_log_level() >= Logger::kDebug)
-      {
+      if (g_logger.get_log_level() >= Logger::kDebug) {
         print_info(device);
       }
 
-      if (action && strcmp(action, "add") == 0)
-      {
+      if (action && strcmp(action, "add") == 0) {
         m_process_match_cb(device);
       }
 
@@ -155,15 +131,13 @@ UdevSubsystem::on_udev_data(GIOChannel* channel, GIOCondition condition)
   return true;
 }
 
-void
-UdevSubsystem::print_info(udev_device* device)
-{
+void UdevSubsystem::print_info(udev_device* device) {
   log_debug("/---------------------------------------------");
   log_debug("devpath: " << udev_device_get_devpath(device));
 
   if (udev_device_get_action(device))
     log_debug("action: " << udev_device_get_action(device));
-  //log_debug("init: " << udev_device_get_is_initialized(device));
+  // log_debug("init: " << udev_device_get_is_initialized(device));
 
   if (udev_device_get_subsystem(device))
     log_debug("subsystem: " << udev_device_get_subsystem(device));
@@ -189,8 +163,8 @@ UdevSubsystem::print_info(udev_device* device)
   if (udev_device_get_action(device))
     log_debug("action:    " << udev_device_get_action(device));
 
-  //udev_device_get_sysattr_value(device, "busnum");
-  //udev_device_get_sysattr_value(device, "devnum");
+    // udev_device_get_sysattr_value(device, "busnum");
+    // udev_device_get_sysattr_value(device, "devnum");
 
 #if 0
   // FIXME: only works with newer versions of libudev

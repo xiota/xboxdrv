@@ -22,26 +22,15 @@
 
 #include "helper.hpp"
 
-ConstButtonFilter*
-ConstButtonFilter::from_string(const std::string& str)
-{
+ConstButtonFilter* ConstButtonFilter::from_string(const std::string& str) {
   return new ConstButtonFilter(str2bool(str));
 }
 
-ConstButtonFilter::ConstButtonFilter(bool value) :
-  m_value(value)
-{
-}
+ConstButtonFilter::ConstButtonFilter(bool value) : m_value(value) {}
 
-bool
-ConstButtonFilter::filter(bool value)
-{
-  return m_value;
-}
+bool ConstButtonFilter::filter(bool value) { return m_value; }
 
-std::string
-ConstButtonFilter::str() const
-{
+std::string ConstButtonFilter::str() const {
   std::ostringstream os;
   os << "const:" << m_value;
   return os.str();

@@ -21,20 +21,19 @@
 
 #include <libusb.h>
 
-#include "options.hpp"
 #include "controller_ptr.hpp"
+#include "options.hpp"
 
-class ControllerFactory
-{
-public:
-  static ControllerPtr create(const XPadDevice& dev_type,
-                              libusb_device* dev,
+class ControllerFactory {
+ public:
+  static ControllerPtr create(const XPadDevice& dev_type, libusb_device* dev,
                               const Options& opts);
 
   static std::vector<ControllerPtr> create_multiple(const XPadDevice& dev_type,
-                                                    libusb_device* dev, const Options& opts);
+                                                    libusb_device* dev,
+                                                    const Options& opts);
 
-private:
+ private:
   ControllerFactory(const ControllerFactory&);
   ControllerFactory& operator=(const ControllerFactory&);
 };

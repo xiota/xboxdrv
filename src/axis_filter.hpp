@@ -26,13 +26,12 @@
 class AxisFilter;
 
 typedef boost::shared_ptr<AxisFilter> AxisFilterPtr;
-
-class AxisFilter
-{
-public:
+
+class AxisFilter {
+ public:
   static AxisFilterPtr from_string(const std::string& str);
 
-public:
+ public:
   AxisFilter() {}
   virtual ~AxisFilter() {}
 
@@ -40,7 +39,7 @@ public:
   virtual int filter(int value, int min, int max) = 0;
   virtual std::string str() const = 0;
 };
-
+
 #endif
 
 /* EOF */

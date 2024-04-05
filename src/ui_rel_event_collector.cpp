@@ -20,29 +20,20 @@
 
 #include "uinput.hpp"
 
-UIRelEventCollector::UIRelEventCollector(UInput& uinput, uint32_t device_id, int type, int code) :
-  UIEventCollector(uinput, device_id, type, code),
-  m_emitters()
-{
-}
+UIRelEventCollector::UIRelEventCollector(UInput& uinput, uint32_t device_id,
+                                         int type, int code)
+    : UIEventCollector(uinput, device_id, type, code), m_emitters() {}
 
-UIEventEmitterPtr
-UIRelEventCollector::create_emitter()
-{
+UIEventEmitterPtr UIRelEventCollector::create_emitter() {
   UIRelEventEmitterPtr emitter(new UIRelEventEmitter(*this));
   m_emitters.push_back(emitter);
   return m_emitters.back();
 }
 
-void
-UIRelEventCollector::send(int value)
-{
+void UIRelEventCollector::send(int value) {
   m_uinput.send(get_device_id(), get_type(), get_code(), value);
 }
 
-void
-UIRelEventCollector::sync()
-{
-}
+void UIRelEventCollector::sync() {}
 
 /* EOF */

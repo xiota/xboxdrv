@@ -19,77 +19,78 @@
 #ifndef HEADER_XBOXDRV_INI_SCHEMA_HPP
 #define HEADER_XBOXDRV_INI_SCHEMA_HPP
 
-#include <map>
 #include <boost/function.hpp>
-
-class INIPairSchema
-{
-public:
+#include <map>
+
+class INIPairSchema {
+ public:
   INIPairSchema() {}
   virtual ~INIPairSchema() {}
-  virtual std::string str() const =0;
-  virtual void call(const std::string& value) =0;
+  virtual std::string str() const = 0;
+  virtual void call(const std::string& value) = 0;
 };
 
-class INISchemaSection
-{
-private:
+class INISchemaSection {
+ private:
   typedef std::map<std::string, INIPairSchema*> Schema;
   Schema m_schema;
 
-public:
-  boost::function<void (const std::string&, const std::string&)> m_callback;
+ public:
+  boost::function<void(const std::string&, const std::string&)> m_callback;
 
-public:
-  INISchemaSection(boost::function<void (const std::string&, const std::string&)> callback);
+ public:
+  INISchemaSection(
+      boost::function<void(const std::string&, const std::string&)> callback);
   ~INISchemaSection();
 
-  INISchemaSection& operator()(const std::string& name, bool*  value);
-  INISchemaSection& operator()(const std::string& name, int*   value);
+  INISchemaSection& operator()(const std::string& name, bool* value);
+  INISchemaSection& operator()(const std::string& name, int* value);
   INISchemaSection& operator()(const std::string& name, float* value);
   INISchemaSection& operator()(const std::string& name, std::string* value);
-  INISchemaSection& operator()(const std::string& name, boost::function<void (const std::string&)> callback);
+  INISchemaSection& operator()(
+      const std::string& name,
+      boost::function<void(const std::string&)> callback);
   INISchemaSection& operator()(const std::string& name,
-                               boost::function<void ()> true_callback,
-                               boost::function<void ()> false_callback);
+                               boost::function<void()> true_callback,
+                               boost::function<void()> false_callback);
 
   INIPairSchema* get(const std::string& name) const;
 
   void save(std::ostream& out);
 
-private:
+ private:
   INISchemaSection& add(const std::string& name, INIPairSchema* schema);
 
-private:
+ private:
   INISchemaSection(const INISchemaSection&);
   INISchemaSection& operator=(const INISchemaSection&);
 };
-
-class INISchema
-{
-private:
+
+class INISchema {
+ private:
   typedef std::map<std::string, INISchemaSection*> Sections;
   Sections m_sections;
 
-public:
+ public:
   INISchema();
   ~INISchema();
 
   void clear();
 
-  INISchemaSection& section(const std::string& name,
-                            boost::function<void (const std::string&, const std::string&)> callback
-                            = boost::function<void (const std::string&, const std::string&)>());
+  INISchemaSection& section(
+      const std::string& name,
+      boost::function<void(const std::string&, const std::string&)> callback =
+          boost::function<void(const std::string&, const std::string&)>());
 
   INISchemaSection* get_section(const std::string& name) const;
 
   void save(std::ostream& out);
 
-private:
+ private:
   INISchema(const INISchema&);
   INISchema& operator=(const INISchema&);
 };
-
+
 #endif
 
 /* EOF */

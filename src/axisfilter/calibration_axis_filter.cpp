@@ -23,41 +23,40 @@
 
 #include "helper.hpp"
 
-CalibrationAxisFilter*
-CalibrationAxisFilter::from_string(const std::string& str)
-{
+CalibrationAxisFilter* CalibrationAxisFilter::from_string(
+    const std::string& str) {
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  tokenizer tokens(
+      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
 
-  int min    = 0;
+  int min = 0;
   int center = 0;
-  int max    = 0;
+  int max = 0;
 
   int j = 0;
-  for(tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i, ++j)
-  {
-    switch(j)
-    {
-      case 0: min    = str2int(*i); break;
-      case 1: center = str2int(*i); break;
-      case 2: max    = str2int(*i); break;
-      default: throw std::runtime_error("to many arguments");
+  for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i, ++j) {
+    switch (j) {
+      case 0:
+        min = str2int(*i);
+        break;
+      case 1:
+        center = str2int(*i);
+        break;
+      case 2:
+        max = str2int(*i);
+        break;
+      default:
+        throw std::runtime_error("to many arguments");
     };
   }
 
   return new CalibrationAxisFilter(min, center, max);
 }
 
-CalibrationAxisFilter::CalibrationAxisFilter(int min, int center, int max) :
-  m_min(min),
-  m_center(center),
-  m_max(max)
-{
-}
+CalibrationAxisFilter::CalibrationAxisFilter(int min, int center, int max)
+    : m_min(min), m_center(center), m_max(max) {}
 
-int
-CalibrationAxisFilter::filter(int value, int min, int max)
-{
+int CalibrationAxisFilter::filter(int value, int min, int max) {
   if (value < m_center)
     value = -min * (value - m_center) / (m_center - m_min);
   else if (value > m_center)
@@ -68,9 +67,7 @@ CalibrationAxisFilter::filter(int value, int min, int max)
   return Math::clamp(min, value, max);
 }
 
-std::string
-CalibrationAxisFilter::str() const
-{
+std::string CalibrationAxisFilter::str() const {
   std::ostringstream out;
   out << "calibration:" << m_min << ":" << m_center << ":" << m_max;
   return out.str();
