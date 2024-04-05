@@ -20,6 +20,7 @@
 
 #include <bitset>
 #include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 

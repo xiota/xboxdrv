@@ -20,7 +20,10 @@
 
 #include <boost/bind.hpp>
 #include <cerrno>
+#include <cstring>
 #include <fstream>
+#include <stdexcept>
+#include <string>
 
 #include "helper.hpp"
 #include "raise_exception.hpp"

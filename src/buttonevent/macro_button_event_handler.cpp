@@ -21,7 +21,10 @@
 #include <linux/input.h>
 
 #include <boost/tokenizer.hpp>
+#include <cassert>
 #include <fstream>
+#include <stdexcept>
+#include <string>
 #include <vector>
 
 #include "evdev_helper.hpp"

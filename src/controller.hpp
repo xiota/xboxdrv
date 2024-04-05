@@ -22,6 +22,7 @@
 #include <boost/function.hpp>
 #include <cstdint>
 #include <memory>
+#include <string>
 
 extern "C" {
 #include <libudev.h>

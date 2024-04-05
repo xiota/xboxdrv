@@ -21,6 +21,7 @@
 
 #include <boost/function.hpp>
 #include <cstdint>
+#include <string>
 #include <vector>
 
 int hexstr2int(const std::string& str);

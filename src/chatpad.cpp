@@ -19,6 +19,9 @@
 #include "chatpad.hpp"
 
 #include <algorithm>
+#include <cassert>
+#include <cstring>
+#include <stdexcept>
 
 #include "helper.hpp"
 #include "linux_uinput.hpp"

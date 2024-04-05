@@ -18,6 +18,8 @@
 
 #include "buttonfilter/toggle_button_filter.hpp"
 
+#include <string>
+
 ToggleButtonFilter::ToggleButtonFilter()
     : m_state(false), m_last_value(false) {}
 

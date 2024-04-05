@@ -18,6 +18,8 @@
 
 #include "invert_axis_filter.hpp"
 
+#include <string>
+
 int InvertAxisFilter::filter(int value, int min, int max) {
   int center = (max + min + 1) / 2;  // FIXME: '+1' is kind of a hack to
                                      // get the center at 0 for the

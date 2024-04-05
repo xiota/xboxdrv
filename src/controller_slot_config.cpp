@@ -19,6 +19,9 @@
 #include "controller_slot_config.hpp"
 
 #include <boost/bind.hpp>
+#include <cassert>
+#include <memory>
+#include <stdexcept>
 
 #include "axisfilter/deadzone_axis_filter.hpp"
 #include "modifier/dpad_rotation_modifier.hpp"

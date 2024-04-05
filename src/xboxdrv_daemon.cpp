@@ -25,8 +25,12 @@
 #include <boost/bind.hpp>
 #include <boost/format.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <cassert>
 #include <cerrno>
+#include <cstring>
 #include <fstream>
+#include <stdexcept>
+#include <string>
 
 #include "controller.hpp"
 #include "controller_factory.hpp"

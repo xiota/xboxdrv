@@ -27,7 +27,10 @@
 #include <cerrno>
 #include <csignal>
 #include <cstdio>
+#include <cstring>
 #include <iostream>
+#include <stdexcept>
+#include <string>
 
 #include "command_line_options.hpp"
 #include "controller_factory.hpp"

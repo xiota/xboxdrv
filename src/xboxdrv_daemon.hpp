@@ -22,9 +22,11 @@
 extern "C" {
 #include <libudev.h>
 }
+
 #include <glib.h>
 
-#include <boost/scoped_ptr.hpp>
+#include <memory>
+#include <string>
 
 #include "controller_ptr.hpp"
 #include "controller_slot_config.hpp"

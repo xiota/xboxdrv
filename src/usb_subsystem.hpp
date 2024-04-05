@@ -22,6 +22,7 @@
 #include <libusb.h>
 
 #include <boost/scoped_ptr.hpp>
+#include <string>
 
 #include "xpad_device.hpp"
 

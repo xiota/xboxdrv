@@ -18,6 +18,8 @@
 
 #include "uinput_message_processor.hpp"
 
+#include <cstring>
+
 #include "log.hpp"
 #include "uinput.hpp"
 

@@ -21,6 +21,7 @@
 
 #include <boost/function.hpp>
 #include <map>
+#include <string>
 
 class INIPairSchema {
  public:

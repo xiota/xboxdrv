@@ -19,8 +19,11 @@
 #include "axisevent/rel_repeat_axis_event_handler.hpp"
 
 #include <boost/tokenizer.hpp>
+#include <cassert>
 #include <cmath>
 #include <sstream>
+#include <stdexcept>
+#include <string>
 
 #include "evdev_helper.hpp"
 #include "helper.hpp"

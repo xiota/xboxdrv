@@ -26,6 +26,8 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
+#include <string>
 
 #include "evdev_helper.hpp"
 #include "helper.hpp"

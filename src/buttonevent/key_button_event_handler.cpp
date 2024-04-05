@@ -21,6 +21,9 @@
 #include <linux/input.h>
 
 #include <boost/tokenizer.hpp>
+#include <memory>
+#include <stdexcept>
+#include <string>
 
 #include "evdev_helper.hpp"
 #include "helper.hpp"

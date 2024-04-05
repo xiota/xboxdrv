@@ -18,8 +18,11 @@
 
 #include "arg_parser.hpp"
 
+#include <cassert>
 #include <cstdio>
 #include <ostream>
+#include <stdexcept>
+#include <string>
 
 #include "helper.hpp"
 #include "pretty_printer.hpp"

@@ -19,6 +19,8 @@
 #ifndef HEADER_XBOXDRV_AXISEVENT_ABS_AXIS_EVENT_HANDLER_HPP
 #define HEADER_XBOXDRV_AXISEVENT_ABS_AXIS_EVENT_HANDLER_HPP
 
+#include <string>
+
 #include "axis_event.hpp"
 #include "ui_event_emitter.hpp"
 

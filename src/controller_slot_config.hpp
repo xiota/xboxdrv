@@ -20,6 +20,7 @@
 #define HEADER_XBOXDRV_CONTROLLER_CONFIG_SET_HPP
 
 #include <boost/function.hpp>
+#include <memory>
 
 #include "controller_config.hpp"
 #include "options.hpp"

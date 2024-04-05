@@ -23,6 +23,7 @@
 #include <boost/tokenizer.hpp>
 #include <cerrno>
 #include <cstring>
+#include <string>
 
 #include "log.hpp"
 

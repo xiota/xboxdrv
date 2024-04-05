@@ -18,6 +18,10 @@
 
 #include "ui_event.hpp"
 
+#include <cassert>
+#include <stdexcept>
+#include <string>
+
 #include "evdev_helper.hpp"
 #include "helper.hpp"
 #include "uinput.hpp"

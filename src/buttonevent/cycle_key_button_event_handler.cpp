@@ -20,6 +20,7 @@
 
 #include <boost/tokenizer.hpp>
 #include <stdexcept>
+#include <string>
 
 #include "helper.hpp"
 #include "raise_exception.hpp"

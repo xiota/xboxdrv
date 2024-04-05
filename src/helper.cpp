@@ -28,7 +28,10 @@
 #include <cassert>
 #include <cerrno>
 #include <cstdio>
+#include <cstring>
 #include <iostream>
+#include <stdexcept>
+#include <string>
 
 #include "raise_exception.hpp"
 

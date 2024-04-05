@@ -19,10 +19,11 @@
 #ifndef HEADER_XBOXDRV_CONTROLLER_MATCH_RULE_HPP
 #define HEADER_XBOXDRV_CONTROLLER_MATCH_RULE_HPP
 
-#include <boost/shared_ptr.hpp>
 extern "C" {
 #include <libudev.h>
 }
+
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <vector>
 

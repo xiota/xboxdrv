@@ -20,6 +20,7 @@
 #define HEADER_XBOXDRV_CONTROLLER_OPTIONS_HPP
 
 #include <map>
+#include <memory>
 #include <vector>
 
 #include "modifier/axismap_modifier.hpp"

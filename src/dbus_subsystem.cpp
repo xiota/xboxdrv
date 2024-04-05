@@ -26,6 +26,7 @@
 
 #include <sstream>
 #include <stdexcept>
+#include <string>
 
 #include "raise_exception.hpp"
 #include "xboxdrv_g_controller.hpp"

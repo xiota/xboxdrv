@@ -24,6 +24,7 @@
 
 #include <boost/function.hpp>
 #include <cstdint>
+#include <string>
 
 class ForceFeedbackHandler;
 class Controller;

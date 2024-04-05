@@ -21,6 +21,8 @@
 #include <boost/tokenizer.hpp>
 #include <cmath>
 #include <sstream>
+#include <stdexcept>
+#include <string>
 
 #include "helper.hpp"
 

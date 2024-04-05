@@ -21,7 +21,11 @@
 #include <fcntl.h>
 
 #include <boost/format.hpp>
+#include <cassert>
 #include <cerrno>
+#include <cstring>
+#include <stdexcept>
+#include <string>
 
 #include "controller.hpp"
 #include "evdev_helper.hpp"

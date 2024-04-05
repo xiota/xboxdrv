@@ -21,8 +21,11 @@
 #include <boost/bind.hpp>
 #include <boost/format.hpp>
 #include <boost/tokenizer.hpp>
+#include <cassert>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
+#include <string>
 
 #include "axisfilter/calibration_axis_filter.hpp"
 #include "axisfilter/relative_axis_filter.hpp"

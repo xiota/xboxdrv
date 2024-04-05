@@ -18,7 +18,7 @@
 
 #include "firestorm_dual_controller.hpp"
 
-#include <boost/format.hpp>
+#include <cstring>
 #include <sstream>
 
 #include "helper.hpp"

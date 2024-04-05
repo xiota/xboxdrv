@@ -20,6 +20,8 @@
 
 #include <boost/tokenizer.hpp>
 #include <sstream>
+#include <stdexcept>
+#include <string>
 
 #include "axisfilter/invert_axis_filter.hpp"
 #include "helper.hpp"

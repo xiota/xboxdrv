@@ -20,6 +20,7 @@
 
 #include <sstream>
 #include <stdexcept>
+#include <string>
 
 FourWayRestrictorModifier* FourWayRestrictorModifier::from_string(
     const std::vector<std::string>& args) {

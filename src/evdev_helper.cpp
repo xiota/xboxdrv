@@ -20,6 +20,9 @@
 
 #include <linux/input.h>
 
+#include <stdexcept>
+#include <string>
+
 #include "helper.hpp"
 #include "log.hpp"
 

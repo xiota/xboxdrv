@@ -19,6 +19,8 @@
 #include "xbox360_wireless_controller.hpp"
 
 #include <boost/format.hpp>
+#include <cassert>
+#include <cstring>
 #include <sstream>
 
 #include "helper.hpp"

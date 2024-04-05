@@ -23,8 +23,10 @@
 
 #include <boost/bind.hpp>
 #include <boost/format.hpp>
+#include <cassert>
 #include <cstdio>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 
 #include "controller_factory.hpp"

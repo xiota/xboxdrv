@@ -19,6 +19,8 @@
 #include "ini_schema.hpp"
 
 #include <sstream>
+#include <stdexcept>
+#include <string>
 
 class INIPairSchemaBoolCallback : public INIPairSchema {
  private:

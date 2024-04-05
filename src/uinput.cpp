@@ -19,10 +19,13 @@
 #include "uinput.hpp"
 
 #include <boost/tokenizer.hpp>
+#include <cassert>
 #include <cmath>
 #include <cstdio>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
+#include <string>
 
 #include "helper.hpp"
 #include "log.hpp"

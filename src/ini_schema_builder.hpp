@@ -19,6 +19,8 @@
 #ifndef HEADER_XBOXDRV_INI_SCHEMA_BUILDER_HPP
 #define HEADER_XBOXDRV_INI_SCHEMA_BUILDER_HPP
 
+#include <string>
+
 #include "ini_builder.hpp"
 
 class INISchema;

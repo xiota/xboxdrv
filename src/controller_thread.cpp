@@ -21,7 +21,9 @@
 #include <glib.h>
 
 #include <boost/bind.hpp>
+#include <cstring>
 #include <iostream>
+#include <memory>
 
 #include "controller.hpp"
 #include "helper.hpp"

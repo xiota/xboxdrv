@@ -20,6 +20,7 @@
 
 #include <boost/format.hpp>
 #include <stdexcept>
+#include <string>
 
 #include "helper.hpp"
 #include "options.hpp"

@@ -20,6 +20,7 @@
 #define HEADER_MODIFIER_HPP
 
 #include <boost/shared_ptr.hpp>
+#include <string>
 
 #include "xboxmsg.hpp"
 

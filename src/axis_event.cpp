@@ -19,7 +19,10 @@
 #include "axis_event.hpp"
 
 #include <boost/tokenizer.hpp>
+#include <cassert>
 #include <cmath>
+#include <cstring>
+#include <string>
 
 #include "axisevent/abs_axis_event_handler.hpp"
 #include "axisevent/key_axis_event_handler.hpp"

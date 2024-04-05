@@ -19,6 +19,8 @@
 #ifndef HEADER_XBOXDRV_CONTROLLER_CONFIG_HPP
 #define HEADER_XBOXDRV_CONTROLLER_CONFIG_HPP
 
+#include <memory>
+
 #include "modifier.hpp"
 #include "uinput_config.hpp"
 

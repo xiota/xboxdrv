@@ -19,6 +19,7 @@
 #include <glib.h>
 #include <libusb.h>
 
+#include <cassert>
 #include <stdexcept>
 
 #include "dummy_message_processor.hpp"

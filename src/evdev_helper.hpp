@@ -21,6 +21,8 @@
 
 #include <X11/Xlib.h>
 
+#include <string>
+
 #include "enum_box.hpp"
 #include "ui_event.hpp"
 
