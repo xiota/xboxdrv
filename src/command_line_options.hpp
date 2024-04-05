@@ -56,10 +56,11 @@ class CommandLineParser {
 
   void set_ui_buttonmap(ButtonMap& btn_map, const std::string& name,
                         const std::string& value);
-  void set_ui_buttonmap(const std::string& name, const std::string& value);
+  void set_ui_buttonmap_helper(const std::string& name,
+                               const std::string& value);
   void set_ui_axismap(AxisMap& axis_map, const std::string& name,
                       const std::string& value);
-  void set_ui_axismap(const std::string& name, const std::string& value);
+  void set_ui_axismap_helper(const std::string& name, const std::string& value);
   void set_modifier(const std::string& name, const std::string& value);
 
   void set_axismap(const std::string& name, const std::string& value);
