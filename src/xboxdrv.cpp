@@ -22,7 +22,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <boost/algorithm/string/join.hpp>
 #include <cerrno>
 #include <csignal>
 #include <cstdio>
@@ -237,19 +236,19 @@ void Xboxdrv::run_list_enums(uint32_t enums) {
 
   if (enums & Options::LIST_ABS) {
     wrap.println("EV_ABS:");
-    wrap.para("  ", boost::algorithm::join(evdev_abs_names.get_names(), ", "));
+    wrap.para("  ", string_join(evdev_abs_names.get_names(), ", "));
     wrap.newline();
   }
 
   if (enums & Options::LIST_REL) {
     wrap.println("EV_REL:");
-    wrap.para("  ", boost::algorithm::join(evdev_rel_names.get_names(), ", "));
+    wrap.para("  ", string_join(evdev_rel_names.get_names(), ", "));
     wrap.newline();
   }
 
   if (enums & Options::LIST_KEY) {
     wrap.println("EV_KEY:");
-    wrap.para("  ", boost::algorithm::join(evdev_key_names.get_names(), ", "));
+    wrap.para("  ", string_join(evdev_key_names.get_names(), ", "));
     wrap.newline();
   }
 
@@ -260,7 +259,7 @@ void Xboxdrv::run_list_enums(uint32_t enums) {
       lst.push_back(i->second);
     }
     wrap.println("X11Keysym:");
-    wrap.para("  ", boost::algorithm::join(lst, ", "));
+    wrap.para("  ", string_join(lst, ", "));
     wrap.newline();
   }
 
@@ -270,7 +269,7 @@ void Xboxdrv::run_list_enums(uint32_t enums) {
       lst.push_back(axis2string(static_cast<XboxAxis>(i)));
     }
     wrap.println("XboxAxis:");
-    wrap.para("  ", boost::algorithm::join(lst, ", "));
+    wrap.para("  ", string_join(lst, ", "));
     wrap.newline();
   }
 
@@ -280,7 +279,7 @@ void Xboxdrv::run_list_enums(uint32_t enums) {
       lst.push_back(btn2string(static_cast<XboxButton>(i)));
     }
     wrap.println("XboxButton:");
-    wrap.para("  ", boost::algorithm::join(lst, ", "));
+    wrap.para("  ", string_join(lst, ", "));
     wrap.newline();
   }
 }

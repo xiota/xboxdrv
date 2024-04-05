@@ -42,6 +42,23 @@ void process_name_value_string(
 void split_string_at(const std::string& str, char c, std::string* lhs,
                      std::string* rhs);
 
+template <typename C>
+std::string string_join(C const& c, std::string_view sep) {
+  std::string result;
+  auto it = std::begin(c);
+  if (it == std::end(c)) {
+    return {};
+  } else {
+    result += *it;
+    ++it;
+    for (; it != std::end(c); ++it) {
+      result += sep;
+      result += *it;
+    }
+    return result;
+  }
+}
+
 /** Convert the given string \a str to an integer, the string can
     either be an exact integer or a percent value (i.e. "75%"), in
     which case it is handled as (range * int(str)) */
