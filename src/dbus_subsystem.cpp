@@ -19,11 +19,9 @@
 #include "dbus_subsystem.hpp"
 
 #include <dbus/dbus-glib-lowlevel.h>
-
-#include <boost/format.hpp>
-// #include <dbus/dbus-glib-binding.h>
 #include <dbus/dbus.h>
 
+#include <format>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -94,9 +92,8 @@ void DBusSubsystem::register_controller_slots(
                                     &dbus_glib_xboxdrv_controller_object_info);
     dbus_g_connection_register_g_object(
         m_connection,
-        (boost::format("/org/seul/Xboxdrv/ControllerSlots/%d") %
-         (i - slots.begin()))
-            .str()
+        std::format("/org/seul/Xboxdrv/ControllerSlots/{:d}",
+                    (i - slots.begin()))
             .c_str(),
         G_OBJECT(controller));
   }

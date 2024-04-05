@@ -22,10 +22,10 @@
 #include <fcntl.h>
 
 #include <algorithm>
-#include <boost/format.hpp>
 #include <cerrno>
 #include <cstdio>
 #include <cstring>
+#include <format>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -111,8 +111,8 @@ EvdevController::EvdevController(const std::string& filename,
         struct input_absinfo absinfo;
         ioctl_x(m_fd, EVIOCGABS(i), &absinfo);
 
-        log_debug(boost::format("abs: %-20s min: %6d max: %6d") % abs2str(i) %
-                  absinfo.minimum % absinfo.maximum);
+        log_debug(std::format("abs: {:20s} min: {:6d} max: {:6d}", abs2str(i),
+                              absinfo.minimum, absinfo.maximum));
         m_absinfo[i] = absinfo;
       }
     }

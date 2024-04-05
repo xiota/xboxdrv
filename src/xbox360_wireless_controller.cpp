@@ -18,9 +18,9 @@
 
 #include "xbox360_wireless_controller.hpp"
 
-#include <boost/format.hpp>
 #include <cassert>
 #include <cstring>
+#include <format>
 #include <sstream>
 
 #include "helper.hpp"
@@ -101,10 +101,10 @@ bool Xbox360WirelessController::parse(uint8_t* data, int len,
 
       if (data[0] == 0x00 && data[1] == 0x0f && data[2] == 0x00 &&
           data[3] == 0xf0) {  // Initial Announc Message
-        m_serial = (boost::format("%2x:%2x:%2x:%2x:%2x:%2x:%2x") %
-                    int(data[7]) % int(data[8]) % int(data[9]) % int(data[10]) %
-                    int(data[11]) % int(data[12]) % int(data[13]))
-                       .str();
+        m_serial =
+            std::format("{:#2x}:{:#2x}:{:#2x}:{:#2x}:{:#2x}:{:#2x}:{:#2x}",
+                        int(data[7]), int(data[8]), int(data[9]), int(data[10]),
+                        int(data[11]), int(data[12]), int(data[13]));
         m_battery_status = data[17];
         log_info("Serial: " << m_serial);
         log_info("Battery Status: " << m_battery_status);

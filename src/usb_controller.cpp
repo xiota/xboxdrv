@@ -18,9 +18,9 @@
 
 #include "usb_controller.hpp"
 
-#include <boost/format.hpp>
 #include <cassert>
 #include <cstring>
+#include <format>
 #include <stdexcept>
 #include <string>
 
@@ -43,17 +43,15 @@ USBController::USBController(libusb_device* dev)
                     "libusb_open() failed: " << usb_strerror(ret));
   } else {
     // get usbpath, usbid and name
-    m_usbpath = (boost::format("%03d:%03d") %
-                 static_cast<int>(libusb_get_bus_number(dev)) %
-                 static_cast<int>(libusb_get_device_address(dev)))
-                    .str();
+    m_usbpath = std::format("{:03d}:{:03d}",
+                            static_cast<int>(libusb_get_bus_number(dev)),
+                            static_cast<int>(libusb_get_device_address(dev)));
 
     libusb_device_descriptor desc;
     ret = libusb_get_device_descriptor(dev, &desc);
     if (ret == LIBUSB_SUCCESS) {
-      m_usbid = (boost::format("%04x:%04x") % static_cast<int>(desc.idVendor) %
-                 static_cast<int>(desc.idProduct))
-                    .str();
+      m_usbid = std::format("{:#04x}:{:#04x}", static_cast<int>(desc.idVendor),
+                            static_cast<int>(desc.idProduct));
 
       char buf[1024];
       int len;

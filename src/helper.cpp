@@ -23,13 +23,13 @@
 #include <unistd.h>
 
 #include <algorithm>
-#include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/tokenizer.hpp>
 #include <cassert>
 #include <cerrno>
 #include <cstdio>
 #include <cstring>
+#include <format>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -83,7 +83,7 @@ std::string raw2str(uint8_t* data, int len) {
   out << "len: " << len << " data: ";
 
   for (int i = 0; i < len; ++i) {
-    out << boost::format("%02x ") % int(data[i]);
+    out << std::format("{:#02x} ", int(data[i]));
   }
 
   return out.str();

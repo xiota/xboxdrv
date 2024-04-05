@@ -19,9 +19,9 @@
 #include "command_line_options.hpp"
 
 #include <boost/bind.hpp>
-#include <boost/format.hpp>
 #include <boost/tokenizer.hpp>
 #include <cassert>
+#include <format>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -555,51 +555,42 @@ void CommandLineParser::init_ini(Options* opts) {
 
   for (int controller = 0; controller <= 9; ++controller) {
     for (int config = 0; config <= 9; ++config) {
-      m_ini.section((boost::format("controller%d/config%d/modifier") %
-                     controller % config)
-                        .str(),
-                    boost::bind(&CommandLineParser::set_modifier_n, this,
-                                controller, config, _1, _2));
-      m_ini.section((boost::format("controller%d/config%d/ui-buttonmap") %
-                     controller % config)
-                        .str(),
+      m_ini.section(
+          std::format("controller{:d}/config{:d}/modifier", controller, config),
+          boost::bind(&CommandLineParser::set_modifier_n, this, controller,
+                      config, _1, _2));
+      m_ini.section(std::format("controller{:d}/config{:d}/ui-buttonmap",
+                                controller, config),
                     boost::bind(&CommandLineParser::set_ui_buttonmap_n, this,
                                 controller, config, _1, _2));
-      m_ini.section((boost::format("controller%d/config%d/ui-axismap") %
-                     controller % config)
-                        .str(),
+      m_ini.section(std::format("controller{:d}/config{:d}/ui-axismap",
+                                controller, config),
                     boost::bind(&CommandLineParser::set_ui_axismap_n, this,
                                 controller, config, _1, _2));
 
-      m_ini.section((boost::format("controller%d/config%d/buttonmap") %
-                     controller % config)
-                        .str(),
+      m_ini.section(std::format("controller{:d}/config{:d}/buttonmap",
+                                controller, config),
                     boost::bind(&CommandLineParser::set_buttonmap_n, this,
                                 controller, config, _1, _2));
       m_ini.section(
-          (boost::format("controller%d/config%d/axismap") % controller % config)
-              .str(),
+          std::format("controller{:d}/config{:d}/axismap", controller, config),
           boost::bind(&CommandLineParser::set_axismap_n, this, controller,
                       config, _1, _2));
 
-      m_ini.section((boost::format("controller%d/config%d/autofire") %
-                     controller % config)
-                        .str(),
-                    boost::bind(&CommandLineParser::set_autofire_n, this,
-                                controller, config, _1, _2));
-      m_ini.section((boost::format("controller%d/config%d/relative-axis") %
-                     controller % config)
-                        .str(),
+      m_ini.section(
+          std::format("controller{:d}/config{:d}/autofire", controller, config),
+          boost::bind(&CommandLineParser::set_autofire_n, this, controller,
+                      config, _1, _2));
+      m_ini.section(std::format("controller{:d}/config{:d}/relative-axis",
+                                controller, config),
                     boost::bind(&CommandLineParser::set_relative_axis_n, this,
                                 controller, config, _1, _2));
-      m_ini.section((boost::format("controller%d/config%d/calibration") %
-                     controller % config)
-                        .str(),
+      m_ini.section(std::format("controller{:d}/config{:d}/calibration",
+                                controller, config),
                     boost::bind(&CommandLineParser::set_calibration_n, this,
                                 controller, config, _1, _2));
-      m_ini.section((boost::format("controller%d/config%d/axis-sensitivity") %
-                     controller % config)
-                        .str(),
+      m_ini.section(std::format("controller{:d}/config{:d}/axis-sensitivity",
+                                controller, config),
                     boost::bind(&CommandLineParser::set_axis_sensitivity_n,
                                 this, controller, config, _1, _2));
     }
