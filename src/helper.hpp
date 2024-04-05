@@ -19,6 +19,7 @@
 #ifndef HEADER_HELPER_HPP
 #define HEADER_HELPER_HPP
 
+#include <algorithm>
 #include <boost/function.hpp>
 #include <cstdint>
 #include <string>
@@ -48,14 +49,6 @@ void split_string_at(const std::string& str, char c, std::string* lhs,
     which case it is handled as (range * int(str)) */
 int to_number(int range, const std::string& str);
 uint32_t get_time();
-
-namespace Math {
-template <class T>
-T clamp(const T& low, const T& v, const T& high) {
-  assert(low <= high);
-  return std::max((low), std::min((v), (high)));
-}
-}  // namespace Math
 
 // Change the sign
 inline int16_t s16_invert(int16_t v) {

@@ -21,6 +21,7 @@
 #include <err.h>
 #include <fcntl.h>
 
+#include <algorithm>
 #include <boost/format.hpp>
 #include <cerrno>
 #include <cstdio>
@@ -263,7 +264,7 @@ bool EvdevController::parse(const struct input_event& ev,
       m_absmap.process(msg_inout, ev.code,
                        // some buggy USB devices report values
                        // outside the given range, so we clamp it
-                       Math::clamp(absinfo.minimum, ev.value, absinfo.maximum),
+                       std::clamp(ev.value, absinfo.minimum, absinfo.maximum),
                        absinfo.minimum, absinfo.maximum);
       return true;  // FIXME: wrong
       break;

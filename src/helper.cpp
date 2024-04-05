@@ -22,6 +22,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/tokenizer.hpp>
@@ -169,7 +170,7 @@ float to_float_no_range_check(int value, int min, int max) {
 }
 
 float to_float(int value, int min, int max) {
-  return Math::clamp(-1.0f, to_float_no_range_check(value, min, max), 1.0f);
+  return std::clamp(to_float_no_range_check(value, min, max), -1.0f, 1.0f);
 }
 
 int from_float(float value, int min, int max) {

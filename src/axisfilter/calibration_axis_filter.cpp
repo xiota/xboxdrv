@@ -18,6 +18,7 @@
 
 #include "axisfilter/calibration_axis_filter.hpp"
 
+#include <algorithm>
 #include <boost/tokenizer.hpp>
 #include <sstream>
 #include <stdexcept>
@@ -66,7 +67,7 @@ int CalibrationAxisFilter::filter(int value, int min, int max) {
   else
     value = 0;
 
-  return Math::clamp(min, value, max);
+  return std::clamp(value, min, max);
 }
 
 std::string CalibrationAxisFilter::str() const {

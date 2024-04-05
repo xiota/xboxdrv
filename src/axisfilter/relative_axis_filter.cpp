@@ -18,6 +18,7 @@
 
 #include "axisfilter/relative_axis_filter.hpp"
 
+#include <algorithm>
 #include <boost/tokenizer.hpp>
 #include <sstream>
 #include <stdexcept>
@@ -51,7 +52,7 @@ RelativeAxisFilter::RelativeAxisFilter(int speed)
 
 void RelativeAxisFilter::update(int msec_delta) {
   m_state += m_float_speed * m_value * msec_delta / 1000.0f;
-  m_state = Math::clamp(-1.0f, m_state, 1.0f);
+  m_state = std::clamp(m_state, -1.0f, 1.0f);
 }
 
 int RelativeAxisFilter::filter(int value, int min, int max) {
