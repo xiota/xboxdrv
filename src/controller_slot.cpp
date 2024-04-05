@@ -39,7 +39,7 @@ ControllerSlot::ControllerSlot(int id_, ControllerSlotConfigPtr config_,
 void ControllerSlot::connect(ControllerPtr controller) {
   assert(!m_thread);
 
-  std::auto_ptr<MessageProcessor> message_proc;
+  std::shared_ptr<MessageProcessor> message_proc;
   if (m_uinput) {
     message_proc.reset(new UInputMessageProcessor(*m_uinput, m_config, m_opts));
   } else {

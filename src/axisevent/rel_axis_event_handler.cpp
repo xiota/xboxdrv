@@ -33,7 +33,7 @@ RelAxisEventHandler* RelAxisEventHandler::from_string(const std::string& str) {
   tokenizer tokens(
       str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
 
-  std::auto_ptr<RelAxisEventHandler> ev(new RelAxisEventHandler);
+  std::shared_ptr<RelAxisEventHandler> ev(new RelAxisEventHandler);
 
   int j = 0;
   for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i, ++j) {
@@ -61,7 +61,7 @@ RelAxisEventHandler* RelAxisEventHandler::from_string(const std::string& str) {
         "AxisEvent::rel_from_string(): at least one argument required: " + str);
   }
 
-  return ev.release();
+  return ev.get();
 }
 
 RelAxisEventHandler::RelAxisEventHandler()

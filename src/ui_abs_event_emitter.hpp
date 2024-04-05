@@ -40,7 +40,7 @@ class UIAbsEventEmitter : public UIEventEmitter {
   UIAbsEventEmitter& operator=(const UIAbsEventEmitter&);
 };
 
-typedef boost::shared_ptr<UIAbsEventEmitter> UIAbsEventEmitterPtr;
+typedef std::shared_ptr<UIAbsEventEmitter> UIAbsEventEmitterPtr;
 
 #endif
 

@@ -22,7 +22,6 @@
 #include <glib.h>
 #include <libusb.h>
 
-#include <boost/scoped_ptr.hpp>
 #include <memory>
 
 #include "controller_ptr.hpp"
@@ -43,9 +42,9 @@ class XboxdrvMain {
  private:
   const Options& m_opts;
   GMainLoop* m_gmain;
-  boost::scoped_ptr<USBGSource> m_usb_gsource;
+  std::shared_ptr<USBGSource> m_usb_gsource;
 
-  std::auto_ptr<UInput> m_uinput;
+  std::shared_ptr<UInput> m_uinput;
 
   int m_jsdev_number;
   int m_evdev_number;

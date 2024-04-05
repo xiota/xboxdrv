@@ -23,13 +23,13 @@ extern "C" {
 #include <libudev.h>
 }
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 
 struct udev_device;
 class ControllerMatchRule;
-typedef boost::shared_ptr<ControllerMatchRule> ControllerMatchRulePtr;
+typedef std::shared_ptr<ControllerMatchRule> ControllerMatchRulePtr;
 
 class ControllerMatchRule {
  public:

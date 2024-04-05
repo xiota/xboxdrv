@@ -115,7 +115,7 @@ ControllerMatchRulePtr ControllerMatchRule::from_string(
       raise_exception(std::runtime_error,
                       "usbid requires VENDOR:PRODUCT argument");
     } else {
-      boost::shared_ptr<ControllerMatchRuleGroup> group(
+      std::shared_ptr<ControllerMatchRuleGroup> group(
           new ControllerMatchRuleGroup);
 
       group->add_rule(ControllerMatchRulePtr(
@@ -150,7 +150,7 @@ ControllerMatchRulePtr ControllerMatchRule::from_string(
     if (args.size() != 2) {
       raise_exception(std::runtime_error, "usbpath requires BUS:DEV argument");
     } else {
-      boost::shared_ptr<ControllerMatchRuleGroup> group(
+      std::shared_ptr<ControllerMatchRuleGroup> group(
           new ControllerMatchRuleGroup);
 
       group->add_rule(ControllerMatchRulePtr(

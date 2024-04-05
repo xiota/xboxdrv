@@ -30,7 +30,7 @@ class UInput;
 class ControllerSlotConfig;
 class Controller;
 
-typedef boost::shared_ptr<ControllerSlotConfig> ControllerSlotConfigPtr;
+typedef std::shared_ptr<ControllerSlotConfig> ControllerSlotConfigPtr;
 
 class ControllerSlotConfig {
  public:

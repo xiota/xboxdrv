@@ -33,7 +33,7 @@ KeyButtonEventHandler* KeyButtonEventHandler::from_string(
     const std::string& str) {
   // std::cout << " KeyButtonEventHandler::from_string: " << str << std::endl;
 
-  std::auto_ptr<KeyButtonEventHandler> ev;
+  std::shared_ptr<KeyButtonEventHandler> ev;
 
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
   tokenizer tokens(
@@ -63,7 +63,7 @@ KeyButtonEventHandler* KeyButtonEventHandler::from_string(
     }
   }
 
-  return ev.release();
+  return ev.get();
 }
 
 KeyButtonEventHandler::KeyButtonEventHandler()

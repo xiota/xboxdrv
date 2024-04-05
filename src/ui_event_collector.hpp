@@ -19,8 +19,8 @@
 #ifndef HEADER_XBOXDRV_UI_EVENT_COLLECTOR_HPP
 #define HEADER_XBOXDRV_UI_EVENT_COLLECTOR_HPP
 
-#include <boost/shared_ptr.hpp>
 #include <cstdint>
+#include <memory>
 #include <vector>
 
 #include "ui_event_emitter.hpp"
@@ -28,7 +28,7 @@
 class UIEventCollector;
 class UInput;
 
-typedef boost::shared_ptr<UIEventCollector> UIEventCollectorPtr;
+typedef std::shared_ptr<UIEventCollector> UIEventCollectorPtr;
 
 class UIEventCollector {
  protected:

@@ -24,11 +24,11 @@
 
 #include <boost/bind.hpp>
 #include <boost/format.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <cassert>
 #include <cerrno>
 #include <cstring>
 #include <fstream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 
@@ -130,7 +130,7 @@ void XboxdrvDaemon::run() {
     udev_subsystem.set_device_callback(
         boost::bind(&XboxdrvDaemon::process_match, this, _1));
 
-    boost::scoped_ptr<DBusSubsystem> dbus_subsystem;
+    std::shared_ptr<DBusSubsystem> dbus_subsystem;
     if (m_opts.dbus != Options::kDBusDisabled) {
       DBusBusType dbus_bus_type;
 

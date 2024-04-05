@@ -51,7 +51,7 @@ class XboxdrvDaemon {
   typedef std::vector<ControllerPtr> Controllers;
   Controllers m_inactive_controllers;
 
-  std::auto_ptr<UInput> m_uinput;
+  std::shared_ptr<UInput> m_uinput;
 
  private:
   static void on_sigint(int);
