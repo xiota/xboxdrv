@@ -1,7 +1,7 @@
 xkb_keymap {
   xkb_keycodes  { include "evdev+aliases(qwerty)" };
 
-  xkb_types     { 
+  xkb_types     {
     type "ALPHABETIC" {
         modifiers= Shift+Lock;
         map[Shift]= Level2;
@@ -27,7 +27,7 @@ xkb_keymap {
     };
   };
 
-  xkb_symbols "chatpad-qwerty"  { 
+  xkb_symbols "chatpad-qwerty"  {
     name[group1]="Germany";
 
     # Row 1
@@ -120,7 +120,7 @@ xkb_keymap {
         type= "ALPHABETIC",
         symbols[Group1]= [               o, O ],
         symbols[Group2]= [               parenright ],
-        symbols[Group3]= [               odiaeresis, Odiaeresis ] 
+        symbols[Group3]= [               odiaeresis, Odiaeresis ]
     };
     key <AD10> {
         type= "ALPHABETIC",
@@ -157,7 +157,7 @@ xkb_keymap {
     key <AC05> {
         type= "ALPHABETIC",
         symbols[Group1]= [               g, G ],
-        symbols[Group2]= [               diaeresis ], # .. 
+        symbols[Group2]= [               diaeresis ], # ..
         symbols[Group3]= [               currency ] # Microsoft Points symbol
     };
     key <AC06> {
@@ -188,7 +188,7 @@ xkb_keymap {
         type= "ALPHABETIC",
         symbols[Group1]= [               period ],
         symbols[Group2]= [               question ],
-        symbols[Group3]= [               numbersign ] # # 
+        symbols[Group3]= [               numbersign ] # #
     };
 
 
@@ -200,7 +200,7 @@ xkb_keymap {
     key <AB01> {
         type= "ALPHABETIC",
         symbols[Group1]= [                y, Y ],
-        symbols[Group2]= [                less ], # < 
+        symbols[Group2]= [                less ], # <
         symbols[Group3]= [                degree ] # °
     };
     key <AB02> {
@@ -231,7 +231,7 @@ xkb_keymap {
     key <AB06> {
         type= "ALPHABETIC",
         symbols[Group1]= [               n, N ],
-        symbols[Group2]= [               semicolon ], # ; 
+        symbols[Group2]= [               semicolon ], # ;
         symbols[Group3]= [               ntilde, Ntilde ]  # n + ~
     };
     key <AB07> {
@@ -243,7 +243,7 @@ xkb_keymap {
     key <AB08> {
         type= "ALPHABETIC",
         symbols[Group1]= [               comma ],
-        symbols[Group2]= [               apostrophe ], 
+        symbols[Group2]= [               apostrophe ],
         symbols[Group3]= [               questiondown ]
     };
     key <RTRN> {
@@ -283,7 +283,7 @@ xkb_keymap {
     modifier_map Mod4 { <LMTA> }; // people
   };
 
-  xkb_geometry  { 
+  xkb_geometry  {
     width  = 250;
     height = 140;
 

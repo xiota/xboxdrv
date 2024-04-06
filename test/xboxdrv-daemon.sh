@@ -2,7 +2,7 @@
 
 xboxdrv --daemon \
  --next-controller \
-    
+
  "$@"
 
 # EOF #

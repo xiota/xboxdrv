@@ -1,6 +1,6 @@
 # Const Filter
 # ============
-# 
+#
 # Simple configuration that uses the joystick buttons 0, 1, 2 and 3 to
 # signal which configuration is currently active.
 

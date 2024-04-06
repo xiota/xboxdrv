@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Bash script for using two (or more) wireless controllers 
+# Bash script for using two (or more) wireless controllers
 # ########################################################
 #
 # Running xboxdrv regularly only supports a single controller, using
@@ -10,7 +10,7 @@
 # and killing the xboxdrv processes has to be done manually.
 
 # tell bash to exit the script when something goes wrong
-set -e 
+set -e
 
 # launch xboxdrv for the first wireless controller
 xboxdrv \

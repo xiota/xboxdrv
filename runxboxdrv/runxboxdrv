@@ -486,7 +486,7 @@ class RunXBoxDrv(object):
         callcommand = Popen(command, shell=True, stdout=PIPE)
         outputcommand = callcommand.communicate()
         return outputcommand[0].split("\n")
-        
+
     @staticmethod
     def which(program):
         import os
@@ -521,7 +521,7 @@ class RunXBoxDrv(object):
         callcommand = Popen(commandline, shell=True, stdout=PIPE)
         outputcommand = callcommand.communicate()
         return outputcommand[0]
-        
+
     @staticmethod
     def killExistingXBoxDrv(sig, signame):
         for line in RunXBoxDrv.runCommandAndGetOutput("ps"):
@@ -542,7 +542,7 @@ class RunXBoxDrv(object):
         loadedmodules = []
         unloadedmodules = []
         for line in RunXBoxDrv.runCommandAndGetOutput("lsmod"):
-            print(line)            
+            print(line)
             fields = line.split()
             if len(fields) < 3:
                 continue
@@ -615,15 +615,15 @@ class RunXBoxDrv(object):
         while out.lower().find(LOADEDTEXT) == -1:
             out = RunXBoxDrv.getNext(myProc)
             print(out)
-        
+
     def process(self):
         commandlist = [self.xboxdrvpath]
 
         if self.configfile:
              commandlist = commandlist + ["--config=%s" % self.configfile]
-        print(commandlist)        
+        print(commandlist)
         myProc = Process(commandlist)
-        with_timeout(1, self.checkLoaded, myProc)        
+        with_timeout(1, self.checkLoaded, myProc)
         if len(self.appandparams) == 0:
             print("WARNING: No path to application specified!")
         else:

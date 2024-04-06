@@ -8,7 +8,7 @@
   <refentryinfo>
     <date>2011-07-20</date>
   </refentryinfo>
-  
+
   <refmeta>
     <refentrytitle>
       <application>xboxdrv</application>
@@ -89,7 +89,7 @@
             <para>Display help text and exit.</para>
           </listitem>
         </varlistentry>
-        
+
         <varlistentry>
           <term>-V, --version</term>
           <listitem>
@@ -483,7 +483,7 @@ start=KEY_ESC
 
       </variablelist>
     </refsect2>
-    
+
     <refsect2>
       <title>Device Options</title>
       <variablelist>
@@ -613,7 +613,7 @@ start=KEY_ESC
               </varlistentry>
             </variablelist>
           </listitem>
-        </varlistentry>        
+        </varlistentry>
 
       </variablelist>
     </refsect2>
@@ -879,7 +879,7 @@ start=KEY_ESC
           </listitem>
         </varlistentry>
       </variablelist>
-    </refsect2>    
+    </refsect2>
 
     <refsect2>
       <title>Force Feedback</title>
@@ -1094,7 +1094,7 @@ start=KEY_ESC
             </para>
             <programlisting><![CDATA[$ xboxdrv \
     --mouse \
-  --next-config 
+  --next-config
     --ui-axismap X1=ABS_X,Y1=ABS_Y \
     --ui-buttonmap A=JS_0,B=JS_1]]></programlisting>
             <para>
@@ -1232,7 +1232,7 @@ start=KEY_ESC
                 </tbody>
               </tgroup>
             </table>
-            
+
             <para>
               Just like with <option>--ui-buttonmap</option> you can add button filter to each button.
             </para>
@@ -1282,7 +1282,7 @@ start=KEY_ESC
         depended, but have a predefined order that is used no matter
         the order in which the options are given.
       </para>
-      
+
       <variablelist>
 
         <varlistentry>
@@ -1290,7 +1290,7 @@ start=KEY_ESC
           <listitem>
             <para>Autofire mapping allows you to let a button automatically fire with a
               given frequency in miliseconds:</para>
-            
+
             <programlisting>$ xboxdrv --autofire A=250</programlisting>
 
             <para>Combining <option>--autofire</option> with button map allows you to have one button act
@@ -1372,13 +1372,13 @@ pos = (1.0f - (1.0f - pos) ** t) ** (1 / t);]]></programlisting>
             <programlisting>$ xboxdrv --deadzone 4000</programlisting>
 
             <para>A value of 4000 works quite well for most games.</para>
-            
+
             <para>You can also give the deadzone in percentage:</para>
-            
+
             <programlisting>$ xboxdrv --deadzone 15%</programlisting>
           </listitem>
         </varlistentry>
-        
+
         <varlistentry>
           <term><option>--deadzone-trigger <replaceable class="parameter">NUM</replaceable></option></term>
           <listitem>
@@ -1472,11 +1472,11 @@ pos = (1.0f - (1.0f - pos) ** t) ** (1 / t);]]></programlisting>
       <title>Uinput Preset Configuration Options</title>
       <para>
         The following options are simple shortcuts for common
-        configurations that can be accomplished manually 
+        configurations that can be accomplished manually
         by using <option>--ui-buttonmap</option>
         and <option>--ui-axismap</option>.
       </para>
-      <variablelist>   
+      <variablelist>
         <varlistentry>
           <term><option>--trigger-as-button</option></term>
           <listitem>
@@ -1575,7 +1575,7 @@ pos = (1.0f - (1.0f - pos) ** t) ** (1 / t);]]></programlisting>
 
     <refsect2>
       <title>Uinput Configuration Options</title>
-      <variablelist>   
+      <variablelist>
 
         <varlistentry>
           <term><option>--no-uinput</option></term>
@@ -1705,7 +1705,7 @@ pos = (1.0f - (1.0f - pos) ** t) ** (1 / t);]]></programlisting>
 RELSPEC      = [ DEVICEID "-" ] "REL_" [ ":" [ VALUE ] [ ":" REPEAT ] ] ;
 BTNSPEC      = [ DEVICEID "-" ] ( ( "BTN_" NAME ) | ( "KEY_" NAME ) ) { "+" BTNSPEC } ;
 EXECSPEC     = PROGRAM { ":" ARGUMENT } ;
-XBOXBUTTON   = "a" | "b" | "x" | "y" | "lb" | "rb" | "lt" | "rt" | 
+XBOXBUTTON   = "a" | "b" | "x" | "y" | "lb" | "rb" | "lt" | "rt" |
                "tl" | "tr" | "start" | "select" | "back" | "guide" | "black" | "white" ;
 FILTER       = "toggle" | "invert" | "autofire" [ ":" RATE ] [ ":" DELAY ] | log [ ":" STRING ] ;
 NAME         = STRING ;
@@ -1717,7 +1717,7 @@ DEVICEID     = NUMBER ;]]></programlisting>
               kernel for buttons. The usage is similar to the normal button
               mapping, except that the right hand side is an event name from
               <filename>/usr/include/linux/input.h</filename>. You can
-              use all <keysym>KEY_</keysym> or <keysym>BTN_</keysym> 
+              use all <keysym>KEY_</keysym> or <keysym>BTN_</keysym>
               codes for <option>--ui-buttonmap</option>.
             </para>
             <para>
@@ -1782,7 +1782,7 @@ DEVICEID     = NUMBER ;]]></programlisting>
               a mouse device. Other possible values are 'mouse' and
               'keyboard'. A device_id of '0' refers to the first
               joystick device, values larger then 0 to the second,
-              third, etc. 
+              third, etc.
             </para>
             <para>
               Note that the 'mouse' and 'keyboard' device_id names do
@@ -1791,7 +1791,7 @@ DEVICEID     = NUMBER ;]]></programlisting>
               sort events that look like a mouse or keyboard
               event. The final determination of which device gets
               handled as what will be done by the Kernel or Xorg
-              depending on what events a device provides. 
+              depending on what events a device provides.
             </para>
             <para>
               An example configuration making use of device_id would look like this:
@@ -1815,7 +1815,7 @@ DEVICEID     = NUMBER ;]]></programlisting>
               Instead of giving just a single button, it is also
               possible to give two buttons
               to <option>--ui-buttonmap</option> to allow shifting:
-            </para>           
+            </para>
             <programlisting><![CDATA[xboxdrv -s \
   --ui-clear \
   --ui-buttonmap A=JS_0,B=JS_1,LB+A=JS_2,LB+B=JS_3]]></programlisting>
@@ -1889,7 +1889,7 @@ NAME       = STRING ;]]></programlisting>
               jaggies in the movement, that will result from manually
               specifying a timeout.
             </para>
-            
+
             <programlisting>$ xboxdrv --ui-axismap X1=KEY_UP:KEY_DOWN:THRESHOLD</programlisting>
             <para>
               <replaceable class="parameter">KEY_UP</replaceable> gives the keycode to be send when the axis is moved up
@@ -1919,7 +1919,7 @@ NAME       = STRING ;]]></programlisting>
 
       </variablelist>
     </refsect2>
-  </refsect1> 
+  </refsect1>
 
   <refsect1 id="inputeventhandler">
     <title id="inputeventhandler.title">Input Event Handler</title>
@@ -1954,14 +1954,14 @@ NAME       = STRING ;]]></programlisting>
         There is also a shorthand form of specifing event handlers by
         just writing:
       </para>
-      <programlisting>$ xboxdrv --ui-buttonmap A=KEY_A</programlisting>        
+      <programlisting>$ xboxdrv --ui-buttonmap A=KEY_A</programlisting>
       <para>
         Here no handler is specified explicitly, if that is the case,
         the appropriate handler will be guessed based on the event
         type. <literal>EV_KEY</literal> events will be handled by
         the <option>key</option> handler, <literal>EV_REL</literal> by
         the <option>rel</option> handler and <literal>EV_ABS</literal> by
-        the <option>abs</option> handler. 
+        the <option>abs</option> handler.
       </para>
 
       <variablelist>
@@ -2151,7 +2151,7 @@ send KEY_LEFTSHIFT 0]]></programlisting>
             </para>
           </listitem>
         </varlistentry>
-      </variablelist>      
+      </variablelist>
     </refsect2>
 
     <refsect2 id="axiseventhandler">
@@ -2165,7 +2165,7 @@ send KEY_LEFTSHIFT 0]]></programlisting>
         the <option>rel</option> handler and <literal>EV_ABS</literal>
         by the <option>abs</option> handler.
       </para>
-      
+
       <variablelist>
         <varlistentry>
           <term><option>abs</option>:<replaceable>ABS_EVENT</replaceable></term>
@@ -2178,9 +2178,9 @@ send KEY_LEFTSHIFT 0]]></programlisting>
               left stick behave as joystick would look like this:
             </para>
             <programlisting><![CDATA[xboxdrv \
-  --ui-axismap X1=abs:ABS_X,Y1=abs:ABS_Y]]></programlisting>            
+  --ui-axismap X1=abs:ABS_X,Y1=abs:ABS_Y]]></programlisting>
           </listitem>
-        </varlistentry>      
+        </varlistentry>
 
         <varlistentry>
           <term><option>key</option>:<replaceable>KEY_UP</replaceable>:<replaceable>KEY_DOWN</replaceable>:<replaceable>THRESHOLD</replaceable></term>
@@ -2204,7 +2204,7 @@ send KEY_LEFTSHIFT 0]]></programlisting>
               events when the LB button is held down.
             </para>
           </listitem>
-        </varlistentry>      
+        </varlistentry>
 
         <varlistentry>
           <term><option>rel</option>:<replaceable>REL_EVENT</replaceable>:<replaceable>VALUE</replaceable>:<replaceable>REPEAT</replaceable></term>
@@ -2419,8 +2419,8 @@ send KEY_LEFTSHIFT 0]]></programlisting>
         </varlistentry>
 
         <varlistentry>
-          <term><option>dead</option>, 
-            <option>deadzone</option>:<replaceable>VALUE</replaceable>, 
+          <term><option>dead</option>,
+            <option>deadzone</option>:<replaceable>VALUE</replaceable>,
             <option>deadzone</option>:<replaceable>MIN</replaceable>:<replaceable>CENTER</replaceable>:<replaceable>MAX</replaceable>
           </term>
           <listitem>
@@ -2679,7 +2679,7 @@ $ modprobe joydev]]></programlisting>
 
       <programlisting>$ xboxdrv --list-controller</programlisting>
     </refsect2>
-    
+
     <refsect2>
       <title>Hotplugging and Xboxdrv Daemon</title>
       <para>
@@ -2715,7 +2715,7 @@ $ modprobe joydev]]></programlisting>
         startup, not when a gamepad gets plugged in, this allows to
         plug in gamepads even after a game or an application like XBMC
         has already been launched and still have it all function
-        properly. 
+        properly.
       </para>
       <para>
         In daemon mode xboxdrv can be detached from the current shell
@@ -2748,7 +2748,7 @@ dbus-send --session --type=method_call --print-reply \
 
 dbus-send --session --type=method_call --print-reply \
   --dest=org.seul.Xboxdrv /org/seul/Xboxdrv/Daemon org.freedesktop.DBus.Introspectable.Introspect]]></programlisting>
-    
+
     <para>
       Status information on available slots, configuration and active controllers can be obtained via:
     </para>
@@ -3011,7 +3011,7 @@ joysticktype = ch]]></programlisting>
   --ui-buttonmap a=JS_0,b=JS_1,x=JS_2,y=JS_3 \
   --ui-buttonmap lb+a=JS_4,lb+b=JS_5,lb+x=JS_6,lb+y=JS_7 \
   --ui-buttonmap rb+a=JS_8,rb+b=JS_9,rb+x=JS_10,rb+y=JS_11
-]]></programlisting>      
+]]></programlisting>
       <para>
         Here all face buttons are get mapped three times, once when
         pressed normally, once when pressed while LB is held down and
@@ -3210,7 +3210,7 @@ $ export SDL_JOYSTICK_DEVICE]]></programlisting>
       <programlisting><![CDATA[$ xboxdrv --no-uinput -v]]></programlisting>
 
     </refsect2>
-    
+
     <refsect2>
       <title>The wireless controller doesn't work</title>
       <para>
@@ -3267,7 +3267,7 @@ $ export SDL_JOYSTICK_DEVICE]]></programlisting>
       <para>
         This workaround will only last till the next reboot, since the device
         names are dynamically created, but for the time being there doesn't
-        seem to any other way to easily work around this issue. 
+        seem to any other way to easily work around this issue.
       </para>
 
       <para>
@@ -3418,12 +3418,12 @@ EndSection]]></programlisting>
 
   <refsect1>
     <title>Bugs</title>
-    
+
     <refsect2>
       <title>X11 keysym issues</title>
       <para>
         X11 keysyms might not work correctly in <option>--ui-buttonmap a=XK_Foobar</option>
-        when Foobar is mapped to multiple keycodes in the keymap. 
+        when Foobar is mapped to multiple keycodes in the keymap.
       </para>
 
       <para>Workaround: Use <keysym>KEY_</keysym> instead or cleanup your keymap</para>
@@ -3470,19 +3470,19 @@ EndSection]]></programlisting>
       <citerefentry>
         <refentrytitle>xboxdrvctl</refentrytitle>
         <manvolnum>1</manvolnum>
-      </citerefentry>, 
+      </citerefentry>,
       <citerefentry>
         <refentrytitle>evtest</refentrytitle>
         <manvolnum>1</manvolnum>
-      </citerefentry>, 
+      </citerefentry>,
       <citerefentry>
         <refentrytitle>jstest</refentrytitle>
         <manvolnum>1</manvolnum>
-      </citerefentry>, 
+      </citerefentry>,
       <citerefentry>
         <refentrytitle>jstest-gtk</refentrytitle>
         <manvolnum>1</manvolnum>
-      </citerefentry>, 
+      </citerefentry>,
       <citerefentry>
         <refentrytitle>xev</refentrytitle>
         <manvolnum>1</manvolnum>

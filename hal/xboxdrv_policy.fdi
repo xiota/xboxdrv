@@ -2,11 +2,11 @@
 
 <deviceinfo version="0.2">
   <device>
-    <match key="input.product" string="Microsoft X-Box 360 pad">     
+    <match key="input.product" string="Microsoft X-Box 360 pad">
       <remove key="input.x11_driver" />
     </match>
 
-    <match key="input.product" string="Xbox Gamepad (userspace driver)">     
+    <match key="input.product" string="Xbox Gamepad (userspace driver)">
       <remove key="input.x11_driver" />
     </match>
   </device>

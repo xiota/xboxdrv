@@ -21,11 +21,10 @@ trigger-as-zaxis = true
 square-axis = true
 
 [relative-axis]
-y2 = 64000 
+y2 = 64000
 
 [axismap]
 -y2=x2
 x2=y2
 
 # EOF #
- 

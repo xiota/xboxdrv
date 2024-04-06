@@ -15,10 +15,10 @@
 # config = otherconfig.xboxdrv
 # alt-config = otherconfig.xboxdrv
 
-# busid = 
-# devid = 
+# busid =
+# devid =
 
-# Chatpad 
+# Chatpad
 # chatpad         = false
 # chatpad-debug   = false
 # chatpad-no-init = false
@@ -26,12 +26,12 @@
 # controller-id = 0
 # detach-kernel-driver = true
 # device-name = <not implemented>
-# evdev = 
+# evdev =
 # evdev-debug = true
 # evdev-grab = true
 # extra-devices = true
 # extra-events = true
-# force-feedback = 
+# force-feedback =
 
 # Headset
 # headset = false
@@ -61,7 +61,7 @@
 # dpad-as-button = true
 # dpad-only = true
 # dpad-rotation = 45
-# four-way-restrictor = 
+# four-way-restrictor =
 # guitar = true
 
 # vendor-id = -1

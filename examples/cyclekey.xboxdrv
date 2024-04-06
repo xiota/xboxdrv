@@ -6,7 +6,7 @@
 # person shooters where keys 1 to 9 would be needed for selecting
 # weapons, but you don't want to waste nine buttons on the gamepad for
 # that use. cycle-key allows using a single button and changing the
-# event it sends out with each press. 
+# event it sends out with each press.
 #
 # Additionally cycle-key sequences can be named and accessed by
 # reference, this allows multiple buttons to be used to cycle through

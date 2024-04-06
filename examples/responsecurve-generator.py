@@ -18,7 +18,7 @@ else:
 
     left.reverse()
     left = left[0:-1]
-    
+
     print(string.join([str(x) for x in (left + right)], ":"))
-    
+
 # EOF #

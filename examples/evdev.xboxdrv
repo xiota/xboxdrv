@@ -9,7 +9,7 @@
 # your evdev to Xbox360 in the file evdev.xboxdrv and your custom
 # xboxdrv configuration in xbox360.xboxdrv you can use them both at
 # the same time with:
-# 
+#
 #   xboxdrv -c evdev.xboxdrv -c xbox360.xboxdrv
 #
 # The following example is for the Microsoft Sidewinder Precision 2

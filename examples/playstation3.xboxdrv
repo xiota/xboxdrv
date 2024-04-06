@@ -1,7 +1,7 @@
 # Example configuration for the Playstation 3 controller
 #
 # Note this only works when connected with USB, when using Bluetooth a
-# different configuration is required. 
+# different configuration is required.
 
 [xboxdrv]
 evdev=/dev/input/by-id/usb-Sony_PLAYSTATION_R_3_Controller-event-joystick

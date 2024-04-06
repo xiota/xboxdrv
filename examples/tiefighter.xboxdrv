@@ -12,7 +12,7 @@
 
 [xboxdrv]
 ui-clear=true # start with a completely clear config
-extra-events=false 
+extra-events=false
 
 [modifier]
 square-axis=X1:Y1 # flightsims like full [-1,1] range

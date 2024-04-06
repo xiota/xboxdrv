@@ -7,7 +7,7 @@
 #
 # This is mostly for fun, but can be used to remap the controls in
 # some isometric games from the dialogonals to straight axis. See also
-# dpad-rotation for a similar effect done to the dpad. 
+# dpad-rotation for a similar effect done to the dpad.
 
 [modifier]
 rotate = X1:Y1:45

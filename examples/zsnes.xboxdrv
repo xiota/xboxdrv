@@ -3,7 +3,7 @@
 #
 # The dpad and analog stick are mapped to the same buttons buttons
 # LB/RB and LT/RT are mapped to the same buttons
-# 
+#
 # Things are mapped to buttons instead of axis as ZSNES has a bug that
 # make hat not work:
 #
