@@ -19,7 +19,7 @@
 #ifndef HEADER_XBOXDRV_INI_SCHEMA_HPP
 #define HEADER_XBOXDRV_INI_SCHEMA_HPP
 
-#include <boost/function.hpp>
+#include <functional>
 #include <map>
 #include <string>
 
@@ -37,11 +37,11 @@ class INISchemaSection {
   Schema m_schema;
 
  public:
-  boost::function<void(const std::string&, const std::string&)> m_callback;
+  std::function<void(const std::string&, const std::string&)> m_callback;
 
  public:
   INISchemaSection(
-      boost::function<void(const std::string&, const std::string&)> callback);
+      std::function<void(const std::string&, const std::string&)> callback);
   ~INISchemaSection();
 
   INISchemaSection& operator()(const std::string& name, bool* value);
@@ -50,10 +50,10 @@ class INISchemaSection {
   INISchemaSection& operator()(const std::string& name, std::string* value);
   INISchemaSection& operator()(
       const std::string& name,
-      boost::function<void(const std::string&)> callback);
+      std::function<void(const std::string&)> callback);
   INISchemaSection& operator()(const std::string& name,
-                               boost::function<void()> true_callback,
-                               boost::function<void()> false_callback);
+                               std::function<void()> true_callback,
+                               std::function<void()> false_callback);
 
   INIPairSchema* get(const std::string& name) const;
 
@@ -80,8 +80,8 @@ class INISchema {
 
   INISchemaSection& section(
       const std::string& name,
-      boost::function<void(const std::string&, const std::string&)> callback =
-          boost::function<void(const std::string&, const std::string&)>());
+      std::function<void(const std::string&, const std::string&)> callback =
+          std::function<void(const std::string&, const std::string&)>());
 
   INISchemaSection* get_section(const std::string& name) const;
 

@@ -18,8 +18,6 @@
 
 #include "controller.hpp"
 
-#include <boost/bind.hpp>
-
 #include "log.hpp"
 #include "message_processor.hpp"
 
@@ -87,7 +85,7 @@ void Controller::set_udev_device(udev_device* udev_dev) {
 }
 
 void Controller::set_message_cb(
-    const boost::function<void(const XboxGenericMsg&)>& msg_cb) {
+    const std::function<void(const XboxGenericMsg&)>& msg_cb) {
   m_msg_cb = msg_cb;
 }
 
@@ -95,7 +93,8 @@ udev_device* Controller::get_udev_device() const { return m_udev_device; }
 
 void Controller::set_active(bool v) {
   if (m_is_active != v) {
-    log_debug("activation status: " << v << " " << m_activation_cb);
+    log_debug("activation status: " << v << " "
+                                    << m_activation_cb.target<void*>());
     m_is_active = v;
     if (m_activation_cb) {
       m_activation_cb();
@@ -103,13 +102,13 @@ void Controller::set_active(bool v) {
   }
 }
 
-void Controller::set_activation_cb(const boost::function<void()>& callback) {
+void Controller::set_activation_cb(const std::function<void()>& callback) {
   m_activation_cb = callback;
 }
 
 bool Controller::is_disconnected() const { return m_is_disconnected; }
 
-void Controller::set_disconnect_cb(const boost::function<void()>& callback) {
+void Controller::set_disconnect_cb(const std::function<void()>& callback) {
   m_disconnect_cb = callback;
 }
 

@@ -23,6 +23,7 @@
 #include <cassert>
 #include <format>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -447,7 +448,7 @@ void CommandLineParser::init_ini(Options* opts) {
   m_ini.clear();
 
   m_ini.section("xboxdrv")("verbose", boost::bind(&Options::set_verbose, opts),
-                           boost::function<void()>())("silent", &opts->silent)(
+                           std::function<void()>())("silent", &opts->silent)(
       "quiet", &opts->quiet)("usb-debug", &opts->usb_debug)(
       "rumble", &opts->rumble)("led", boost::bind(&Options::set_led, opts, _1))(
       "rumble-l", &opts->rumble_l)("rumble-r", &opts->rumble_r)(
@@ -464,9 +465,9 @@ void CommandLineParser::init_ini(Options* opts) {
                                 _1))("timeout", &opts->timeout)(
       "priority", boost::bind(&Options::set_priority, opts, _1))(
       "next", boost::bind(&Options::next_config, opts),
-      boost::function<void()>())(
+      std::function<void()>())(
       "next-controller", boost::bind(&Options::next_controller, opts),
-      boost::function<void()>())("extra-devices", &opts->extra_devices)(
+      std::function<void()>())("extra-devices", &opts->extra_devices)(
       "extra-events", &opts->extra_events)(
       "toggle", boost::bind(&Options::set_toggle_button, opts, _1))(
       "ff-device", boost::bind(&Options::set_ff_device, opts, _1))
@@ -475,10 +476,10 @@ void CommandLineParser::init_ini(Options* opts) {
           "deadzone-trigger",
           boost::bind(&CommandLineParser::set_deadzone_trigger, this, _1))(
           "square-axis", boost::bind(&CommandLineParser::set_square_axis, this),
-          boost::function<void()>())(
+          std::function<void()>())(
           "four-way-restrictor",
           boost::bind(&CommandLineParser::set_four_way_restrictor, this),
-          boost::function<void()>())(
+          std::function<void()>())(
           "dpad-rotation",
           boost::bind(&CommandLineParser::set_dpad_rotation, this, _1))
 
@@ -486,25 +487,25 @@ void CommandLineParser::init_ini(Options* opts) {
       ("device-name", boost::bind(&Options::set_device_name, opts, _1))(
           "device-usbid", boost::bind(&Options::set_device_usbid, opts, _1))(
           "mouse", boost::bind(&CommandLineParser::mouse, this),
-          boost::function<void()>())("guitar",
-                                     boost::bind(&Options::set_guitar, opts),
-                                     boost::function<void()>())(
+          std::function<void()>())("guitar",
+                                   boost::bind(&Options::set_guitar, opts),
+                                   std::function<void()>())(
           "trigger-as-button",
           boost::bind(&Options::set_trigger_as_button, opts),
-          boost::function<void()>())(
+          std::function<void()>())(
           "trigger-as-zaxis", boost::bind(&Options::set_trigger_as_zaxis, opts),
-          boost::function<void()>())(
+          std::function<void()>())(
           "dpad-as-button", boost::bind(&Options::set_dpad_as_button, opts),
-          boost::function<void()>())("dpad-only",
-                                     boost::bind(&Options::set_dpad_only, opts),
-                                     boost::function<void()>())(
+          std::function<void()>())("dpad-only",
+                                   boost::bind(&Options::set_dpad_only, opts),
+                                   std::function<void()>())(
           "force-feedback",
           boost::bind(&Options::set_force_feedback, opts, _1))(
           "mimic-xpad", boost::bind(&Options::set_mimic_xpad, opts),
-          boost::function<void()>())(
+          std::function<void()>())(
           "mimic-xpad-wireless",
           boost::bind(&Options::set_mimic_xpad_wireless, opts),
-          boost::function<void()>())
+          std::function<void()>())
 
           ("chatpad", &opts->chatpad)(
               "chatpad-no-init", &opts->chatpad_no_init)("chatpad-debug",
@@ -515,7 +516,7 @@ void CommandLineParser::init_ini(Options* opts) {
                   "headset-dump", &opts->headset_dump)("headset-play",
                                                        &opts->headset_play)(
                   "ui-clear", boost::bind(&Options::set_ui_clear, opts),
-                  boost::function<void()>());
+                  std::function<void()>());
 
   m_ini.section("xboxdrv-daemon")(
       "detach", boost::bind(&Options::set_daemon_detach, opts, true),

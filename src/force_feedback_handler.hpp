@@ -21,7 +21,7 @@
 
 #include <linux/input.h>
 
-#include <boost/function.hpp>
+#include <functional>
 #include <map>
 
 class Controller;

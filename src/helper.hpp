@@ -20,8 +20,8 @@
 #define HEADER_HELPER_HPP
 
 #include <algorithm>
-#include <boost/function.hpp>
 #include <cstdint>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -37,7 +37,7 @@ bool is_number(const std::string& str);
  * on each */
 void process_name_value_string(
     const std::string& str,
-    const boost::function<void(const std::string&, const std::string&)>& func);
+    const std::function<void(const std::string&, const std::string&)>& func);
 
 void split_string_at(const std::string& str, char c, std::string* lhs,
                      std::string* rhs);
