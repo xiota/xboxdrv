@@ -18,9 +18,7 @@
 
 #include "response_curve_axis_filter.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <sstream>
-#include <string>
 
 #include "helper.hpp"
 
@@ -28,12 +26,8 @@ ResponseCurveAxisFilter* ResponseCurveAxisFilter::from_string(
     const std::string& str) {
   std::vector<int> samples;
 
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
-  int idx = 0;
-  for (tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx) {
-    samples.push_back(std::stoi(*t));
+  for (auto& i : string_split(str, ":")) {
+    samples.push_back(std::stoi(i));
   }
 
   return new ResponseCurveAxisFilter(samples);

@@ -18,10 +18,8 @@
 
 #include "buttonfilter/autofire_button_filter.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <sstream>
 #include <stdexcept>
-#include <string>
 
 #include "helper.hpp"
 
@@ -30,22 +28,21 @@ AutofireButtonFilter* AutofireButtonFilter::from_string(
   int rate = 50;
   int delay = 0;
 
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
-  for (tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx) {
+  for (auto& t : tokens) {
     switch (idx) {
       case 0:
-        rate = std::stoi(*t);
+        rate = std::stoi(t);
         break;
       case 1:
-        delay = std::stoi(*t);
+        delay = std::stoi(t);
         break;
       default:
         throw std::runtime_error("to many arguments");
         break;
     }
+    ++idx;
   }
 
   return new AutofireButtonFilter(rate, delay);

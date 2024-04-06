@@ -18,23 +18,18 @@
 
 #include "ui_event_sequence.hpp"
 
-#include <boost/tokenizer.hpp>
-#include <string>
-
 #include "evdev_helper.hpp"
+#include "helper.hpp"
 #include "ui_event.hpp"
 #include "uinput.hpp"
 
 UIEventSequence UIEventSequence::from_string(const std::string& value) {
   UIEvents sequence;
 
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer ev_tokens(
-      value, boost::char_separator<char>("+", "", boost::keep_empty_tokens));
-  int k = 0;
-  for (tokenizer::iterator m = ev_tokens.begin(); m != ev_tokens.end();
-       ++m, ++k) {
-    sequence.push_back(str2key_event(*m));
+  std::vector<std::string> tokens = string_split(value, "+");
+
+  for (auto& token : tokens) {
+    sequence.push_back(str2key_event(token));
   }
 
   return sequence;

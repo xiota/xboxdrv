@@ -18,52 +18,49 @@
 
 #include "key_axis_event_handler.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <memory>
 #include <stdexcept>
-#include <string>
 
 #include "evdev_helper.hpp"
 #include "helper.hpp"
 #include "uinput.hpp"
 
 KeyAxisEventHandler* KeyAxisEventHandler::from_string(const std::string& str) {
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
-
   std::shared_ptr<KeyAxisEventHandler> ev(new KeyAxisEventHandler);
 
-  int j = 0;
-  for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i, ++j) {
-    switch (j) {
+  std::vector<std::string> tokens = string_split(str, ":");
+  int idx = 0;
+  for (auto& i : tokens) {
+    switch (idx) {
       case 0: {
-        ev->m_up_codes = UIEventSequence::from_string(*i);
+        ev->m_up_codes = UIEventSequence::from_string(i);
       } break;
 
       case 1: {
-        if (is_number(*i)) {
+        if (is_number(i)) {
           // bit of hackery to handle simplified syntax for trigger button that
           // don't need up/down events
-          ev->m_threshold = std::stoi(*i);
+          ev->m_threshold = std::stoi(i);
           ev->m_down_codes = ev->m_up_codes;
           ev->m_up_codes.clear();
         } else {
-          ev->m_down_codes = UIEventSequence::from_string(*i);
+          ev->m_down_codes = UIEventSequence::from_string(i);
         }
       } break;
 
       case 2:
-        ev->m_threshold = std::stoi(*i);
+        ev->m_threshold = std::stoi(i);
         break;
 
       default:
         throw std::runtime_error(
             "AxisEvent::key_from_string(): to many arguments: " + str);
+        break;
     }
+    ++idx;
   }
 
-  if (j == 0) {
+  if (idx == 0) {
     throw std::runtime_error(
         "AxisEvent::key_from_string(): at least one argument required: " + str);
   }

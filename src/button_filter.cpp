@@ -18,7 +18,6 @@
 
 #include "button_filter.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <sstream>
 #include <stdexcept>
 #include <string>

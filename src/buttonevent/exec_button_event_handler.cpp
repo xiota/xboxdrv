@@ -20,23 +20,15 @@
 
 #include <sys/wait.h>
 
-#include <boost/tokenizer.hpp>
 #include <cerrno>
 #include <cstring>
-#include <string>
 
+#include "helper.hpp"
 #include "log.hpp"
 
 ExecButtonEventHandler* ExecButtonEventHandler::from_string(
     const std::string& str) {
-  std::vector<std::string> args;
-
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
-
-  std::copy(tokens.begin(), tokens.end(), std::back_inserter(args));
-
+  std::vector<std::string> args = string_split(str, ":");
   return new ExecButtonEventHandler(args);
 }
 

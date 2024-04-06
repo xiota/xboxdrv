@@ -18,12 +18,11 @@
 
 #include "controller_match_rule.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <cassert>
 #include <memory>
 #include <stdexcept>
-#include <string>
 
+#include "helper.hpp"
 #include "raise_exception.hpp"
 
 class ControllerMatchRuleProperty : public ControllerMatchRule {
@@ -105,10 +104,7 @@ bool ControllerMatchRule::match(udev_device* device) const {
 
 ControllerMatchRulePtr ControllerMatchRule::from_string(
     const std::string& lhs, const std::string& rhs) {
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      rhs, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
-  std::vector<std::string> args(tokens.begin(), tokens.end());
+  std::vector<std::string> args = string_split(rhs, ":");
 
   if (lhs == "usbid") {
     if (args.size() != 2) {

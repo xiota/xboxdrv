@@ -18,7 +18,6 @@
 
 #include "axis_event.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <cassert>
 #include <cmath>
 #include <cstring>

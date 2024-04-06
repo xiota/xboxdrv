@@ -18,45 +18,43 @@
 
 #include "axisevent/rel_axis_event_handler.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <cmath>
 #include <memory>
 #include <stdexcept>
-#include <string>
 
 #include "evdev_helper.hpp"
 #include "helper.hpp"
 #include "uinput.hpp"
 
 RelAxisEventHandler* RelAxisEventHandler::from_string(const std::string& str) {
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  std::vector<std::string> tokens = string_split(str, ":");
 
   std::shared_ptr<RelAxisEventHandler> ev(new RelAxisEventHandler);
 
-  int j = 0;
-  for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i, ++j) {
-    switch (j) {
+  int idx = 0;
+  for (auto& i : tokens) {
+    switch (idx) {
       case 0:
-        ev->m_code = str2rel_event(*i);
+        ev->m_code = str2rel_event(i);
         break;
 
       case 1:
-        ev->m_value = std::stof(*i);
+        ev->m_value = std::stof(i);
         break;
 
       case 2:
-        ev->m_repeat = std::stoi(*i);
+        ev->m_repeat = std::stoi(i);
         break;
 
       default:
         throw std::runtime_error(
             "AxisEvent::rel_from_string(): to many arguments: " + str);
+        break;
     }
+    ++idx;
   }
 
-  if (j == 0) {
+  if (idx == 0) {
     throw std::runtime_error(
         "AxisEvent::rel_from_string(): at least one argument required: " + str);
   }

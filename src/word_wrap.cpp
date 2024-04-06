@@ -18,9 +18,9 @@
 
 #include "word_wrap.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <iostream>
-#include <string>
+
+#include "helper.hpp"
 
 WordWrap::WordWrap(int terminal_width) : m_terminal_width(terminal_width) {}
 
@@ -33,22 +33,22 @@ void WordWrap::newline() { std::cout << std::endl; }
 void WordWrap::para(const std::string& str) const { para("", str); }
 
 void WordWrap::para(const std::string& prefix, const std::string& str) const {
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      str, boost::char_separator<char>(" ", "", boost::drop_empty_tokens));
+  std::vector<std::string> words = string_split(str, " ");
 
   int len = prefix.size();
   std::cout << prefix;
-  for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i) {
-    if (len + static_cast<int>(i->size()) + 1 >= m_terminal_width) {
+
+  for (auto& i : words) {
+    if (len + static_cast<int>(i.size()) + 1 >= m_terminal_width) {
       std::cout << std::endl;
       std::cout << prefix;
       len = prefix.size();
     }
 
-    std::cout << *i << " ";
-    len += i->size() + 1;
+    std::cout << i << " ";
+    len += i.size() + 1;
   }
+
   std::cout << std::endl;
 }
 

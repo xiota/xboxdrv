@@ -20,10 +20,8 @@
 
 #include <linux/input.h>
 
-#include <boost/tokenizer.hpp>
 #include <memory>
 #include <stdexcept>
-#include <string>
 
 #include "evdev_helper.hpp"
 #include "helper.hpp"
@@ -35,24 +33,22 @@ KeyButtonEventHandler* KeyButtonEventHandler::from_string(
 
   std::shared_ptr<KeyButtonEventHandler> ev;
 
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
-  for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i, ++idx) {
+  for (auto& i : tokens) {
     switch (idx) {
       case 0: {
         ev.reset(new KeyButtonEventHandler());
-        ev->m_codes = UIEventSequence::from_string(*i);
+        ev->m_codes = UIEventSequence::from_string(i);
       } break;
 
       case 1: {
-        ev->m_secondary_codes = UIEventSequence::from_string(*i);
+        ev->m_secondary_codes = UIEventSequence::from_string(i);
         ev->m_hold_threshold = 250;
       } break;
 
       case 2: {
-        ev->m_hold_threshold = std::stoi(*i);
+        ev->m_hold_threshold = std::stoi(i);
       } break;
 
       default: {
@@ -61,6 +57,7 @@ KeyButtonEventHandler* KeyButtonEventHandler::from_string(
         throw std::runtime_error(out.str());
       } break;
     }
+    ++idx;
   }
 
   return ev.get();

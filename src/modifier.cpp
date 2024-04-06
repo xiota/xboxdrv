@@ -18,10 +18,9 @@
 
 #include "modifier.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <stdexcept>
-#include <string>
 
+#include "helper.hpp"
 #include "modifier/dpad_restrictor_modifier.hpp"
 #include "modifier/dpad_rotation_modifier.hpp"
 #include "modifier/four_way_restrictor_modifier.hpp"
@@ -38,11 +37,7 @@ Modifier* Modifier::from_string(const std::string& name,
     // return ButtonmapModifier::from_string(value);
     throw std::runtime_error("unknown modifier: " + name);
   } else {
-    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-    tokenizer tokens(
-        value, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
-
-    std::vector<std::string> args(tokens.begin(), tokens.end());
+    std::vector<std::string> args = string_split(value, ":");
 
     if (name == "dpad-rotation" || name == "dpad-rotate") {
       return DpadRotationModifier::from_string(args);

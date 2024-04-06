@@ -23,7 +23,6 @@
 #include <unistd.h>
 
 #include <algorithm>
-#include <boost/tokenizer.hpp>
 #include <cassert>
 #include <cerrno>
 #include <cstdio>
@@ -31,8 +30,8 @@
 #include <format>
 #include <iostream>
 #include <stdexcept>
-#include <string>
 
+#include "helper.hpp"
 #include "raise_exception.hpp"
 
 int hexstr2int(const std::string& str) {
@@ -86,16 +85,32 @@ void split_string_at(const std::string& str, char c, std::string* lhs,
   }
 }
 
+std::vector<std::string> string_split(std::string_view text,
+                                      std::string_view delimiter) {
+  std::vector<std::string> result;
+
+  std::string::size_type pos = 0;
+  std::string::size_type prev = 0;
+  while ((pos = text.find(delimiter, prev)) != std::string::npos) {
+    result.emplace_back(text.substr(prev, pos - prev));
+    prev = pos + delimiter.length();
+  }
+
+  // to get the last substring
+  // (or entire string if delimiter is not found)
+  result.emplace_back(text.substr(prev));
+
+  return result;
+}
+
 void process_name_value_string(
     const std::string& str,
     const std::function<void(const std::string&, const std::string&)>& func) {
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      str, boost::char_separator<char>(",", "", boost::drop_empty_tokens));
+  std::vector<std::string> tokens = string_split(str, ",");
 
-  for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i) {
+  for (auto& i : tokens) {
     std::string lhs, rhs;
-    split_string_at(*i, '=', &lhs, &rhs);
+    split_string_at(i, '=', &lhs, &rhs);
     func(lhs, rhs);
   }
 }

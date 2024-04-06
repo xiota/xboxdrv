@@ -18,7 +18,6 @@
 
 #include "options.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <cassert>
 #include <format>
 #include <functional>

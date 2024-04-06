@@ -23,6 +23,10 @@
 #include <libusb.h>
 
 #include <memory>
+#include <string>
+#include <vector>
+
+#include "helper.hpp"
 
 class LinuxUinput;
 

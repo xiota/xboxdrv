@@ -18,14 +18,12 @@
 
 #include "command_line_options.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <cassert>
 #include <format>
 #include <fstream>
 #include <functional>
 #include <iostream>
 #include <stdexcept>
-#include <string>
 
 #include "axisfilter/calibration_axis_filter.hpp"
 #include "axisfilter/relative_axis_filter.hpp"
@@ -1208,21 +1206,19 @@ void CommandLineParser::set_ui_buttonmap(ButtonMap& btn_map,
   XboxButton btn = XBOX_BTN_UNKNOWN;
   std::vector<ButtonFilterPtr> filters;
 
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      name, boost::char_separator<char>("^", "", boost::keep_empty_tokens));
+  std::vector<std::string> tokens = string_split(name, "^");
   int idx = 0;
-  for (tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx) {
+  for (auto& t : tokens) {
     switch (idx) {
       case 0:  // shift+key portion
       {
-        std::string::size_type j = t->find('+');
-        if (j == std::string::npos) {
+        std::string::size_type idx = t.find('+');
+        if (idx == std::string::npos) {
           shift = XBOX_BTN_UNKNOWN;
-          btn = string2btn(*t);
+          btn = string2btn(t);
         } else {
-          shift = string2btn(t->substr(0, j));
-          btn = string2btn(t->substr(j + 1));
+          shift = string2btn(t.substr(0, idx));
+          btn = string2btn(t.substr(idx + 1));
         }
 
         if (value.empty()) {  // if no rhs value is given, add filters to the
@@ -1238,10 +1234,11 @@ void CommandLineParser::set_ui_buttonmap(ButtonMap& btn_map,
 
       default: {  // filter
         if (event) {
-          event->add_filter(ButtonFilter::from_string(*t));
+          event->add_filter(ButtonFilter::from_string(t));
         }
       } break;
     }
+    ++idx;
   }
 }
 
@@ -1260,21 +1257,19 @@ void CommandLineParser::set_ui_axismap(AxisMap& axis_map,
   XboxAxis axis = XBOX_AXIS_UNKNOWN;
   std::vector<AxisFilterPtr> filters;
 
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      name, boost::char_separator<char>("^", "", boost::keep_empty_tokens));
+  std::vector<std::string> tokens = string_split(name, "^");
   int idx = 0;
-  for (tokenizer::iterator t = tokens.begin(); t != tokens.end(); ++t, ++idx) {
+  for (auto& t : tokens) {
     switch (idx) {
       case 0:  // shift+key portion
       {
-        std::string::size_type j = t->find('+');
-        if (j == std::string::npos) {
+        std::string::size_type idx = t.find('+');
+        if (idx == std::string::npos) {
           shift = XBOX_BTN_UNKNOWN;
-          axis = string2axis(*t);
+          axis = string2axis(t);
         } else {
-          shift = string2btn(t->substr(0, j));
-          axis = string2axis(t->substr(j + 1));
+          shift = string2btn(t.substr(0, idx));
+          axis = string2axis(t.substr(idx + 1));
         }
 
         if (value.empty()) {  // if no rhs value is given, add filters to the
@@ -1294,10 +1289,11 @@ void CommandLineParser::set_ui_axismap(AxisMap& axis_map,
 
       default: {  // filter
         if (event) {
-          event->add_filter(AxisFilter::from_string(*t));
+          event->add_filter(AxisFilter::from_string(t));
         }
       } break;
     }
+    ++idx;
   }
 }
 
@@ -1356,10 +1352,7 @@ void CommandLineParser::set_autofire(const std::string& name,
 
 void CommandLineParser::set_calibration(const std::string& name,
                                         const std::string& value) {
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      value, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
-  std::vector<std::string> args(tokens.begin(), tokens.end());
+  std::vector<std::string> args = string_split(value, ":");
 
   if (args.size() != 3) {
     throw std::runtime_error("calibration requires MIN:CENTER:MAX as argument");

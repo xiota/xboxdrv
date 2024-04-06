@@ -42,6 +42,9 @@ void process_name_value_string(
 void split_string_at(const std::string& str, char c, std::string* lhs,
                      std::string* rhs);
 
+std::vector<std::string> string_split(std::string_view text,
+                                      std::string_view delimiter);
+
 template <typename C>
 std::string string_join(C const& c, std::string_view sep) {
   std::string result;

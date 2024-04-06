@@ -19,38 +19,35 @@
 #include "axisfilter/calibration_axis_filter.hpp"
 
 #include <algorithm>
-#include <boost/tokenizer.hpp>
 #include <sstream>
 #include <stdexcept>
-#include <string>
 
 #include "helper.hpp"
 
 CalibrationAxisFilter* CalibrationAxisFilter::from_string(
     const std::string& str) {
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-  tokenizer tokens(
-      str, boost::char_separator<char>(":", "", boost::keep_empty_tokens));
+  std::vector<std::string> tokens = string_split(str, ":");
 
   int min = 0;
   int center = 0;
   int max = 0;
 
-  int j = 0;
-  for (tokenizer::iterator i = tokens.begin(); i != tokens.end(); ++i, ++j) {
-    switch (j) {
+  int idx = 0;
+  for (auto& i : tokens) {
+    switch (idx) {
       case 0:
-        min = std::stoi(*i);
+        min = std::stoi(i);
         break;
       case 1:
-        center = std::stoi(*i);
+        center = std::stoi(i);
         break;
       case 2:
-        max = std::stoi(*i);
+        max = std::stoi(i);
         break;
       default:
         throw std::runtime_error("to many arguments");
-    };
+    }
+    ++idx;
   }
 
   return new CalibrationAxisFilter(min, center, max);

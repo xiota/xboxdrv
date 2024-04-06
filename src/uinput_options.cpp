@@ -20,8 +20,6 @@
 
 #include <linux/input.h>
 
-#include <boost/tokenizer.hpp>
-
 UInputOptions::UInputOptions() : m_btn_map(), m_axis_map() { set_defaults(); }
 
 ButtonMap& UInputOptions::get_btn_map() { return m_btn_map; }

@@ -18,7 +18,6 @@
 
 #include "button_event.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <cassert>
 #include <cerrno>
 #include <fstream>

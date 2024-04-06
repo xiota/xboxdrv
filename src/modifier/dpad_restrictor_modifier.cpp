@@ -18,7 +18,6 @@
 
 #include "dpad_restrictor_modifier.hpp"
 
-#include <boost/tokenizer.hpp>
 #include <cassert>
 #include <stdexcept>
 #include <string>
