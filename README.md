@@ -1,3 +1,19 @@
+The driver portion of this project is deprecated in favor of kernel drivers.
+However, this program is able to remap evdev input to an emulated Xbox controller.
+This continues to be useful for programs that support only Xbox gamepads.
+Outside of Steam, I am not aware of any other program with this capability.
+
+The primary objectives of this fork are to:
+
+* Serve as a backup in case other repos are taken offline.
+* Merge existing fixes and patches that do not break input remapping.
+* Update and cleanup code to keep it functional on modern systems.
+
+New features are unlikely to be added unless they are extremely simple
+to implement, improve input remapping, or are required to fix bugs.
+
+-----
+
 Xbox/Xbox360 USB Gamepad Driver for Userspace
 =============================================
 
@@ -34,28 +50,28 @@ Required libraries and tools:
  * libdbus
  * glib
 
-Once everything installed, you can compile by typing:
+Once everything is installed, you can compile by typing:
 
-    scons
+    * scons
 
-On Ubuntu 10.10 you can install all the required libraries via:
+On Ubuntu you can install all the required libraries via:
 
-    sudo apt-get install \
-     g++ \
-     libboost1.42-dev \
-     scons \
-     pkg-config \
-     libusb-1.0-0-dev \
-     git-core \
-     libx11-dev \
-     libudev-dev \
-     x11proto-core-dev \
-     libdbus-glib-1-dev
+    $ sudo apt-get install \
+        g++ \
+        libboost1.42-dev \
+        scons \
+        pkg-config \
+        libusb-1.0-0-dev \
+        git-core \
+        libx11-dev \
+        libudev-dev \
+        x11proto-core-dev \
+        libdbus-glib-1-dev
 
 To load the uinput kernel module automatically on boot add it
-/etc/modules, to load it manually type:
+`/etc/modules`, to load it manually type:
 
-    sudo modprobe uinput
+    $ sudo modprobe uinput
 
 On other distributions exact install instructions might be
 slightly different.
@@ -66,11 +82,11 @@ Installation
 
 Once the compilation process is complete you can install xboxdrv with:
 
-    make install
+    $ make install
 
 You can also change the install PREFIX and DESTDIR as usual with:
 
-    make install PREFIX=/usr DESTDIR=/tmp
+    $ make install PREFIX=/usr DESTDIR=/tmp
 
 Note that there is no need to install xboxdrv, you can run it directly
 from the source directory if you prefer.
@@ -88,9 +104,9 @@ Extensive documentation on running xboxdrv can be found in the RUNNING
 XBOXDRV section of the xboxdrv manpage. When you haven't installed
 xboxdrv the man page can be found in doc/xboxdrv.1 and be read with:
 
-    man -l doc/xboxdrv.1
+    $ man -l doc/xboxdrv.1
 
 Documentation on xboxdrv-daemon, a daemon that will automatically
 launch xboxdrv when a pad is plugged in can be read via:
 
-    man -l doc/xboxdrv-daemon.1
+    $ man -l doc/xboxdrv-daemon.1

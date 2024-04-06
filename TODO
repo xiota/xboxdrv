@@ -11,14 +11,14 @@ Pre Release Testing:
 
 VERSION="$(cat VERSION)"
 TAG="v${VERSION}"
-git tag -s  "${TAG}" -m "xboxdrv ${TAG}" 
+git tag -s  "${TAG}" -m "xboxdrv ${TAG}"
 
 # Normal Source
 git archive --format=tar --prefix="xboxdrv-linux-${VERSION}/" ${TAG} | bzip2 -c > /tmp/xboxdrv-linux-${VERSION}.tar.bz2
 
 git push --tags
 
-
+
 Ubuntu Package:
 ===============
 
@@ -27,7 +27,7 @@ cd ../debian/xboxdrv
 # Ubuntu 11.04
 # ============
 git checkout master
-git-import-orig -u 0.8.2 ~/projects/xboxdrv/htdocs/xboxdrv-linux-0.8.2.tar.bz2 
+git-import-orig -u 0.8.2 ~/projects/xboxdrv/htdocs/xboxdrv-linux-0.8.2.tar.bz2
 dch -v "0.8.2-1" "xboxdrv 0.8.2 release"
 git commit -m "xboxdrv 0.8.2 release" -a
 git-buildpackage --git-no-create-orig --git-tag --git-builder="debuild -S"
@@ -38,7 +38,7 @@ dput my-ppa ../xboxdrv_0.8.2-1_source.changes
 # ============
 git checkout master-10.10
 git merge master
-git show master:debian/changelog > debian/changelog 
+git show master:debian/changelog > debian/changelog
 dch -b -v "0.8.2-1~maverick1" --distribution maverick "xboxdrv 0.8.2 backport"
 git commit -m "xboxdrv 0.8.2 backport" -a
 git-buildpackage --git-no-create-orig --git-debian-branch=master-10.10 --git-tag --git-builder="debuild -S"
@@ -49,7 +49,7 @@ dput my-ppa ../xboxdrv_0.8.2-1~maverick1_source.changes
 # ==================
 git checkout master-lts
 git merge master
-git show master:debian/changelog > debian/changelog 
+git show master:debian/changelog > debian/changelog
 dch -b -v "0.8.2-1~lucid1" --distribution lucid "xboxdrv 0.8.2 backport"
 git commit -m "xboxdrv 0.8.2 backport" -a
 git-buildpackage --git-no-create-orig --git-debian-branch=master-lts --git-tag --git-builder="debuild -S"
@@ -68,7 +68,7 @@ git checkout stable-lts
 git-buildpackage --git-no-create-orig --git-debian-branch=stable-lts --git-tag --git-builder="debuild -S" --git-debian-tag="stable/0.6.6-1_lucid2"
 sudo pbuilder --build --basetgz /var/cache/pbuilder/base-lucid.tgz ../xboxdrv-stable_0.6.6-1~lucid2.dsc
 
-
+
 Target for 0.8.3
 ================
 
@@ -105,7 +105,7 @@ libusb:warning [libusb_close] internal signalling write failed, closing anyway
   -> need a time delay before button is actually send for situations
      where sending the key is expensive (weapon switching in game might be slow)
 
-  -> add an option to have the cycle sequence not wrap around: 
+  -> add an option to have the cycle sequence not wrap around:
      -> possible use: throttle in a flightsim mapped to 1-9
 
   Possible future improvements:
@@ -119,7 +119,7 @@ libusb:warning [libusb_close] internal signalling write failed, closing anyway
 
   - single button inventory: next, hold to activate
 
-
+
 Target for 0.9.0
 ================
 
@@ -213,7 +213,7 @@ libusb:warning [libusb_close] internal signalling write failed, closing anyway
 
 * search for "#ifdef FIXME"
 
-* do proper error checking: 
+* do proper error checking:
 
 xboxdrv: src/usb_controller.cpp:218: void USBController::on_read_data(libusb_transfer*): Assertion `ret == LIBUSB_SUCCESS' failed.
 Aborted
@@ -279,7 +279,7 @@ make: *** [xboxdrv] Error 2
 
 * when verbose is given, warn when keys are dual mapped, give list of free keys
 
-* space is currently illegal, but shouldn't be "GUIDE = KEY_LEFTALT + KEY_E" 
+* space is currently illegal, but shouldn't be "GUIDE = KEY_LEFTALT + KEY_E"
 
 * write macro that calibrates the joystick for DOS games
 
@@ -350,7 +350,7 @@ Autolaunch error: X11 initialization failed." failed to open connection to bus: 
 
   -> do we need more rel types? rel-once? or can repeat values be
      abused?
-     
+
      repeat: 0 - always repeat, -1, never repeat, NUM - repeat every NUM msec
 
   -> add rel-repeat:{repeat} type that repeats more often the more the
@@ -363,7 +363,7 @@ Autolaunch error: X11 initialization failed." failed to open connection to bus: 
 
 * documentation needs to be improved
 
-* --ui-axismap LT=KEY_A:KEY_B:1 
+* --ui-axismap LT=KEY_A:KEY_B:1
 
 Here KEY_B is the key you want to send and KEY_A is a random other key
 that you don't need. It's a hack as mapping both to KEY_B seems to
@@ -380,7 +380,7 @@ disable LT and RT -> already fixed, check it
   etc. REL_HWEEL will be button 6 and 7, add that to documentation somewhere
 
 == Bugs ==
-     
+
 * multiple ControllerThread lead to UInput::update() being called
   multiple times, as UInputMessageProcessor does call the update()
   which is wrong
@@ -389,7 +389,7 @@ disable LT and RT -> already fixed, check it
 
 * LED isn't set proper when wireless controllers wake up from power-down
 
-
+
 == Unsolved/WontFix ==
 
 * after every thread cleanup, do an enumeration over all USB devices,
@@ -411,7 +411,7 @@ disable LT and RT -> already fixed, check it
   and use them when a slot got free -> discard, bad idea, as it
   results in confusing behaviour
 
-* daemon on regular xboxdrv have different controller orderings 
+* daemon on regular xboxdrv have different controller orderings
 
   -> hard to avoid, as wireless controllers are only picked up when
      active, which they always become later then the wired ones, which
@@ -434,7 +434,7 @@ disable LT and RT -> already fixed, check it
   number of allocated controller slots
 
 * get rid of all std::cout stuff when using detached daemon, redirect
-  log output to a file, syslog or somewhere else: 
+  log output to a file, syslog or somewhere else:
 
   --silent:  stops event output
   --quiet:   stops all stdout output (automatically used when --detach is given, except for errors)
@@ -467,8 +467,8 @@ disable LT and RT -> already fixed, check it
     proper functions and use the same functions for both cmdline and ini
 
 * allow setting a --default-name from which all other controller names
-  are derived 
-   -> already there in the form of auto.auto? 
+  are derived
+   -> already there in the form of auto.auto?
      -> No, as those don't derive the name, but set a fixed one
 
 * allow swap/assign of controller to slots via dbus
@@ -494,7 +494,7 @@ disable LT and RT -> already fixed, check it
   * timeout makes a huge difference, real MarbleMouse Trackball send around every 10msec
   * need to deal with rounding errors to allow small movements
 
-* add --ui-buttonmap A=KEY_A:KEY_B:1000:1 
+* add --ui-buttonmap A=KEY_A:KEY_B:1000:1
 
   the last 0/1 parameter tells if it should do:
 
@@ -532,12 +532,11 @@ Other Stuff
 
 * remove uinput.send_rel_repetitive() replace with just EventHandler::update()
 
-  -> might not be needed, send_rel_repetitive() is kind of convenient  
+  -> might not be needed, send_rel_repetitive() is kind of convenient
 
   -> send_rel_repetitive() doesn't work with multi-axis REL events (mouse emulation)
 
-* boost::lexical_cast<> error messages are useless, make some better ones
-
+
 Daemon Match Rules
 ==================
 
@@ -564,7 +563,7 @@ Daemon Match Rules
 
 * extend usbid match rule to bcd device
 
-
+
 Stuff to do before 0.7.3 release:
 =================================
 
@@ -594,11 +593,11 @@ Stuff to do before 0.7.3 release:
     check for conflicts and necessary modifications?
   - Options::finish() to do final things?
 
-
+
 Stuff to do before 0.7.x release:
 =================================
 
-* add Wiimote and PS3 bluetooth support 
+* add Wiimote and PS3 bluetooth support
 
 * -R, --rumble-test is broken for FirestormDualController (has no analog triggers)
 
@@ -677,7 +676,7 @@ http://www.mp3car.com/vbulletin/input-devices/108554-xbox360-chatpad-awsome-back
 
 * remove guide button from default mapping when its an Xbox1 controller
 
-* guitar handling was changed in a4e1003cba0ff925358ce5ed84d2bf9a728e93d6 
+* guitar handling was changed in a4e1003cba0ff925358ce5ed84d2bf9a728e93d6
 
 * REL_ events could need acceleration support, as mouse emulation is currently kind of imprecise
 
@@ -719,7 +718,7 @@ Feature
 * test TR:Anniversary with max effect 16
 
 
-fixme:dinput:joy_polldev joystick cannot handle type 21 event (code 0) <- 21 == EV_FF (status report?) 
+fixme:dinput:joy_polldev joystick cannot handle type 21 event (code 0) <- 21 == EV_FF (status report?)
 
 http://www.immersion.com/developer/downloads/ImmFundamentals/HTML/
 http://msdn.microsoft.com/en-us/library/bb219655(VS.85).aspx
@@ -753,7 +752,7 @@ Orange	LB1	+32767
 
 * add support for LED messages (can this be used by anything?)
 
-
+
 Stuff to do before 0.8.0 release:
 =================================
 
@@ -770,33 +769,33 @@ Stuff to do before 0.8.0 release:
      // leaving controller plugged in for a longer time settles to this:
       00 00 03 ef 16 00 00 00 00 33 fc 77 01 de
 
-     00 00 03 ef 16 00 00 00 00 33 fc 77 01 de 
+     00 00 03 ef 16 00 00 00 00 33 fc 77 01 de
      00 00 03 ef 16 00 00 00 00 33 fc 77 01 c0
      00 00 02 ee 12 00 00 00 00 12 fc 77 01 de
            ^^^^^                         ^^^^^
-     00 00 01 ee 12 00 00 00 00 12 fc 77 01 de 
-     00 00 03 ef 16 00 00 00 00 11 fc 77 01 de 
-     00 00 03 ef 16 00 00 00 00 33 fc 77 01 de 
-     00 00 02 ee 12 00 00 00 00 12 fc 77 01 de 
+     00 00 01 ee 12 00 00 00 00 12 fc 77 01 de
+     00 00 03 ef 16 00 00 00 00 11 fc 77 01 de
+     00 00 03 ef 16 00 00 00 00 33 fc 77 01 de
+     00 00 02 ee 12 00 00 00 00 12 fc 77 01 de
      wrong ideas: bluetooth master id
 
      00 00 01 ef 16 00 00 00 00 11 fc 77 01 c0
      00 00 03 ef 16 00 00 00 00 11 fc 77 01 c0
 
      SIXAXIS:
-     00 00 06 ee 10 00 00 00 00 06 83 77 01 81 
+     00 00 06 ee 10 00 00 00 00 06 83 77 01 81
      00 00 06 ee 10 00 00 00 00 06 83 77 01
-     00 00 06 ee 10 00 00 00 00 06 83 77 
+     00 00 06 ee 10 00 00 00 00 06 83 77
 
      // taken from: http://www.pabr.org/sixlinux/sixlinux.en.html
      00 00 02 ee 10 00 00 00 00 02 b2 77 01 81
-     
+
      random guesses: bluetooth id, serial number, calibration data,
      battery status
 
 * Wiimote support (either native or via libcwiid
 
-
+
 Random Stuff
 ============
 http://lists.libsdl.org/pipermail/sdl-libsdl.org/2007-March/060263.html
