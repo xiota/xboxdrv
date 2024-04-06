@@ -35,7 +35,7 @@ env:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install build-essential scons g++ libboost-dev scons pkg-config libusb-1.0-0-dev libx11-dev libudev-dev x11proto-core-dev libdbus-glib-1-dev
+  - sudo apt-get install build-essential scons g++ scons pkg-config libusb-1.0-0-dev libx11-dev libudev-dev x11proto-core-dev libdbus-glib-1-dev
 
 script:
   - git clean -f

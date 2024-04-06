@@ -22,7 +22,6 @@
              ((guix licenses) #:prefix license:)
              (guix packages)
              (guix utils)
-             (gnu packages boost)
              (gnu packages glib)
              (gnu packages libusb)
              (gnu packages linux)
@@ -63,8 +62,7 @@
     `(("pkg-config" ,pkg-config)
       ("glib" ,glib "bin")))
    (inputs
-    `(("boost" ,boost)
-      ("dbus-glib" ,dbus-glib)
+    `(("dbus-glib" ,dbus-glib)
       ("libusb" ,libusb)
       ("libudev" ,eudev)
       ("libx11" ,libx11)

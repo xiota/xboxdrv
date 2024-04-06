@@ -27,7 +27,6 @@
             buildInputs = [
               pkgs.xorg.libX11
               pkgs.libusb1
-              pkgs.boost
               pkgs.glib
               pkgs.dbus-glib
             ];

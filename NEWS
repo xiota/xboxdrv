@@ -1,3 +1,8 @@
+## xboxdrv 0.8.11 - (2024-04-06)
+
+* removed boost dependency
+
+
 ## xboxdrv 0.8.10 - (2022-08-04)
 
 Cherry-picks from chewi and cebtenzzre repos.

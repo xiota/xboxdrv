@@ -42,7 +42,6 @@ Required libraries and tools:
  * libusb-1.0
  * pkg-config
  * libudev
- * boost
  * scons
  * uinput (userspace input kernel module)
  * git (only to download the development version)
@@ -58,7 +57,6 @@ On Ubuntu you can install all the required libraries via:
 
     $ sudo apt-get install \
         g++ \
-        libboost1.42-dev \
         scons \
         pkg-config \
         libusb-1.0-0-dev \
