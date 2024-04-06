@@ -21,10 +21,10 @@
 #include <glib.h>
 #include <libusb.h>
 
-#include <boost/bind.hpp>
 #include <cassert>
 #include <cstdio>
 #include <format>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -125,7 +125,7 @@ void XboxdrvMain::on_controller_disconnect() { shutdown(); }
 void XboxdrvMain::run() {
   m_controller = create_controller();
   m_controller->set_disconnect_cb(
-      boost::bind(&XboxdrvMain::on_controller_disconnect, this));
+      std::bind(&XboxdrvMain::on_controller_disconnect, this));
   std::shared_ptr<MessageProcessor> message_proc;
   init_controller(m_controller);
 

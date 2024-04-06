@@ -18,16 +18,19 @@
 
 #include "headset.hpp"
 
-#include <boost/bind.hpp>
 #include <cerrno>
 #include <cstring>
 #include <fstream>
+#include <functional>
 #include <stdexcept>
 #include <string>
 
 #include "helper.hpp"
 #include "raise_exception.hpp"
 #include "usb_helper.hpp"
+
+using std::placeholders::_1;
+using std::placeholders::_2;
 
 Headset::Headset(libusb_device_handle* handle, bool debug)
     : m_handle(handle),
@@ -51,7 +54,7 @@ void Headset::play_file(const std::string& filename) {
       log_error("short read");
     } else {
       m_interface->submit_write(4, reinterpret_cast<uint8_t*>(data), len,
-                                boost::bind(&Headset::send_data, this, _1));
+                                std::bind(&Headset::send_data, this, _1));
     }
   }
 }
@@ -63,7 +66,7 @@ void Headset::record_file(const std::string& filename) {
     raise_exception(std::runtime_error, filename << ": " << strerror(errno));
   } else {
     m_interface->submit_read(3, 32,
-                             boost::bind(&Headset::receive_data, this, _1, _2));
+                             std::bind(&Headset::receive_data, this, _1, _2));
   }
 }
 

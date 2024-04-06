@@ -18,7 +18,6 @@
 
 #include "controller_slot_config.hpp"
 
-#include <boost/bind.hpp>
 #include <cassert>
 #include <memory>
 #include <stdexcept>

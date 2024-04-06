@@ -22,12 +22,12 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus.h>
 
-#include <boost/bind.hpp>
 #include <cassert>
 #include <cerrno>
 #include <cstring>
 #include <format>
 #include <fstream>
+#include <functional>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -44,6 +44,9 @@
 #include "usb_gsource.hpp"
 #include "usb_helper.hpp"
 #include "usb_subsystem.hpp"
+
+using std::placeholders::_1;
+using std::placeholders::_2;
 
 XboxdrvDaemon* XboxdrvDaemon::s_current = 0;
 
@@ -128,7 +131,7 @@ void XboxdrvDaemon::run() {
 
     UdevSubsystem udev_subsystem;
     udev_subsystem.set_device_callback(
-        boost::bind(&XboxdrvDaemon::process_match, this, _1));
+        std::bind(&XboxdrvDaemon::process_match, this, _1));
 
     std::shared_ptr<DBusSubsystem> dbus_subsystem;
     if (m_opts.dbus != Options::kDBusDisabled) {
@@ -209,6 +212,9 @@ void XboxdrvDaemon::process_match(struct udev_device* device) {
     }
   }
 }
+
+using std::placeholders::_1;
+using std::placeholders::_2;
 
 void XboxdrvDaemon::init_uinput() {
   // Setup uinput
@@ -308,9 +314,9 @@ void XboxdrvDaemon::launch_controller_thread(udev_device* udev_dev,
          i != controllers.end(); ++i) {
       ControllerPtr& controller = *i;
 
-      controller->set_disconnect_cb(boost::bind(
+      controller->set_disconnect_cb(std::bind(
           &g_idle_add, &XboxdrvDaemon::on_controller_disconnect_wrap, this));
-      controller->set_activation_cb(boost::bind(
+      controller->set_activation_cb(std::bind(
           &g_idle_add, &XboxdrvDaemon::on_controller_activate_wrap, this));
 
       // FIXME: Little dirty hack
@@ -433,7 +439,7 @@ void XboxdrvDaemon::on_controller_disconnect() {
   m_inactive_controllers.erase(
       std::remove_if(m_inactive_controllers.begin(),
                      m_inactive_controllers.end(),
-                     boost::bind(&Controller::is_disconnected, _1)),
+                     std::bind(&Controller::is_disconnected, _1)),
       m_inactive_controllers.end());
 }
 

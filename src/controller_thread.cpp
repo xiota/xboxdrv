@@ -20,8 +20,8 @@
 
 #include <glib.h>
 
-#include <boost/bind.hpp>
 #include <cstring>
+#include <functional>
 #include <iostream>
 #include <memory>
 
@@ -29,6 +29,9 @@
 #include "helper.hpp"
 #include "log.hpp"
 #include "message_processor.hpp"
+
+using std::placeholders::_1;
+using std::placeholders::_2;
 
 extern bool global_exit_xboxdrv;
 
@@ -46,7 +49,7 @@ ControllerThread::ControllerThread(ControllerPtr controller,
   m_timeout_id =
       g_timeout_add(m_timeout, &ControllerThread::on_timeout_wrap, this);
   m_controller->set_message_cb(
-      boost::bind(&ControllerThread::on_message, this, _1));
+      std::bind(&ControllerThread::on_message, this, _1));
   m_processor->set_controller(m_controller.get());
 }
 

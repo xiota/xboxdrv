@@ -18,10 +18,11 @@
 
 #include "options.hpp"
 
-#include <boost/bind.hpp>
 #include <boost/tokenizer.hpp>
 #include <cassert>
 #include <format>
+#include <functional>
+#include <memory>
 #include <stdexcept>
 #include <string>
 
@@ -29,13 +30,16 @@
 #include "raise_exception.hpp"
 #include "uinput.hpp"
 
+using std::placeholders::_1;
+using std::placeholders::_2;
+
 Options* g_options;
 
 Options::GenericUSBSpec Options::GenericUSBSpec::from_string(
     const std::string& str) {
   GenericUSBSpec spec;
   process_name_value_string(
-      str, boost::bind(&GenericUSBSpec::apply_pair, boost::ref(spec), _1, _2));
+      str, std::bind(&GenericUSBSpec::apply_pair, std::ref(spec), _1, _2));
   return spec;
 }
 
@@ -302,16 +306,15 @@ void Options::add_match(const std::string& lhs, const std::string& rhs) {
 }
 
 void Options::set_match(const std::string& str) {
-  process_name_value_string(str,
-                            boost::bind(&Options::add_match, this, _1, _2));
+  process_name_value_string(str, std::bind(&Options::add_match, this, _1, _2));
 }
 
 void Options::set_match_group(const std::string& str) {
   std::shared_ptr<ControllerMatchRuleGroup> group(new ControllerMatchRuleGroup);
 
   process_name_value_string(
-      str, boost::bind(&ControllerMatchRuleGroup::add_rule_from_string, group,
-                       _1, _2));
+      str, std::bind(&ControllerMatchRuleGroup::add_rule_from_string, group, _1,
+                     _2));
 
   get_controller_slot().add_match_rule(group);
 }
