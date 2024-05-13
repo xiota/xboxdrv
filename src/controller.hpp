@@ -23,6 +23,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <vector>
 
 extern "C" {
 #include <libudev.h>
@@ -50,6 +51,8 @@ class Controller {
 
  public:
   Controller();
+  const std::vector<uint16_t>& get_ff_features() const { return m_ff_features; }
+  int get_num_ff_effects() const { return m_num_ff_effects; }
   virtual ~Controller();
 
   void set_rumble(uint8_t left, uint8_t right);
