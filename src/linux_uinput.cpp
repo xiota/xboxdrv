@@ -217,12 +217,12 @@ void LinuxUinput::finish() {
   if (m_force_feedback_enabled) {
     log_debug("force-feedback is enabled in LinuxUinput");
 
-    for (int i = 0; i < m_controller->get_ff_features().size(); ++i) {
+    for (size_t i = 0; i < m_controller->get_ff_features().size(); ++i) {
       add_ff(m_controller->get_ff_features()[i]);
     }
   }
 
-  strncpy(user_dev.name, name.c_str(), UINPUT_MAX_NAME_SIZE);
+  strncpy(user_dev.name, name.c_str(), UINPUT_MAX_NAME_SIZE - 1);
   user_dev.id.version = usbid.version;
   user_dev.id.bustype = usbid.bustype;
   user_dev.id.vendor = usbid.vendor;
@@ -236,7 +236,7 @@ void LinuxUinput::finish() {
   }
 
   {
-    int write_ret = write(m_fd, &user_dev, sizeof(user_dev));
+    int write_ret = write(m_fd, &user_dev, UINPUT_MAX_NAME_SIZE);
     if (write_ret < 0) {
       throw std::runtime_error("uinput:finish: " + name + ": " +
                                strerror(errno));

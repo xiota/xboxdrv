@@ -59,7 +59,7 @@ void Playstation3USBController::set_rumble_real(uint8_t left, uint8_t right) {
                    0xff, 0x27, 0x10,  0x00, 0x32,  // LED 1
                    0x00, 0x00, 0x00,  0x00, 0x00};
 
-  usb_control(LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS |
+  usb_control((size_t)LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS |
                   LIBUSB_RECIPIENT_INTERFACE,        // RequestType
               HID_SET_REPORT,                        // Request
               (HID_REPORT_TYPE_OUTPUT << 8) | 0x01,  // Value
@@ -111,7 +111,7 @@ void Playstation3USBController::set_led_real(uint8_t status) {
       0xff, 0x27, 0x10, 0x00, 0x32,        // LED 1
       0x00, 0x00, 0x00, 0x00, 0x00};
 
-  usb_control(LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS |
+  usb_control((size_t)LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS |
                   LIBUSB_RECIPIENT_INTERFACE,        // RequestType
               HID_SET_REPORT,                        // Request
               (HID_REPORT_TYPE_OUTPUT << 8) | 0x01,  // Value
