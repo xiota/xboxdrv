@@ -17,7 +17,7 @@ to implement, improve input remapping, or are required to fix bugs.
 Xbox/Xbox360 USB Gamepad Driver for Userspace
 =============================================
 
-Xboxdrv is a Xbox/Xbox360 gamepad driver for Linux that works in
+`xboxdrv` is a Xbox/Xbox360 gamepad driver for Linux that works in
 userspace. It is an alternative to the xpad kernel driver and has
 support for Xbox1 gamepads, Xbox360 USB gamepads and Xbox360 wireless
 gamepads. The Xbox360 guitar and some Xbox1 dancemats might work too.
@@ -38,26 +38,24 @@ Compilation
 
 Required libraries and tools:
 
- * g++ - GNU C++ Compiler
- * libusb-1.0
- * pkg-config
- * libudev
- * scons
- * uinput (userspace input kernel module)
- * git (only to download the development version)
- * X11
- * libdbus
- * glib
+* compiler with C++20 support
+* libusb-1.0
+* pkg-config
+* libudev
+* meson
+* ninja
+* uinput (userspace input kernel module)
+* git (only to download the development version)
+* X11
+* libdbus
+* glib
 
-Once everything is installed, you can compile by typing:
-
-    * scons
-
-On Ubuntu you can install all the required libraries via:
+On Ubuntu, required libraries may be installed with:
 
     $ sudo apt-get install \
         g++ \
-        scons \
+        meson \
+        ninja \
         pkg-config \
         libusb-1.0-0-dev \
         git-core \
@@ -66,45 +64,59 @@ On Ubuntu you can install all the required libraries via:
         x11proto-core-dev \
         libdbus-glib-1-dev
 
-To load the uinput kernel module automatically on boot add it
-`/etc/modules`, to load it manually type:
+Once everything is installed, you may compile by typing:
+
+    $ meson setup build .
+    $ ninja -C build
+
+To load the uinput kernel module automatically on boot,
+add it to `/etc/modules`.  To load it manually type:
 
     $ sudo modprobe uinput
 
-On other distributions exact install instructions might be
-slightly different.
+The compilation procedure may differ on other distributions.
 
 
 Installation
 ------------
 
-Once the compilation process is complete you can install xboxdrv with:
+There is no need to install `xboxdrv`.  You may run it directly from the build directory.
 
-    $ make install
+If you prefer, you may install `xboxdrv` after compilation by running:
 
-You can also change the install PREFIX and DESTDIR as usual with:
+    $ meson install -C build
 
-    $ make install PREFIX=/usr DESTDIR=/tmp
+You can also change the install PREFIX and DESTDIR with:
 
-Note that there is no need to install xboxdrv, you can run it directly
-from the source directory if you prefer.
+    $ meson install -C build --prefix=/usr --destdir "/tmp"
 
-If you want to run xboxdrv in daemon mode on boot, copy
-`data/org.seul.Xboxdrv.conf` into `/etc/dbus-1/system.d/`, otherwise xboxdrv will complain with:
+If you want to run `xboxdrv` in daemon mode on boot,
+copy `data/org.seul.Xboxdrv.conf` into `/etc/dbus-1/system.d/`,
+otherwise `xboxdrv` will complain with:
 
     [ERROR] XboxdrvDaemon::run(): fatal exception: failed to get unique dbus name: Connection ":1.135" is not allowed to own the service "org.seul.Xboxdrv" due to security policies in the configuration file
+
+
+Arch Linux
+----------
+
+For convenience, Arch Linux users may use one of the
+[AUR](https://wiki.archlinux.org/title/Arch_User_Repository) packages:
+
+* [`xboxdrv`](https://aur.archlinux.org/pkgbase/xboxdrv) – tagged releases
+* [`xboxdrv-git`](https://aur.archlinux.org/pkgbase/xboxdrv-git) – most recent commit in main branch
 
 
 Running
 -------
 
-Extensive documentation on running xboxdrv can be found in the RUNNING
-XBOXDRV section of the xboxdrv manpage. When you haven't installed
-xboxdrv the man page can be found in doc/xboxdrv.1 and be read with:
+Extensive documentation about running `xboxdrv` can be found in the
+RUNNING XBOXDRV section of the `xboxdrv` manpage.  When not installed,
+the man page can be found at `doc/xboxdrv.1`.  Read it with:
 
     $ man -l doc/xboxdrv.1
 
-Documentation on xboxdrv-daemon, a daemon that will automatically
-launch xboxdrv when a pad is plugged in can be read via:
+`xboxdrv-daemon` is a daemon that will automatically launch `xboxdrv`
+when a gamepad is plugged in.  Documentation can be read with:
 
     $ man -l doc/xboxdrv-daemon.1
