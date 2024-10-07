@@ -1,3 +1,9 @@
+## xboxdrv 0.8.12 - (2024-10-07)
+
+* added meson build system
+* fixed segfault
+
+
 ## xboxdrv 0.8.11 - (2024-04-06)
 
 * removed boost dependency
