@@ -29,7 +29,7 @@
 RelAxisEventHandler* RelAxisEventHandler::from_string(const std::string& str) {
   std::vector<std::string> tokens = string_split(str, ":");
 
-  std::shared_ptr<RelAxisEventHandler> ev(new RelAxisEventHandler);
+  std::unique_ptr<RelAxisEventHandler> ev(new RelAxisEventHandler);
 
   int idx = 0;
   for (auto& i : tokens) {
@@ -59,7 +59,7 @@ RelAxisEventHandler* RelAxisEventHandler::from_string(const std::string& str) {
         "AxisEvent::rel_from_string(): at least one argument required: " + str);
   }
 
-  return ev.get();
+  return ev.release();
 }
 
 RelAxisEventHandler::RelAxisEventHandler()

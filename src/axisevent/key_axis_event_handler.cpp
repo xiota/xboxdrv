@@ -26,7 +26,7 @@
 #include "uinput.hpp"
 
 KeyAxisEventHandler* KeyAxisEventHandler::from_string(const std::string& str) {
-  std::shared_ptr<KeyAxisEventHandler> ev(new KeyAxisEventHandler);
+  std::unique_ptr<KeyAxisEventHandler> ev(new KeyAxisEventHandler);
 
   std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
@@ -65,7 +65,7 @@ KeyAxisEventHandler* KeyAxisEventHandler::from_string(const std::string& str) {
         "AxisEvent::key_from_string(): at least one argument required: " + str);
   }
 
-  return ev.get();
+  return ev.release();
 }
 
 KeyAxisEventHandler::KeyAxisEventHandler()

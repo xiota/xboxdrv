@@ -31,7 +31,7 @@ KeyButtonEventHandler* KeyButtonEventHandler::from_string(
     const std::string& str) {
   // std::cout << " KeyButtonEventHandler::from_string: " << str << std::endl;
 
-  std::shared_ptr<KeyButtonEventHandler> ev;
+  std::unique_ptr<KeyButtonEventHandler> ev;
 
   std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
@@ -60,7 +60,7 @@ KeyButtonEventHandler* KeyButtonEventHandler::from_string(
     ++idx;
   }
 
-  return ev.get();
+  return ev.release();
 }
 
 KeyButtonEventHandler::KeyButtonEventHandler()

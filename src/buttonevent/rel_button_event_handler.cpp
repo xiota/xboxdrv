@@ -26,7 +26,7 @@
 
 RelButtonEventHandler* RelButtonEventHandler::from_string(
     const std::string& str) {
-  std::shared_ptr<RelButtonEventHandler> ev;
+  std::unique_ptr<RelButtonEventHandler> ev;
 
   std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
@@ -47,7 +47,7 @@ RelButtonEventHandler* RelButtonEventHandler::from_string(
     ++idx;
   }
 
-  return ev.get();
+  return ev.release();
 }
 
 RelButtonEventHandler::RelButtonEventHandler(const UIEvent& code)
