@@ -188,7 +188,7 @@ install_data(
 
 install_data(
   sources: 'data/xboxdrv.service',
-  install_dir: get_option('libdir') / 'systemd' / 'service'
+  install_dir: get_option('libdir') / 'systemd' / 'system'
 )
 
 install_data(
