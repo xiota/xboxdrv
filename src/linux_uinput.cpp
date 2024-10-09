@@ -223,6 +223,7 @@ void LinuxUinput::finish() {
   }
 
   strncpy(user_dev.name, name.c_str(), UINPUT_MAX_NAME_SIZE - 1);
+  user_dev.name[UINPUT_MAX_NAME_SIZE - 1] = '\0';
   user_dev.id.version = usbid.version;
   user_dev.id.bustype = usbid.bustype;
   user_dev.id.vendor = usbid.vendor;
@@ -236,7 +237,7 @@ void LinuxUinput::finish() {
   }
 
   {
-    int write_ret = write(m_fd, &user_dev, UINPUT_MAX_NAME_SIZE);
+    int write_ret = write(m_fd, &user_dev, sizeof(user_dev));
     if (write_ret < 0) {
       throw std::runtime_error("uinput:finish: " + name + ": " +
                                strerror(errno));
