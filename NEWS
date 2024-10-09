@@ -1,3 +1,9 @@
+## xboxdrv 0.8.13 - (2024-10-09)
+
+* fixed systemd path
+* fixed uinput write error
+
+
 ## xboxdrv 0.8.12 - (2024-10-07)
 
 * added meson build system
