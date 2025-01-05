@@ -28,7 +28,8 @@ ControllerSlotOptions::ControllerSlotOptions()
       m_match_rules(),
       m_force_feedback(false),
       m_led_status(-1),
-      m_ff_device(DEVICEID_JOYSTICK) {}
+      m_ff_device(DEVICEID_JOYSTICK),
+      m_rumble_gain(255) {}
 
 ControllerOptions& ControllerSlotOptions::get_options(int num) {
   return m_options[num];

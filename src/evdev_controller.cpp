@@ -177,16 +177,22 @@ void EvdevController::set_led_real(uint8_t status) {
 
 void EvdevController::upload(const struct ff_effect& effect) {
   struct ff_effect cpy = effect;
-  cpy.id = -1;
+  if (m_effect_ids.find(effect.id) == m_effect_ids.end()) {
+    cpy.id = -1;
+  }
   if (ioctl(m_fd, EVIOCSFF, &cpy) < 0) {
     perror("force-feedback: uploading event");
+    return;
   }
+  m_effect_ids.emplace(cpy.id);
 }
 
 void EvdevController::erase(int id) {
   if (ioctl(m_fd, EVIOCRMFF, id) < 0) {
     perror("force-feedback: erasing event");
+    return;
   }
+  m_effect_ids.erase(id);
 }
 
 static void write_event(int fd, int code, int value) {

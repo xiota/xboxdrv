@@ -23,6 +23,7 @@
 #include <linux/input.h>
 
 #include <queue>
+#include <set>
 #include <string>
 
 #include "controller.hpp"
@@ -49,6 +50,8 @@ class EvdevController : public Controller {
   EventBuffer m_event_buffer;
 
   XboxGenericMsg m_msg;
+
+  std::set<int> m_effect_ids;
 
  public:
   EvdevController(const std::string& filename, const EvdevAbsMap& absmap,
