@@ -3,7 +3,7 @@ project(
   'cpp',
   license : 'GPL-3.0-or-later',
   default_options : ['buildtype=release', 'prefix=/usr', 'cpp_std=c++20'],
-  version: '0.8.13',
+  version: '0.8.14',
 )
 
 dbus = dependency('dbus-glib-1')
