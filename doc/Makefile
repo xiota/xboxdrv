@@ -1,7 +1,7 @@
 all: xboxdrv.1
 
 xboxdrv.1: xboxdrv.xml Makefile
-	echo "<!ENTITY xboxdrv_version \"$$(cat ../VERSION)\">" > xboxdrv.ent
+	echo "<!ENTITY xboxdrv_version \"$$(grep -Po "(?<=version: ')[0-9\\.]+(?=')" ../meson.build)\">" > xboxdrv.ent
 	db2x_xsltproc --stylesheet man "$<" | db2x_manxml
 	xmlto xhtml -o xboxdrv.html -m config.xsl xboxdrv.xml
 	mv -v xboxdrv.html/index.html xboxdrv.html/index.orig.html
