@@ -183,7 +183,7 @@ install_data(
 
 install_data(
   sources: 'data/org.seul.Xboxdrv.conf',
-  install_dir: get_option('sysconfdir') / 'dbus-1' / 'system.d'
+  install_dir: get_option('datadir') / 'dbus-1' / 'system.d'
 )
 
 install_data(
