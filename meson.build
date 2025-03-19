@@ -13,6 +13,7 @@ libusb = dependency('libusb-1.0')
 libudev = dependency('libudev')
 x11 = dependency('x11')
 
+genmarshal = find_program('glib-genmarshal')
 python = find_program('python')
 sed = find_program('sed')
 
@@ -26,7 +27,7 @@ xboxdrv_vfs_in = custom_target(
 )
 
 xboxdrv_vfs = custom_target(
-  command: [sed, '-E', 's&__[_a-z]*_examples_&examples_&g', '-i', '@INPUT@'],
+  command: [sed, '-E', 's& [_a-zA-Z][_a-zA-Z0-9]*_examples_& examples_&g', '-i', '@INPUT@'],
   input: xboxdrv_vfs_in,
   output: 'xboxdrv_vfs.hpp.out'
 )
