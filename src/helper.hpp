@@ -23,6 +23,7 @@
 #include <cstdint>
 #include <functional>
 #include <string>
+#include <sys/types.h>
 #include <vector>
 
 int hexstr2int(const std::string& str);
