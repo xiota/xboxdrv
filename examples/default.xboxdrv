@@ -71,7 +71,7 @@
 # detach = true
 # on-connect = /home/juser/bin/on-connect.sh
 # on-disconnect = /home/juser/bin/on-connect.sh
-# pid-file = /var/run/xboxdrv.pid
+# pid-file = /run/xboxdrv.pid
 
 [autofire]
 

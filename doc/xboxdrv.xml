@@ -2722,7 +2722,7 @@ $ modprobe joydev]]></programlisting>
         via <option>--detach</option>, to get a handle on it to kill
         it you can write its pid via the <option>--pid-file</option>:
       </para>
-      <programlisting>$ sudo xboxdrv --daemon --detach --pid-file /var/run/xboxdrv.pid</programlisting>
+      <programlisting>$ sudo xboxdrv --daemon --detach --pid-file /run/xboxdrv.pid</programlisting>
     </refsect2>
   </refsect1>
 
