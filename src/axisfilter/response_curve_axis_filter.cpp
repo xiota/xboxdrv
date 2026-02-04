@@ -41,16 +41,31 @@ int ResponseCurveAxisFilter::filter(int value, int min, int max) {
   } else if (m_samples.size() == 1) {
     return m_samples[0];
   } else {
-    // FIXME: should rewrite this to use integer only and make sure
-    // that the edge conditions are meet
     int bucket_count = m_samples.size() - 1;
-    float bucket_size = (max - min) / static_cast<float>(bucket_count);
 
-    int bucket_index = int((value - min) / bucket_size);
+    // By normalized I mean "starting at zero"
+    int value_norm = (value - min);
+    int max_norm = (max - min);
 
-    float t = ((value - min) - (static_cast<float>(bucket_index) * bucket_size)) / bucket_size;
+    int bucket_size = max_norm / bucket_count;
+    int bucket_index = std::min(value_norm / bucket_size, bucket_count - 1);
+    int bucket_start = bucket_index * bucket_size;
 
-    return ((1.0f - t) * m_samples[bucket_index]) + (t * m_samples[bucket_index + 1]);
+    // Ensure last bucket is stretched in case of a rounding error
+    int bucket_size_final;
+    if (bucket_index == bucket_count - 1) {
+      bucket_size_final = max_norm - (bucket_size * (bucket_count - 1));
+    } else {
+      bucket_size_final = bucket_size;
+    }
+
+    int sample_start = m_samples[bucket_index];
+    int sample_end = m_samples[bucket_index + 1];
+
+    // Normally t would be ((value_norm - bucket_start) / bucket_size_final).
+    // Here t is multiplied by bucket_size_final to preserve precision with ints
+    int t = (value_norm - bucket_start);
+    return (((bucket_size_final - t) * sample_start) + (t * sample_end)) / bucket_size_final;
   }
 }
 
