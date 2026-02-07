@@ -44,7 +44,7 @@ CalibrationAxisFilter *CalibrationAxisFilter::from_string(const std::string &str
         max = std::stoi(i);
         break;
       default:
-        throw std::runtime_error("to many arguments");
+        throw std::runtime_error("CalibrationAxisFilter: too many arguments: " + str);
     }
     ++idx;
   }

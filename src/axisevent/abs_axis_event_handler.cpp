@@ -37,24 +37,16 @@ AbsAxisEventHandler *AbsAxisEventHandler::from_string(const std::string &str) {
         break;
 
       default:
-        throw std::runtime_error(
-            "AxisEventHandlers::abs_from_string(): to many arguments: " + str
-        );
+        throw std::runtime_error("AbsAxisEventHandler: too many arguments: " + str);
         break;
     }
     ++idx;
   }
 
   if (idx == 0) {
-    throw std::runtime_error(
-        "AxisEventHandler::abs_from_string(): at least one argument "
-        "required: " +
-        str
-    );
+    throw std::runtime_error("AbsAxisEventHandler: at least one argument required: " + str);
   } else if (idx > 1) {
-    throw std::runtime_error(
-        "AxisEventHandler::abs_from_string(): invalid extra arguments in " + str
-    );
+    throw std::runtime_error("AbsAxisEventHandler: invalid extra arguments: " + str);
   } else {
     return new AbsAxisEventHandler(code, -1, -1, 0, 0);
   }

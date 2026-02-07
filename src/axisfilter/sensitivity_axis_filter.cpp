@@ -36,7 +36,7 @@ SensitivityAxisFilter *SensitivityAxisFilter::from_string(const std::string &str
         sensitivity = std::stof(i);
         break;
       default:
-        throw std::runtime_error("to many arguments");
+        throw std::runtime_error("SensitivityAxisFilter: too many arguments: " + str);
         break;
     }
     ++idx;

@@ -35,7 +35,7 @@ RelativeAxisFilter *RelativeAxisFilter::from_string(const std::string &str) {
         speed = std::stoi(t);
         break;
       default:
-        throw std::runtime_error("to many arguments");
+        throw std::runtime_error("RelativeAxisFilter: too many arguments: " + str);
         break;
     }
     ++idx;

@@ -51,9 +51,7 @@ KeyButtonEventHandler *KeyButtonEventHandler::from_string(const std::string &str
       } break;
 
       default: {
-        std::ostringstream out;
-        out << "to many arguments in '" << str << "'";
-        throw std::runtime_error(out.str());
+        throw std::runtime_error("KeyButtonEventHandler: too many arguments: " + str);
       } break;
     }
     ++idx;

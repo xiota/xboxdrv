@@ -47,16 +47,14 @@ RelAxisEventHandler *RelAxisEventHandler::from_string(const std::string &str) {
         break;
 
       default:
-        throw std::runtime_error("AxisEvent::rel_from_string(): to many arguments: " + str);
+        throw std::runtime_error("RelAxisEventHandler: too many arguments: " + str);
         break;
     }
     ++idx;
   }
 
   if (idx == 0) {
-    throw std::runtime_error(
-        "AxisEvent::rel_from_string(): at least one argument required: " + str
-    );
+    throw std::runtime_error("RelAxisEventHandler: at least one argument required: " + str);
   }
 
   return ev.release();

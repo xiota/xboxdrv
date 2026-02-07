@@ -53,16 +53,14 @@ KeyAxisEventHandler *KeyAxisEventHandler::from_string(const std::string &str) {
         break;
 
       default:
-        throw std::runtime_error("AxisEvent::key_from_string(): to many arguments: " + str);
+        throw std::runtime_error("KeyAxisEventHandler: too many arguments: " + str);
         break;
     }
     ++idx;
   }
 
   if (idx == 0) {
-    throw std::runtime_error(
-        "AxisEvent::key_from_string(): at least one argument required: " + str
-    );
+    throw std::runtime_error("KeyAxisEventHandler: at least one argument required: " + str);
   }
 
   return ev.release();

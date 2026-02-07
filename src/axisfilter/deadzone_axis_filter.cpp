@@ -47,7 +47,7 @@ DeadzoneAxisFilter *DeadzoneAxisFilter::from_string(const std::string &str) {
         break;
 
       default:
-        throw std::runtime_error("to many arguments");
+        throw std::runtime_error("DeadzoneAxisFilter: too many arguments: " + str);
         break;
     }
     ++idx;

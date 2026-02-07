@@ -38,7 +38,7 @@ AutofireButtonFilter *AutofireButtonFilter::from_string(const std::string &str) 
         delay = std::stoi(t);
         break;
       default:
-        throw std::runtime_error("to many arguments");
+        throw std::runtime_error("AutofireButtonFilter: too many arguments: " + str);
         break;
     }
     ++idx;
