@@ -1,6 +1,7 @@
 /*
 **  Xbox360 USB Gamepad Userspace Driver
 **  Copyright (C) 2011 Ingo Ruhnke <grumbel@gmail.com>
+**  Copyright (C) 2026 LunarEclipse <luna@lunareclipse.zone>
 **
 **  This program is free software: you can redistribute it and/or modify
 **  it under the terms of the GNU General Public License as published by
@@ -47,6 +48,9 @@ int ResponseCurveAxisFilter::filter(int value, int min, int max) {
     int value_norm = (value - min);
     int max_norm = (max - min);
 
+
+    // TODO: handle situation where following assumption is not upheld:
+    // (max - min) <= (m_samples.size() - 1) <=> max_norm <= bucket_count
     int bucket_size = max_norm / bucket_count;
     int bucket_index = std::min(value_norm / bucket_size, bucket_count - 1);
     int bucket_start = bucket_index * bucket_size;
