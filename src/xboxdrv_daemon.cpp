@@ -48,22 +48,19 @@
 using std::placeholders::_1;
 using std::placeholders::_2;
 
-XboxdrvDaemon* XboxdrvDaemon::s_current = 0;
+XboxdrvDaemon *XboxdrvDaemon::s_current = 0;
 
 namespace {
 
-bool get_usb_id(udev_device* device, uint16_t* vendor_id,
-                uint16_t* product_id) {
-  const char* vendor_id_str =
-      udev_device_get_property_value(device, "ID_VENDOR_ID");
+bool get_usb_id(udev_device *device, uint16_t *vendor_id, uint16_t *product_id) {
+  const char *vendor_id_str = udev_device_get_property_value(device, "ID_VENDOR_ID");
   if (!vendor_id_str) {
     return false;
   } else {
     *vendor_id = hexstr2int(vendor_id_str);
   }
 
-  const char* product_id_str =
-      udev_device_get_property_value(device, "ID_MODEL_ID");
+  const char *product_id_str = udev_device_get_property_value(device, "ID_MODEL_ID");
   if (!product_id_str) {
     return false;
   } else {
@@ -73,16 +70,16 @@ bool get_usb_id(udev_device* device, uint16_t* vendor_id,
   return true;
 }
 
-bool get_usb_path(udev_device* device, int* bus, int* dev) {
+bool get_usb_path(udev_device *device, int *bus, int *dev) {
   // busnum:devnum are decimal, not hex
-  const char* busnum_str = udev_device_get_property_value(device, "BUSNUM");
+  const char *busnum_str = udev_device_get_property_value(device, "BUSNUM");
   if (!busnum_str) {
     return false;
   } else {
     *bus = std::stoi(busnum_str);
   }
 
-  const char* devnum_str = udev_device_get_property_value(device, "DEVNUM");
+  const char *devnum_str = udev_device_get_property_value(device, "DEVNUM");
   if (!devnum_str) {
     return false;
   } else {
@@ -94,12 +91,8 @@ bool get_usb_path(udev_device* device, int* bus, int* dev) {
 
 }  // namespace
 
-XboxdrvDaemon::XboxdrvDaemon(const Options& opts)
-    : m_opts(opts),
-      m_gmain(),
-      m_controller_slots(),
-      m_inactive_controllers(),
-      m_uinput() {
+XboxdrvDaemon::XboxdrvDaemon(const Options &opts)
+    : m_opts(opts), m_gmain(), m_controller_slots(), m_inactive_controllers(), m_uinput() {
   assert(!s_current);
   s_current = this;
 
@@ -130,8 +123,7 @@ void XboxdrvDaemon::run() {
     init_uinput();
 
     UdevSubsystem udev_subsystem;
-    udev_subsystem.set_device_callback(
-        std::bind(&XboxdrvDaemon::process_match, this, _1));
+    udev_subsystem.set_device_callback(std::bind(&XboxdrvDaemon::process_match, this, _1));
 
     std::shared_ptr<DBusSubsystem> dbus_subsystem;
     if (m_opts.dbus != Options::kDBusDisabled) {
@@ -164,8 +156,7 @@ void XboxdrvDaemon::run() {
           break;
       }
 
-      dbus_subsystem.reset(
-          new DBusSubsystem("org.seul.Xboxdrv", dbus_bus_type));
+      dbus_subsystem.reset(new DBusSubsystem("org.seul.Xboxdrv", dbus_bus_type));
       dbus_subsystem->register_xboxdrv_daemon(this);
       dbus_subsystem->register_controller_slots(m_controller_slots);
     }
@@ -177,12 +168,12 @@ void XboxdrvDaemon::run() {
     // get rid of active ControllerThreads before the subsystems shutdown
     m_inactive_controllers.clear();
     m_controller_slots.clear();
-  } catch (const std::exception& err) {
+  } catch (const std::exception &err) {
     log_error("fatal exception: " << err.what());
   }
 }
 
-void XboxdrvDaemon::process_match(struct udev_device* device) {
+void XboxdrvDaemon::process_match(struct udev_device *device) {
   // FIXME: bad place?!
   // FIXME: cleanup_threads();
 
@@ -195,8 +186,8 @@ void XboxdrvDaemon::process_match(struct udev_device* device) {
     XPadDevice dev_type;
     if (!find_xpad_device(vendor, product, &dev_type)) {
       log_debug(
-          std::format("ignoring {:#04x}:{:#04x} not a valid Xboxdrv device",
-                      vendor, product));
+          std::format("ignoring {:#04x}:{:#04x} not a valid Xboxdrv device", vendor, product)
+      );
     } else {
       int bus;
       int dev;
@@ -205,7 +196,7 @@ void XboxdrvDaemon::process_match(struct udev_device* device) {
       } else {
         try {
           launch_controller_thread(device, dev_type, bus, dev);
-        } catch (const std::exception& err) {
+        } catch (const std::exception &err) {
           log_error("failed to launch ControllerThread: " << err.what());
         }
       }
@@ -233,17 +224,20 @@ void XboxdrvDaemon::init_uinput() {
     // create controller slots
     int slot_count = 0;
 
-    for (Options::ControllerSlots::const_iterator controller =
-             m_opts.controller_slots.begin();
-         controller != m_opts.controller_slots.end(); ++controller) {
+    for (Options::ControllerSlots::const_iterator controller = m_opts.controller_slots.begin();
+         controller != m_opts.controller_slots.end();
+         ++controller) {
       log_info("creating slot: " << slot_count);
       m_controller_slots.push_back(ControllerSlotPtr(new ControllerSlot(
           m_controller_slots.size(),
-          ControllerSlotConfig::create(*m_uinput, slot_count,
-                                       m_opts.extra_devices, controller->second,
-                                       NULL),
+          ControllerSlotConfig::create(
+              *m_uinput, slot_count, m_opts.extra_devices, controller->second, NULL
+          ),
           controller->second.get_match_rules(),
-          controller->second.get_led_status(), m_opts, m_uinput.get())));
+          controller->second.get_led_status(),
+          m_opts,
+          m_uinput.get()
+      )));
       slot_count += 1;
     }
 
@@ -260,25 +254,26 @@ void XboxdrvDaemon::create_pid_file() {
     log_info("writing pid file: " << m_opts.pid_file);
     std::ofstream out(m_opts.pid_file.c_str());
     if (!out) {
-      raise_exception(std::runtime_error,
-                      "failed to create pid file: " << m_opts.pid_file << ": "
-                                                    << strerror(errno));
+      raise_exception(
+          std::runtime_error,
+          "failed to create pid file: " << m_opts.pid_file << ": " << strerror(errno)
+      );
     } else {
       out << getpid() << std::endl;
     }
   }
 }
 
-ControllerSlotPtr XboxdrvDaemon::find_free_slot(udev_device* dev) {
+ControllerSlotPtr XboxdrvDaemon::find_free_slot(udev_device *dev) {
   // first pass, look for slots where the rules match the given vendor:product,
   // bus:dev
-  for (ControllerSlots::iterator i = m_controller_slots.begin();
-       i != m_controller_slots.end(); ++i) {
+  for (ControllerSlots::iterator i = m_controller_slots.begin(); i != m_controller_slots.end();
+       ++i) {
     if (!(*i)->is_connected()) {
       // found a free slot, check if the rules match
-      for (std::vector<ControllerMatchRulePtr>::const_iterator rule =
-               (*i)->get_rules().begin();
-           rule != (*i)->get_rules().end(); ++rule) {
+      for (std::vector<ControllerMatchRulePtr>::const_iterator rule = (*i)->get_rules().begin();
+           rule != (*i)->get_rules().end();
+           ++rule) {
         if ((*rule)->match(dev)) {
           return *i;
         }
@@ -288,8 +283,8 @@ ControllerSlotPtr XboxdrvDaemon::find_free_slot(udev_device* dev) {
 
   // second pass, look for slots that don't have any rules and thus match
   // everything
-  for (ControllerSlots::iterator i = m_controller_slots.begin();
-       i != m_controller_slots.end(); ++i) {
+  for (ControllerSlots::iterator i = m_controller_slots.begin(); i != m_controller_slots.end();
+       ++i) {
     if (!(*i)->is_connected() && (*i)->get_rules().empty()) {
       return *i;
     }
@@ -299,25 +294,30 @@ ControllerSlotPtr XboxdrvDaemon::find_free_slot(udev_device* dev) {
   return ControllerSlotPtr();
 }
 
-void XboxdrvDaemon::launch_controller_thread(udev_device* udev_dev,
-                                             const XPadDevice& dev_type,
-                                             uint8_t busnum, uint8_t devnum) {
+void XboxdrvDaemon::launch_controller_thread(
+    udev_device *udev_dev,
+    const XPadDevice &dev_type,
+    uint8_t busnum,
+    uint8_t devnum
+) {
   // FIXME: results must be libusb_unref_device()'ed
-  libusb_device* dev = usb_find_device_by_path(busnum, devnum);
+  libusb_device *dev = usb_find_device_by_path(busnum, devnum);
 
   if (!dev) {
     log_error("USB device disappeared before it could be opened");
   } else {
     std::vector<ControllerPtr> controllers =
         ControllerFactory::create_multiple(dev_type, dev, m_opts);
-    for (std::vector<ControllerPtr>::iterator i = controllers.begin();
-         i != controllers.end(); ++i) {
-      ControllerPtr& controller = *i;
+    for (std::vector<ControllerPtr>::iterator i = controllers.begin(); i != controllers.end();
+         ++i) {
+      ControllerPtr &controller = *i;
 
-      controller->set_disconnect_cb(std::bind(
-          &g_idle_add, &XboxdrvDaemon::on_controller_disconnect_wrap, this));
-      controller->set_activation_cb(std::bind(
-          &g_idle_add, &XboxdrvDaemon::on_controller_activate_wrap, this));
+      controller->set_disconnect_cb(
+          std::bind(&g_idle_add, &XboxdrvDaemon::on_controller_disconnect_wrap, this)
+      );
+      controller->set_activation_cb(
+          std::bind(&g_idle_add, &XboxdrvDaemon::on_controller_activate_wrap, this)
+      );
 
       // FIXME: Little dirty hack
       controller->set_udev_device(udev_dev);
@@ -327,11 +327,15 @@ void XboxdrvDaemon::launch_controller_thread(udev_device* udev_dev,
         ControllerSlotPtr slot = find_free_slot(udev_dev);
         if (!slot) {
           log_error(
-              "no free controller slot found, controller will be ignored: "
-              << std::format("{:#03d}:{:#03d} {:#04x}:{:#04x} '{:s}'",
-                             static_cast<int>(busnum), static_cast<int>(devnum),
-                             dev_type.idVendor, dev_type.idProduct,
-                             dev_type.name));
+              "no free controller slot found, controller will be ignored: " << std::format(
+                  "{:#03d}:{:#03d} {:#04x}:{:#04x} '{:s}'",
+                  static_cast<int>(busnum),
+                  static_cast<int>(devnum),
+                  dev_type.idVendor,
+                  dev_type.idProduct,
+                  dev_type.name
+              )
+          );
         } else {
           connect(slot, controller);
         }
@@ -347,7 +351,8 @@ int XboxdrvDaemon::get_free_slot_count() const {
   int slot_count = 0;
 
   for (ControllerSlots::const_iterator i = m_controller_slots.begin();
-       i != m_controller_slots.end(); ++i) {
+       i != m_controller_slots.end();
+       ++i) {
     if (!(*i)->is_connected()) {
       slot_count += 1;
     }
@@ -366,21 +371,24 @@ void XboxdrvDaemon::connect(ControllerSlotPtr slot, ControllerPtr controller) {
     } else {
       controller->set_led(slot->get_led_status());
     }
-  } catch (const std::exception& err) {
+  } catch (const std::exception &err) {
     log_error("failed to set led: " << err.what());
   }
 
   slot->connect(controller);
   on_connect(slot);
 
-  log_info("controller connected: " << controller->get_usbpath() << " "
-                                    << controller->get_usbid() << " "
-                                    << "'" << controller->get_name() << "'");
+  log_info(
+      "controller connected: " << controller->get_usbpath() << " " << controller->get_usbid()
+                               << " "
+                               << "'" << controller->get_name() << "'"
+  );
 
-  log_info("launched Controller for "
-           << controller->get_usbpath() << " in slot " << slot->get_id()
-           << ", free slots: " << get_free_slot_count() << "/"
-           << m_controller_slots.size());
+  log_info(
+      "launched Controller for " << controller->get_usbpath() << " in slot " << slot->get_id()
+                                 << ", free slots: " << get_free_slot_count() << "/"
+                                 << m_controller_slots.size()
+  );
 }
 
 ControllerPtr XboxdrvDaemon::disconnect(ControllerSlotPtr slot) {
@@ -408,9 +416,11 @@ void XboxdrvDaemon::on_disconnect(ControllerSlotPtr slot) {
   ControllerPtr controller = slot->get_controller();
   assert(controller);
 
-  log_info("controller disconnected: " << controller->get_usbpath() << " "
-                                       << controller->get_usbid() << " "
-                                       << "'" << controller->get_name() << "'");
+  log_info(
+      "controller disconnected: " << controller->get_usbpath() << " " << controller->get_usbid()
+                                  << " "
+                                  << "'" << controller->get_name() << "'"
+  );
 
   if (!m_opts.on_disconnect.empty()) {
     log_info("launching disconnect script: " << m_opts.on_disconnect);
@@ -428,8 +438,8 @@ void XboxdrvDaemon::on_controller_disconnect() {
   // log_tmp("on_controller_disconnect");
 
   // cleanup active controllers in slots
-  for (ControllerSlots::iterator i = m_controller_slots.begin();
-       i != m_controller_slots.end(); ++i) {
+  for (ControllerSlots::iterator i = m_controller_slots.begin(); i != m_controller_slots.end();
+       ++i) {
     if ((*i)->get_controller() && (*i)->get_controller()->is_disconnected()) {
       disconnect(*i);  // discard the ControllerPtr
     }
@@ -437,18 +447,21 @@ void XboxdrvDaemon::on_controller_disconnect() {
 
   // cleanup inactive controllers
   m_inactive_controllers.erase(
-      std::remove_if(m_inactive_controllers.begin(),
-                     m_inactive_controllers.end(),
-                     std::bind(&Controller::is_disconnected, _1)),
-      m_inactive_controllers.end());
+      std::remove_if(
+          m_inactive_controllers.begin(),
+          m_inactive_controllers.end(),
+          std::bind(&Controller::is_disconnected, _1)
+      ),
+      m_inactive_controllers.end()
+  );
 }
 
 void XboxdrvDaemon::on_controller_activate() {
   // log_tmp("on_controller_activate");
 
   // check for inactive controller and free the slots
-  for (ControllerSlots::iterator i = m_controller_slots.begin();
-       i != m_controller_slots.end(); ++i) {
+  for (ControllerSlots::iterator i = m_controller_slots.begin(); i != m_controller_slots.end();
+       ++i) {
     // if a slot contains an inactive controller, disconnect it and save
     // the controller for later when it might be active again
     if ((*i)->get_controller() && !(*i)->get_controller()->is_active()) {
@@ -459,7 +472,8 @@ void XboxdrvDaemon::on_controller_activate() {
 
   // check for activated controller and connect them to a slot
   for (Controllers::iterator i = m_inactive_controllers.begin();
-       i != m_inactive_controllers.end(); ++i) {
+       i != m_inactive_controllers.end();
+       ++i) {
     if (!*i) {
       log_error("NULL in m_inactive_controllers, shouldn't happen");
     } else {
@@ -480,46 +494,56 @@ void XboxdrvDaemon::on_controller_activate() {
 
   // cleanup inactive controller
   m_inactive_controllers.erase(
-      std::remove(m_inactive_controllers.begin(), m_inactive_controllers.end(),
-                  ControllerPtr()),
-      m_inactive_controllers.end());
+      std::remove(
+          m_inactive_controllers.begin(), m_inactive_controllers.end(), ControllerPtr()
+      ),
+      m_inactive_controllers.end()
+  );
 }
 
 std::string XboxdrvDaemon::status() {
   std::ostringstream out;
 
   out << "SLOT  CFG  NCFG    USBID    USBPATH  NAME\n";
-  for (ControllerSlots::iterator i = m_controller_slots.begin();
-       i != m_controller_slots.end(); ++i) {
+  for (ControllerSlots::iterator i = m_controller_slots.begin(); i != m_controller_slots.end();
+       ++i) {
     if ((*i)->get_controller()) {
-      out << std::format("{:4d}  {:3d}  {:4d}  {:5s}  {:7s}  {:s}\n",
-                         (i - m_controller_slots.begin()),
-                         (*i)->get_config()->get_current_config(),
-                         (*i)->get_config()->config_count(),
-                         (*i)->get_controller()->get_usbid(),
-                         (*i)->get_controller()->get_usbpath(),
-                         (*i)->get_controller()->get_name());
+      out << std::format(
+          "{:4d}  {:3d}  {:4d}  {:5s}  {:7s}  {:s}\n",
+          (i - m_controller_slots.begin()),
+          (*i)->get_config()->get_current_config(),
+          (*i)->get_config()->config_count(),
+          (*i)->get_controller()->get_usbid(),
+          (*i)->get_controller()->get_usbpath(),
+          (*i)->get_controller()->get_name()
+      );
     } else {
-      out << std::format("{:4d}  {:3d}  {:4d}      -         -\n",
-                         (i - m_controller_slots.begin()),
-                         (*i)->get_config()->get_current_config(),
-                         (*i)->get_config()->config_count());
+      out << std::format(
+          "{:4d}  {:3d}  {:4d}      -         -\n",
+          (i - m_controller_slots.begin()),
+          (*i)->get_config()->get_current_config(),
+          (*i)->get_config()->config_count()
+      );
     }
   }
 
   for (Controllers::iterator i = m_inactive_controllers.begin();
-       i != m_inactive_controllers.end(); ++i) {
-    out << std::format("   -             :{:5s}  {:7s}  {:s}\n",
-                       (*i)->get_usbid(), (*i)->get_usbpath(),
-                       (*i)->get_name());
+       i != m_inactive_controllers.end();
+       ++i) {
+    out << std::format(
+        "   -             :{:5s}  {:7s}  {:s}\n",
+        (*i)->get_usbid(),
+        (*i)->get_usbpath(),
+        (*i)->get_name()
+    );
   }
 
   return out.str();
 }
 
 void XboxdrvDaemon::shutdown() {
-  for (ControllerSlots::iterator i = m_controller_slots.begin();
-       i != m_controller_slots.end(); ++i) {
+  for (ControllerSlots::iterator i = m_controller_slots.begin(); i != m_controller_slots.end();
+       ++i) {
     if ((*i)->get_controller() && !(*i)->get_controller()->is_disconnected()) {
       (*i)->get_controller()->set_led(0);
     }
@@ -532,6 +556,8 @@ void XboxdrvDaemon::shutdown() {
   g_main_loop_quit(m_gmain);
 }
 
-void XboxdrvDaemon::on_sigint(int) { XboxdrvDaemon::current()->shutdown(); }
+void XboxdrvDaemon::on_sigint(int) {
+  XboxdrvDaemon::current()->shutdown();
+}
 
 /* EOF */

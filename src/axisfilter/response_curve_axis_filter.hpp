@@ -25,10 +25,10 @@
 
 class ResponseCurveAxisFilter : public AxisFilter {
  public:
-  static ResponseCurveAxisFilter* from_string(const std::string& str);
+  static ResponseCurveAxisFilter *from_string(const std::string &str);
 
  public:
-  ResponseCurveAxisFilter(const std::vector<int>& samples);
+  ResponseCurveAxisFilter(const std::vector<int> &samples);
 
   int filter(int value, int min, int max);
   std::string str() const;

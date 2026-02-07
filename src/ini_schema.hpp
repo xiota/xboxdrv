@@ -28,48 +28,48 @@ class INIPairSchema {
   INIPairSchema() {}
   virtual ~INIPairSchema() {}
   virtual std::string str() const = 0;
-  virtual void call(const std::string& value) = 0;
+  virtual void call(const std::string &value) = 0;
 };
 
 class INISchemaSection {
  private:
-  typedef std::map<std::string, INIPairSchema*> Schema;
+  typedef std::map<std::string, INIPairSchema *> Schema;
   Schema m_schema;
 
  public:
-  std::function<void(const std::string&, const std::string&)> m_callback;
+  std::function<void(const std::string &, const std::string &)> m_callback;
 
  public:
-  INISchemaSection(
-      std::function<void(const std::string&, const std::string&)> callback);
+  INISchemaSection(std::function<void(const std::string &, const std::string &)> callback);
   ~INISchemaSection();
 
-  INISchemaSection& operator()(const std::string& name, bool* value);
-  INISchemaSection& operator()(const std::string& name, int* value);
-  INISchemaSection& operator()(const std::string& name, float* value);
-  INISchemaSection& operator()(const std::string& name, std::string* value);
-  INISchemaSection& operator()(
-      const std::string& name,
-      std::function<void(const std::string&)> callback);
-  INISchemaSection& operator()(const std::string& name,
-                               std::function<void()> true_callback,
-                               std::function<void()> false_callback);
+  INISchemaSection &operator()(const std::string &name, bool *value);
+  INISchemaSection &operator()(const std::string &name, int *value);
+  INISchemaSection &operator()(const std::string &name, float *value);
+  INISchemaSection &operator()(const std::string &name, std::string *value);
+  INISchemaSection &
+  operator()(const std::string &name, std::function<void(const std::string &)> callback);
+  INISchemaSection &operator()(
+      const std::string &name,
+      std::function<void()> true_callback,
+      std::function<void()> false_callback
+  );
 
-  INIPairSchema* get(const std::string& name) const;
+  INIPairSchema *get(const std::string &name) const;
 
-  void save(std::ostream& out);
-
- private:
-  INISchemaSection& add(const std::string& name, INIPairSchema* schema);
+  void save(std::ostream &out);
 
  private:
-  INISchemaSection(const INISchemaSection&);
-  INISchemaSection& operator=(const INISchemaSection&);
+  INISchemaSection &add(const std::string &name, INIPairSchema *schema);
+
+ private:
+  INISchemaSection(const INISchemaSection &);
+  INISchemaSection &operator=(const INISchemaSection &);
 };
 
 class INISchema {
  private:
-  typedef std::map<std::string, INISchemaSection*> Sections;
+  typedef std::map<std::string, INISchemaSection *> Sections;
   Sections m_sections;
 
  public:
@@ -78,18 +78,19 @@ class INISchema {
 
   void clear();
 
-  INISchemaSection& section(
-      const std::string& name,
-      std::function<void(const std::string&, const std::string&)> callback =
-          std::function<void(const std::string&, const std::string&)>());
+  INISchemaSection &section(
+      const std::string &name,
+      std::function<void(const std::string &, const std::string &)> callback =
+          std::function<void(const std::string &, const std::string &)>()
+  );
 
-  INISchemaSection* get_section(const std::string& name) const;
+  INISchemaSection *get_section(const std::string &name) const;
 
-  void save(std::ostream& out);
+  void save(std::ostream &out);
 
  private:
-  INISchema(const INISchema&);
-  INISchema& operator=(const INISchema&);
+  INISchema(const INISchema &);
+  INISchema &operator=(const INISchema &);
 };
 
 #endif

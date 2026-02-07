@@ -25,23 +25,23 @@
 
 #include "helper.hpp"
 
-RotateAxisModifier* RotateAxisModifier::from_string(
-    const std::vector<std::string>& args) {
+RotateAxisModifier *RotateAxisModifier::from_string(const std::vector<std::string> &args) {
   if (args.size() != 3 && args.size() != 4) {
-    throw std::runtime_error(
-        "RotateAxisModifier requires three or four arguments");
+    throw std::runtime_error("RotateAxisModifier requires three or four arguments");
   } else {
-    return new RotateAxisModifier(string2axis(args[0]), string2axis(args[1]),
-                                  std::stof(args[2]) * M_PI / 180.0f,
-                                  args.size() == 3 ? false : str2bool(args[3]));
+    return new RotateAxisModifier(
+        string2axis(args[0]),
+        string2axis(args[1]),
+        std::stof(args[2]) * M_PI / 180.0f,
+        args.size() == 3 ? false : str2bool(args[3])
+    );
   }
 }
 
-RotateAxisModifier::RotateAxisModifier(XboxAxis xaxis, XboxAxis yaxis,
-                                       float angle, bool mirror)
+RotateAxisModifier::RotateAxisModifier(XboxAxis xaxis, XboxAxis yaxis, float angle, bool mirror)
     : m_xaxis(xaxis), m_yaxis(yaxis), m_angle(angle), m_mirror(mirror) {}
 
-void RotateAxisModifier::update(int msec_delta, XboxGenericMsg& msg) {
+void RotateAxisModifier::update(int msec_delta, XboxGenericMsg &msg) {
   float x = get_axis_float(msg, m_xaxis);
   float y = get_axis_float(msg, m_yaxis);
 
@@ -58,8 +58,7 @@ void RotateAxisModifier::update(int msec_delta, XboxGenericMsg& msg) {
 
 std::string RotateAxisModifier::str() const {
   std::ostringstream out;
-  out << "rotate:" << m_xaxis << "=" << m_yaxis << ":"
-      << (m_angle / 180.0f * M_PI);
+  out << "rotate:" << m_xaxis << "=" << m_yaxis << ":" << (m_angle / 180.0f * M_PI);
   return out.str();
 }
 

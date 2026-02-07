@@ -71,7 +71,7 @@ struct TWirelessMsg {
 
 } __attribute__((__packed__));
 
-TWirelessController::TWirelessController(libusb_device* dev, bool try_detach)
+TWirelessController::TWirelessController(libusb_device *dev, bool try_detach)
     : USBController(dev) {
   usb_claim_interface(0, try_detach);
   usb_submit_read(1, sizeof(TWirelessMsg));
@@ -80,7 +80,7 @@ TWirelessController::TWirelessController(libusb_device* dev, bool try_detach)
 TWirelessController::~TWirelessController() {}
 
 void TWirelessController::set_rumble_real(uint8_t left, uint8_t right) {
-  uint8_t cmd[] = {left, right, 0x00, 0x00};
+  uint8_t cmd[] = { left, right, 0x00, 0x00 };
   usb_control(0x21, 0x09, 0x0200, 0x00, cmd, sizeof(cmd));
 }
 
@@ -88,8 +88,7 @@ void TWirelessController::set_led_real(uint8_t status) {
   // not supported
 }
 
-bool TWirelessController::parse(uint8_t* data, int len,
-                                XboxGenericMsg* msg_out) {
+bool TWirelessController::parse(uint8_t *data, int len, XboxGenericMsg *msg_out) {
   if (len == sizeof(TWirelessMsg)) {
     TWirelessMsg msg_in;
     memcpy(&msg_in, data, sizeof(TWirelessMsg));
@@ -186,17 +185,19 @@ bool TWirelessController::parse(uint8_t* data, int len,
 }
 
 inline int16_t TWirelessController::scale_x8to16(uint8_t x) {
-  if (x > 127)
+  if (x > 127) {
     return static_cast<int16_t>((x - 128) * 32767 / 127);
-  else
+  } else {
     return static_cast<int16_t>((x - 127) * 32768 / 127);
+  }
 }
 
 inline int16_t TWirelessController::scale_y8to16(uint8_t y) {
-  if (y > 127)
+  if (y > 127) {
     return static_cast<int16_t>((128 - y) * 32768 / 127);
-  else
+  } else {
     return static_cast<int16_t>((127 - y) * 32767 / 127);
+  }
 }
 
 /* EOF */

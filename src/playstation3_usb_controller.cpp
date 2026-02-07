@@ -26,8 +26,7 @@
 #include "usb_helper.hpp"
 #include "xboxmsg.hpp"
 
-Playstation3USBController::Playstation3USBController(libusb_device* dev,
-                                                     bool try_detach)
+Playstation3USBController::Playstation3USBController(libusb_device *dev, bool try_detach)
     : USBController(dev), endpoint_in(1), endpoint_out(2) {
   usb_claim_interface(0, try_detach);
   usb_submit_read(endpoint_in, 64);
@@ -49,22 +48,26 @@ Playstation3USBController::~Playstation3USBController() {}
 void Playstation3USBController::set_rumble_real(uint8_t left, uint8_t right) {
   // log_tmp("Rumble: " << static_cast<int>(left) << " " <<
   // static_cast<int>(right));
-  uint8_t cmd[] = {// FIXME: 254 isn't quite right and the right motor seems to
-                   // be on/off only
-                   0x00, 254,  right, 254,  left,  // rumble values
-                   0x00, 0x00, 0x00,  0x00, 0x03,  // 0x10=LED1 .. 0x02=LED4
-                   0xff, 0x27, 0x10,  0x00, 0x32,  // LED 4
-                   0xff, 0x27, 0x10,  0x00, 0x32,  // LED 3
-                   0xff, 0x27, 0x10,  0x00, 0x32,  // LED 2
-                   0xff, 0x27, 0x10,  0x00, 0x32,  // LED 1
-                   0x00, 0x00, 0x00,  0x00, 0x00};
+  uint8_t cmd[] = { // FIXME: 254 isn't quite right and the right motor seems to
+                    // be on/off only
+                    0x00, 254,  right, 254,  left,  // rumble values
+                    0x00, 0x00, 0x00,  0x00, 0x03,  // 0x10=LED1 .. 0x02=LED4
+                    0xff, 0x27, 0x10,  0x00, 0x32,  // LED 4
+                    0xff, 0x27, 0x10,  0x00, 0x32,  // LED 3
+                    0xff, 0x27, 0x10,  0x00, 0x32,  // LED 2
+                    0xff, 0x27, 0x10,  0x00, 0x32,  // LED 1
+                    0x00, 0x00, 0x00,  0x00, 0x00
+  };
 
-  usb_control((size_t)LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS |
-                  LIBUSB_RECIPIENT_INTERFACE,        // RequestType
-              HID_SET_REPORT,                        // Request
-              (HID_REPORT_TYPE_OUTPUT << 8) | 0x01,  // Value
-              0,                                     // Index
-              cmd, sizeof(cmd));
+  usb_control(
+      (size_t)LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS |
+          LIBUSB_RECIPIENT_INTERFACE,        // RequestType
+      HID_SET_REPORT,                        // Request
+      (HID_REPORT_TYPE_OUTPUT << 8) | 0x01,  // Value
+      0,                                     // Index
+      cmd,
+      sizeof(cmd)
+  );
 }
 
 void Playstation3USBController::set_led_real(uint8_t status) {
@@ -102,27 +105,28 @@ void Playstation3USBController::set_led_real(uint8_t status) {
       break;
   }
 
-  uint8_t cmd[] = {
-      0x00, 0x00, 0x00, 0x00, 0x00,        // rumble values
-      0x00, 0x00, 0x00, 0x00, ps3_status,  // 0x10=LED1 .. 0x02=LED4
-      0xff, 0x27, 0x10, 0x00, 0x32,        // LED 4
-      0xff, 0x27, 0x10, 0x00, 0x32,        // LED 3
-      0xff, 0x27, 0x10, 0x00, 0x32,        // LED 2
-      0xff, 0x27, 0x10, 0x00, 0x32,        // LED 1
-      0x00, 0x00, 0x00, 0x00, 0x00};
+  uint8_t cmd[] = { 0x00, 0x00, 0x00, 0x00, 0x00,        // rumble values
+                    0x00, 0x00, 0x00, 0x00, ps3_status,  // 0x10=LED1 .. 0x02=LED4
+                    0xff, 0x27, 0x10, 0x00, 0x32,        // LED 4
+                    0xff, 0x27, 0x10, 0x00, 0x32,        // LED 3
+                    0xff, 0x27, 0x10, 0x00, 0x32,        // LED 2
+                    0xff, 0x27, 0x10, 0x00, 0x32,        // LED 1
+                    0x00, 0x00, 0x00, 0x00, 0x00 };
 
-  usb_control((size_t)LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS |
-                  LIBUSB_RECIPIENT_INTERFACE,        // RequestType
-              HID_SET_REPORT,                        // Request
-              (HID_REPORT_TYPE_OUTPUT << 8) | 0x01,  // Value
-              0,                                     // Index
-              cmd, sizeof(cmd));
+  usb_control(
+      (size_t)LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS |
+          LIBUSB_RECIPIENT_INTERFACE,        // RequestType
+      HID_SET_REPORT,                        // Request
+      (HID_REPORT_TYPE_OUTPUT << 8) | 0x01,  // Value
+      0,                                     // Index
+      cmd,
+      sizeof(cmd)
+  );
 }
 
 #define bitswap(x) x = ((x & 0x00ff) << 8) | ((x & 0xff00) >> 8)
 
-bool Playstation3USBController::parse(uint8_t* data, int len,
-                                      XboxGenericMsg* msg_out) {
+bool Playstation3USBController::parse(uint8_t *data, int len, XboxGenericMsg *msg_out) {
   if (static_cast<size_t>(len) >= sizeof(msg_out->ps3usb)) {
     msg_out->type = XBOX_MSG_PS3USB;
     memcpy(&msg_out->ps3usb, data, sizeof(msg_out->ps3usb));
@@ -133,21 +137,28 @@ bool Playstation3USBController::parse(uint8_t* data, int len,
     bitswap(msg_out->ps3usb.rot_z);
 
     if (false) {
-      log_debug(std::format("X:{:5d} Y:{:5d} Z:{:5d} RZ:{:5d}\n",
-                            (static_cast<int>(msg_out->ps3usb.accl_x) - 512),
-                            (static_cast<int>(msg_out->ps3usb.accl_y) - 512),
-                            (static_cast<int>(msg_out->ps3usb.accl_z) - 512),
-                            (static_cast<int>(msg_out->ps3usb.rot_z))));
+      log_debug(
+          std::format(
+              "X:{:5d} Y:{:5d} Z:{:5d} RZ:{:5d}\n",
+              (static_cast<int>(msg_out->ps3usb.accl_x) - 512),
+              (static_cast<int>(msg_out->ps3usb.accl_y) - 512),
+              (static_cast<int>(msg_out->ps3usb.accl_z) - 512),
+              (static_cast<int>(msg_out->ps3usb.rot_z))
+          )
+      );
     }
 
     if (false) {
       // values are normalized to 1g (-116 is force by gravity)
-      log_debug(std::format(
-          "X:{:6.3f} Y:{:6.3f} Z:{:6.3f} RZ:{:6.3f}\n",
-          ((static_cast<int>(msg_out->ps3usb.accl_x) - 512) / 116.0f),
-          ((static_cast<int>(msg_out->ps3usb.accl_y) - 512) / 116.0f),
-          ((static_cast<int>(msg_out->ps3usb.accl_z) - 512) / 116.0f),
-          ((static_cast<int>(msg_out->ps3usb.rot_z) - 5) / 1.0f)));
+      log_debug(
+          std::format(
+              "X:{:6.3f} Y:{:6.3f} Z:{:6.3f} RZ:{:6.3f}\n",
+              ((static_cast<int>(msg_out->ps3usb.accl_x) - 512) / 116.0f),
+              ((static_cast<int>(msg_out->ps3usb.accl_y) - 512) / 116.0f),
+              ((static_cast<int>(msg_out->ps3usb.accl_z) - 512) / 116.0f),
+              ((static_cast<int>(msg_out->ps3usb.rot_z) - 5) / 1.0f)
+          )
+      );
     }
 
     if (false) {

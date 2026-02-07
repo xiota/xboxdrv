@@ -27,21 +27,21 @@ class USBGSource;
 
 struct GUSBSource {
   GSource source;
-  USBGSource* usb_source;
+  USBGSource *usb_source;
 };
 
 class USBGSource {
  private:
   GSourceFuncs m_source_funcs;
-  GUSBSource* m_source;
+  GUSBSource *m_source;
   gint m_source_id;
-  std::list<GPollFD*> m_pollfds;
+  std::list<GPollFD *> m_pollfds;
 
  public:
   USBGSource();
   ~USBGSource();
 
-  void attach(GMainContext* context);
+  void attach(GMainContext *context);
 
  private:
   gboolean on_source();
@@ -50,27 +50,26 @@ class USBGSource {
   void on_usb_pollfd_added(int fd, short events);
   void on_usb_pollfd_removed(int fd);
 
-  static gboolean on_source_wrap(void* userdata) {
-    return static_cast<USBGSource*>(userdata)->on_source();
+  static gboolean on_source_wrap(void *userdata) {
+    return static_cast<USBGSource *>(userdata)->on_source();
   }
 
-  static void on_usb_pollfd_added_wrap(int fd, short events, void* userdata) {
-    static_cast<USBGSource*>(userdata)->on_usb_pollfd_added(fd, events);
+  static void on_usb_pollfd_added_wrap(int fd, short events, void *userdata) {
+    static_cast<USBGSource *>(userdata)->on_usb_pollfd_added(fd, events);
   }
 
-  static void on_usb_pollfd_removed_wrap(int fd, void* userdata) {
-    static_cast<USBGSource*>(userdata)->on_usb_pollfd_removed(fd);
+  static void on_usb_pollfd_removed_wrap(int fd, void *userdata) {
+    static_cast<USBGSource *>(userdata)->on_usb_pollfd_removed(fd);
   }
 
   // glib callbacks
-  static gboolean on_source_prepare(GSource* source, gint* timeout_);
-  static gboolean on_source_check(GSource* source);
-  static gboolean on_source_dispatch(GSource* source, GSourceFunc callback,
-                                     gpointer userdata);
+  static gboolean on_source_prepare(GSource *source, gint *timeout_);
+  static gboolean on_source_check(GSource *source);
+  static gboolean on_source_dispatch(GSource *source, GSourceFunc callback, gpointer userdata);
 
  private:
-  USBGSource(const USBGSource&);
-  USBGSource& operator=(const USBGSource&);
+  USBGSource(const USBGSource &);
+  USBGSource &operator=(const USBGSource &);
 };
 
 #endif

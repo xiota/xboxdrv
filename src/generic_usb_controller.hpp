@@ -30,17 +30,16 @@ class GenericUSBController : public USBController {
   int m_endpoint;
 
  public:
-  GenericUSBController(libusb_device* dev, int interface, int endpoint,
-                       bool try_detach);
+  GenericUSBController(libusb_device *dev, int interface, int endpoint, bool try_detach);
   ~GenericUSBController();
 
   void set_rumble_real(uint8_t left, uint8_t right);
   void set_led_real(uint8_t status);
-  bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
+  bool parse(uint8_t *data, int len, XboxGenericMsg *msg_out);
 
  private:
-  GenericUSBController(const GenericUSBController&);
-  GenericUSBController& operator=(const GenericUSBController&);
+  GenericUSBController(const GenericUSBController &);
+  GenericUSBController &operator=(const GenericUSBController &);
 };
 
 #endif

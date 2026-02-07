@@ -26,11 +26,11 @@
 #include "helper.hpp"
 #include "uinput.hpp"
 
-AbsAxisEventHandler* AbsAxisEventHandler::from_string(const std::string& str) {
+AbsAxisEventHandler *AbsAxisEventHandler::from_string(const std::string &str) {
   std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
   UIEvent code = UIEvent::invalid();
-  for (auto& i : tokens) {
+  for (auto &i : tokens) {
     switch (idx) {
       case 0:
         code = str2abs_event(i);
@@ -38,7 +38,8 @@ AbsAxisEventHandler* AbsAxisEventHandler::from_string(const std::string& str) {
 
       default:
         throw std::runtime_error(
-            "AxisEventHandlers::abs_from_string(): to many arguments: " + str);
+            "AxisEventHandlers::abs_from_string(): to many arguments: " + str
+        );
         break;
     }
     ++idx;
@@ -48,11 +49,12 @@ AbsAxisEventHandler* AbsAxisEventHandler::from_string(const std::string& str) {
     throw std::runtime_error(
         "AxisEventHandler::abs_from_string(): at least one argument "
         "required: " +
-        str);
+        str
+    );
   } else if (idx > 1) {
     throw std::runtime_error(
-        "AxisEventHandler::abs_from_string(): invalid extra arguments in " +
-        str);
+        "AxisEventHandler::abs_from_string(): invalid extra arguments in " + str
+    );
   } else {
     return new AbsAxisEventHandler(code, -1, -1, 0, 0);
   }
@@ -61,30 +63,35 @@ AbsAxisEventHandler* AbsAxisEventHandler::from_string(const std::string& str) {
 AbsAxisEventHandler::AbsAxisEventHandler()
     : m_code(UIEvent::invalid()), m_fuzz(0), m_flat(0), m_abs_emitter() {}
 
-AbsAxisEventHandler::AbsAxisEventHandler(const UIEvent& code, int min, int max,
-                                         int fuzz, int flat)
+AbsAxisEventHandler::AbsAxisEventHandler(
+    const UIEvent &code,
+    int min,
+    int max,
+    int fuzz,
+    int flat
+)
     : m_code(code), m_fuzz(fuzz), m_flat(flat), m_abs_emitter() {
   set_axis_range(min, max);
 }
 
-void AbsAxisEventHandler::init(UInput& uinput, int slot, bool extra_devices) {
+void AbsAxisEventHandler::init(UInput &uinput, int slot, bool extra_devices) {
   assert(!m_abs_emitter);
 
   m_code.resolve_device_id(slot, extra_devices);
-  m_abs_emitter = uinput.add_abs(m_code.get_device_id(), m_code.code, m_min,
-                                 m_max, m_fuzz, m_flat);
+  m_abs_emitter =
+      uinput.add_abs(m_code.get_device_id(), m_code.code, m_min, m_max, m_fuzz, m_flat);
 }
 
-void AbsAxisEventHandler::send(UInput& uinput, int value) {
+void AbsAxisEventHandler::send(UInput &uinput, int value) {
   m_abs_emitter->send(value);
 }
 
-void AbsAxisEventHandler::update(UInput& uinput, int msec_delta) {}
+void AbsAxisEventHandler::update(UInput &uinput, int msec_delta) {}
 
 std::string AbsAxisEventHandler::str() const {
   std::ostringstream out;
-  out << m_code.get_device_id() << "-" << m_code.code << ":" << m_min << ":"
-      << m_max << ":" << m_fuzz << ":" << m_flat;
+  out << m_code.get_device_id() << "-" << m_code.code << ":" << m_min << ":" << m_max << ":"
+      << m_fuzz << ":" << m_flat;
   return out.str();
 }
 

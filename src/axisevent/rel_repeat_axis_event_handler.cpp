@@ -28,21 +28,20 @@
 #include "raise_exception.hpp"
 #include "uinput.hpp"
 
-RelRepeatAxisEventHandler* RelRepeatAxisEventHandler::from_string(
-    const std::string& str) {
+RelRepeatAxisEventHandler *RelRepeatAxisEventHandler::from_string(const std::string &str) {
   // split string at ':'
   std::vector<std::string> args = string_split(str, ":");
 
   if (args.size() == 3) {
     return new RelRepeatAxisEventHandler(
-        str2rel_event(args[0]), std::stoi(args[1]), std::stof(args[2]));
+        str2rel_event(args[0]), std::stoi(args[1]), std::stof(args[2])
+    );
   } else {
     raise_exception(std::runtime_error, "must have three arguments");
   }
 }
 
-RelRepeatAxisEventHandler::RelRepeatAxisEventHandler(const UIEvent& code,
-                                                     int value, int repeat)
+RelRepeatAxisEventHandler::RelRepeatAxisEventHandler(const UIEvent &code, int value, int repeat)
     : m_code(code),
       m_value(value),
       m_repeat(repeat),
@@ -50,15 +49,14 @@ RelRepeatAxisEventHandler::RelRepeatAxisEventHandler(const UIEvent& code,
       m_timer(0),
       m_rel_emitter() {}
 
-void RelRepeatAxisEventHandler::init(UInput& uinput, int slot,
-                                     bool extra_devices) {
+void RelRepeatAxisEventHandler::init(UInput &uinput, int slot, bool extra_devices) {
   assert(!m_rel_emitter);
 
   m_code.resolve_device_id(slot, extra_devices);
   m_rel_emitter = uinput.add_rel(m_code.get_device_id(), m_code.code);
 }
 
-void RelRepeatAxisEventHandler::send(UInput& uinput, int value) {
+void RelRepeatAxisEventHandler::send(UInput &uinput, int value) {
   if (value < 0) {
     m_stick_value = value / static_cast<float>(-m_min);
   } else {
@@ -71,7 +69,7 @@ void RelRepeatAxisEventHandler::send(UInput& uinput, int value) {
   }
 }
 
-void RelRepeatAxisEventHandler::update(UInput& uinput, int msec_delta) {
+void RelRepeatAxisEventHandler::update(UInput &uinput, int msec_delta) {
   // time ticks slower depending on how fr the stick is moved
   m_timer += msec_delta * fabsf(m_stick_value);
 

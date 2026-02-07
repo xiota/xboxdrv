@@ -23,7 +23,7 @@
 
 #include "helper.hpp"
 
-DelayButtonFilter* DelayButtonFilter::from_string(const std::string& str) {
+DelayButtonFilter *DelayButtonFilter::from_string(const std::string &str) {
   return new DelayButtonFilter(std::stoi(str));
 }
 
@@ -42,7 +42,9 @@ bool DelayButtonFilter::filter(bool value) {
   }
 }
 
-void DelayButtonFilter::update(int msec_delta) { m_time += msec_delta; }
+void DelayButtonFilter::update(int msec_delta) {
+  m_time += msec_delta;
+}
 
 std::string DelayButtonFilter::str() const {
   std::ostringstream os;

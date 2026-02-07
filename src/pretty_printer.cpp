@@ -21,13 +21,17 @@
 #include <iostream>
 #include <string>
 
-PrettyPrinter::PrettyPrinter(int terminal_width_)
-    : terminal_width(terminal_width_) {}
+PrettyPrinter::PrettyPrinter(int terminal_width_) : terminal_width(terminal_width_) {}
 
-void PrettyPrinter::print(const std::string& str) { print("", "", str); }
+void PrettyPrinter::print(const std::string &str) {
+  print("", "", str);
+}
 
-void PrettyPrinter::print(const std::string& indent_str,
-                          const std::string& left, const std::string& str) {
+void PrettyPrinter::print(
+    const std::string &indent_str,
+    const std::string &left,
+    const std::string &str
+) {
   const int width = terminal_width - indent_str.size() - 1;
 
   if (!left.empty()) {
@@ -106,7 +110,7 @@ void PrettyPrinter::print(const std::string& indent_str,
 
 #ifdef __TEST__
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   PrettyPrinter printer(16, get_terminal_width() - 16);
 
   printer.print(
@@ -118,7 +122,8 @@ int main(int argc, char** argv) {
       "\n"
       "\n"
       "You should have received a copy of the GNU General Public License "
-      "along with this program.");
+      "along with this program."
+  );
   return 0;
 }
 

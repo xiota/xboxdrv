@@ -25,7 +25,7 @@
 
 class CalibrationAxisFilter : public AxisFilter {
  public:
-  static CalibrationAxisFilter* from_string(const std::string& str);
+  static CalibrationAxisFilter *from_string(const std::string &str);
 
  public:
   CalibrationAxisFilter(int min, int center, int max);

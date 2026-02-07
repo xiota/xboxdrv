@@ -29,7 +29,7 @@ class Controller;
 class ForceFeedbackEffect {
  public:
   ForceFeedbackEffect();
-  ForceFeedbackEffect(const struct ff_effect& e);
+  ForceFeedbackEffect(const struct ff_effect &e);
 
   // Delay before the effect start
   int delay;
@@ -47,10 +47,9 @@ class ForceFeedbackEffect {
 
   // Envelope
   struct Envelope {
-    Envelope()
-        : attack_length(0), attack_level(0), fade_length(0), fade_level(0) {}
+    Envelope() : attack_length(0), attack_level(0), fade_length(0), fade_level(0) {}
 
-    Envelope(const struct ff_envelope& e)
+    Envelope(const struct ff_envelope &e)
         : attack_length(e.attack_length),
           attack_level(e.attack_level),
           fade_length(e.fade_length),
@@ -68,8 +67,12 @@ class ForceFeedbackEffect {
   int weak_magnitude;
   int strong_magnitude;
 
-  int get_weak_magnitude() const { return weak_magnitude; }
-  int get_strong_magnitude() const { return strong_magnitude; }
+  int get_weak_magnitude() const {
+    return weak_magnitude;
+  }
+  int get_strong_magnitude() const {
+    return strong_magnitude;
+  }
 
   void update(int msec_delta);
   void play();
@@ -86,15 +89,15 @@ class ForceFeedbackHandler {
 
   int weak_magnitude;
   int strong_magnitude;
-  Controller* m_controller;
+  Controller *m_controller;
 
  public:
-  ForceFeedbackHandler(Controller* controller);
+  ForceFeedbackHandler(Controller *controller);
   ~ForceFeedbackHandler();
 
   int get_max_effects();
 
-  void upload(const struct ff_effect& effect);
+  void upload(const struct ff_effect &effect);
   void erase(int id);
 
   void play(int id);

@@ -26,12 +26,12 @@ class DummyMessageProcessor : public MessageProcessor {
  public:
   DummyMessageProcessor();
 
-  void send(const XboxGenericMsg& msg, int msec_delta);
-  virtual void set_controller(Controller* controller);
+  void send(const XboxGenericMsg &msg, int msec_delta);
+  virtual void set_controller(Controller *controller);
 
  private:
-  DummyMessageProcessor(const DummyMessageProcessor&);
-  DummyMessageProcessor& operator=(const DummyMessageProcessor&);
+  DummyMessageProcessor(const DummyMessageProcessor &);
+  DummyMessageProcessor &operator=(const DummyMessageProcessor &);
 };
 
 #endif

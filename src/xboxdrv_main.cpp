@@ -43,9 +43,9 @@
 #include "usb_helper.hpp"
 #include "usb_subsystem.hpp"
 
-XboxdrvMain* XboxdrvMain::s_current = 0;
+XboxdrvMain *XboxdrvMain::s_current = 0;
 
-XboxdrvMain::XboxdrvMain(const Options& opts)
+XboxdrvMain::XboxdrvMain(const Options &opts)
     : m_opts(opts),
       m_gmain(),
       m_usb_gsource(),
@@ -76,8 +76,12 @@ XboxdrvMain::~XboxdrvMain() {
 ControllerPtr XboxdrvMain::create_controller() {
   if (!m_opts.evdev_device.empty()) {  // normal PC joystick via evdev
     return ControllerPtr(new EvdevController(
-        m_opts.evdev_device, m_opts.evdev_absmap, m_opts.evdev_keymap,
-        m_opts.evdev_grab, m_opts.evdev_debug));
+        m_opts.evdev_device,
+        m_opts.evdev_absmap,
+        m_opts.evdev_keymap,
+        m_opts.evdev_grab,
+        m_opts.evdev_debug
+    ));
 
     // FIXME: ugly, should be part of Controller
     m_dev_type.type = GAMEPAD_XBOX360;
@@ -88,7 +92,7 @@ ControllerPtr XboxdrvMain::create_controller() {
 
     // FIXME: this must be libusb_unref_device()'ed, child code must not keep a
     // copy around
-    libusb_device* dev = 0;
+    libusb_device *dev = 0;
 
     USBSubsystem::find_controller(&dev, m_dev_type, m_opts);
 
@@ -104,7 +108,7 @@ ControllerPtr XboxdrvMain::create_controller() {
   }
 }
 
-void XboxdrvMain::init_controller(const ControllerPtr& controller) {
+void XboxdrvMain::init_controller(const ControllerPtr &controller) {
   m_jsdev_number = UInput::find_jsdev_number();
   m_evdev_number = UInput::find_evdev_number();
 
@@ -120,12 +124,13 @@ void XboxdrvMain::init_controller(const ControllerPtr& controller) {
   }
 }
 
-void XboxdrvMain::on_controller_disconnect() { shutdown(); }
+void XboxdrvMain::on_controller_disconnect() {
+  shutdown();
+}
 
 void XboxdrvMain::run() {
   m_controller = create_controller();
-  m_controller->set_disconnect_cb(
-      std::bind(&XboxdrvMain::on_controller_disconnect, this));
+  m_controller->set_disconnect_cb(std::bind(&XboxdrvMain::on_controller_disconnect, this));
   std::shared_ptr<MessageProcessor> message_proc;
   init_controller(m_controller);
 
@@ -146,21 +151,19 @@ void XboxdrvMain::run() {
 
       log_debug("creating ControllerSlotConfig");
       ControllerSlotConfigPtr config_set = ControllerSlotConfig::create(
-          *m_uinput, 0, m_opts.extra_devices, m_opts.get_controller_slot(),
-          m_controller.get());
+          *m_uinput, 0, m_opts.extra_devices, m_opts.get_controller_slot(), m_controller.get()
+      );
 
       // After all the ControllerConfig registered their events, finish up
       // the device creation
       log_debug("finish UInput creation");
       m_uinput->finish();
 
-      message_proc.reset(
-          new UInputMessageProcessor(*m_uinput, config_set, m_opts));
+      message_proc.reset(new UInputMessageProcessor(*m_uinput, config_set, m_opts));
     }
 
     if (!m_opts.quiet) {
-      std::cout << "\nYour Xbox/Xbox360 controller should now be available as:"
-                << std::endl
+      std::cout << "\nYour Xbox/Xbox360 controller should now be available as:" << std::endl
                 << "  /dev/input/js" << m_jsdev_number << std::endl
                 << "  /dev/input/event" << m_evdev_number << std::endl;
 
@@ -200,28 +203,33 @@ void XboxdrvMain::on_child_watch(GPid pid, gint status) {
   shutdown();
 }
 
-void XboxdrvMain::print_info(libusb_device* dev, const XPadDevice& dev_type,
-                             const Options& opts) const {
+void XboxdrvMain::print_info(
+    libusb_device *dev,
+    const XPadDevice &dev_type,
+    const Options &opts
+) const {
   libusb_device_descriptor desc;
   int ret = libusb_get_device_descriptor(dev, &desc);
   if (ret != LIBUSB_SUCCESS) {
     raise_exception(
-        std::runtime_error,
-        "libusb_get_device_descriptor() failed: " << usb_strerror(ret));
+        std::runtime_error, "libusb_get_device_descriptor() failed: " << usb_strerror(ret)
+    );
   }
 
   std::cout << "Controller:        " << dev_type.name << std::endl;
   std::cout << "Vendor/Product:    "
-            << std::format("{:#04x}:{:#04x}", uint16_t(desc.idVendor),
-                           uint16_t(desc.idProduct))
+            << std::format("{:#04x}:{:#04x}", uint16_t(desc.idVendor), uint16_t(desc.idProduct))
             << std::endl;
   std::cout << "USB Path:          "
-            << std::format("{:#03d}:{:#03d}",
-                           static_cast<int>(libusb_get_bus_number(dev)),
-                           static_cast<int>(libusb_get_device_address(dev)))
+            << std::format(
+                   "{:#03d}:{:#03d}",
+                   static_cast<int>(libusb_get_bus_number(dev)),
+                   static_cast<int>(libusb_get_device_address(dev))
+               )
             << std::endl;
-  if (dev_type.type == GAMEPAD_XBOX360_WIRELESS)
+  if (dev_type.type == GAMEPAD_XBOX360_WIRELESS) {
     std::cout << "Wireless Port:     " << opts.wireless_id << std::endl;
+  }
   std::cout << "Controller Type:   " << dev_type.type << std::endl;
 
   // std::cout << "ForceFeedback:     " <<
@@ -242,6 +250,8 @@ void XboxdrvMain::shutdown() {
   g_main_loop_quit(m_gmain);
 }
 
-void XboxdrvMain::on_sigint(int) { XboxdrvMain::current()->shutdown(); }
+void XboxdrvMain::on_sigint(int) {
+  XboxdrvMain::current()->shutdown();
+}
 
 /* EOF */

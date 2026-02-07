@@ -30,26 +30,29 @@
 #include "uinput.hpp"
 
 ControllerSlotConfigPtr ControllerSlotConfig::create(
-    UInput& uinput, int slot, bool extra_devices,
-    const ControllerSlotOptions& opts, Controller* controller) {
+    UInput &uinput,
+    int slot,
+    bool extra_devices,
+    const ControllerSlotOptions &opts,
+    Controller *controller
+) {
   ControllerSlotConfigPtr m_config(new ControllerSlotConfig);
 
-  for (ControllerSlotOptions::Options::const_iterator i =
-           opts.get_options().begin();
-       i != opts.get_options().end(); ++i) {
-    const ControllerOptions& ctrl_opt = i->second;
+  for (ControllerSlotOptions::Options::const_iterator i = opts.get_options().begin();
+       i != opts.get_options().end();
+       ++i) {
+    const ControllerOptions &ctrl_opt = i->second;
 
-    ControllerConfigPtr config(
-        new ControllerConfig(uinput, slot, extra_devices, ctrl_opt));
+    ControllerConfigPtr config(new ControllerConfig(uinput, slot, extra_devices, ctrl_opt));
     create_modifier(ctrl_opt, &config->get_modifier());
     m_config->add_config(config);
 
 #ifdef FIXME
     // introspection of the config
     std::cout << "==[[ Active Modifier ]]==" << std::endl;
-    for (std::vector<ModifierPtr>::iterator mod =
-             config->get_modifier().begin();
-         mod != config->get_modifier().end(); ++mod) {
+    for (std::vector<ModifierPtr>::iterator mod = config->get_modifier().begin();
+         mod != config->get_modifier().end();
+         ++mod) {
       std::cout << (*mod)->str() << std::endl;
     }
 #endif
@@ -83,14 +86,16 @@ ControllerSlotConfigPtr ControllerSlotConfig::create(
   return m_config;
 }
 
-void ControllerSlotConfig::create_modifier(const ControllerOptions& opts,
-                                           std::vector<ModifierPtr>* modifier) {
+void ControllerSlotConfig::create_modifier(
+    const ControllerOptions &opts,
+    std::vector<ModifierPtr> *modifier
+) {
   if (!opts.calibration_map.empty()) {
     std::shared_ptr<AxismapModifier> axismap(new AxismapModifier);
 
-    for (std::map<XboxAxis, AxisFilterPtr>::const_iterator i =
-             opts.calibration_map.begin();
-         i != opts.calibration_map.end(); ++i) {
+    for (std::map<XboxAxis, AxisFilterPtr>::const_iterator i = opts.calibration_map.begin();
+         i != opts.calibration_map.end();
+         ++i) {
       axismap->add_filter(i->first, i->second);
     }
 
@@ -100,13 +105,16 @@ void ControllerSlotConfig::create_modifier(const ControllerOptions& opts,
   if (opts.deadzone) {
     std::shared_ptr<AxismapModifier> axismap(new AxismapModifier);
 
-    XboxAxis axes[] = {XBOX_AXIS_X1, XBOX_AXIS_Y1,
+    XboxAxis axes[] = { XBOX_AXIS_X1,
+                        XBOX_AXIS_Y1,
 
-                       XBOX_AXIS_X2, XBOX_AXIS_Y2};
+                        XBOX_AXIS_X2,
+                        XBOX_AXIS_Y2 };
 
     for (size_t i = 0; i < sizeof(axes) / sizeof(XboxAxis); ++i) {
-      axismap->add_filter(axes[i], AxisFilterPtr(new DeadzoneAxisFilter(
-                                       -opts.deadzone, opts.deadzone, true)));
+      axismap->add_filter(
+          axes[i], AxisFilterPtr(new DeadzoneAxisFilter(-opts.deadzone, opts.deadzone, true))
+      );
     }
 
     modifier->push_back(axismap);
@@ -115,30 +123,31 @@ void ControllerSlotConfig::create_modifier(const ControllerOptions& opts,
   if (opts.deadzone_trigger) {
     std::shared_ptr<AxismapModifier> axismap(new AxismapModifier);
 
-    XboxAxis axes[] = {XBOX_AXIS_LT, XBOX_AXIS_RT};
+    XboxAxis axes[] = { XBOX_AXIS_LT, XBOX_AXIS_RT };
 
     for (size_t i = 0; i < sizeof(axes) / sizeof(XboxAxis); ++i) {
       axismap->add_filter(
-          axes[i], AxisFilterPtr(new DeadzoneAxisFilter(
-                       -opts.deadzone_trigger, opts.deadzone_trigger, true)));
+          axes[i],
+          AxisFilterPtr(
+              new DeadzoneAxisFilter(-opts.deadzone_trigger, opts.deadzone_trigger, true)
+          )
+      );
     }
 
     modifier->push_back(axismap);
   }
 
   if (opts.square_axis) {
-    modifier->push_back(
-        ModifierPtr(new SquareAxisModifier(XBOX_AXIS_X1, XBOX_AXIS_Y1)));
-    modifier->push_back(
-        ModifierPtr(new SquareAxisModifier(XBOX_AXIS_X2, XBOX_AXIS_Y2)));
+    modifier->push_back(ModifierPtr(new SquareAxisModifier(XBOX_AXIS_X1, XBOX_AXIS_Y1)));
+    modifier->push_back(ModifierPtr(new SquareAxisModifier(XBOX_AXIS_X2, XBOX_AXIS_Y2)));
   }
 
   if (!opts.sensitivity_map.empty()) {
     std::shared_ptr<AxismapModifier> axismap(new AxismapModifier);
 
-    for (std::map<XboxAxis, AxisFilterPtr>::const_iterator i =
-             opts.sensitivity_map.begin();
-         i != opts.sensitivity_map.end(); ++i) {
+    for (std::map<XboxAxis, AxisFilterPtr>::const_iterator i = opts.sensitivity_map.begin();
+         i != opts.sensitivity_map.end();
+         ++i) {
       axismap->add_filter(i->first, i->second);
     }
 
@@ -146,18 +155,16 @@ void ControllerSlotConfig::create_modifier(const ControllerOptions& opts,
   }
 
   if (opts.four_way_restrictor) {
-    modifier->push_back(
-        ModifierPtr(new FourWayRestrictorModifier(XBOX_AXIS_X1, XBOX_AXIS_Y1)));
-    modifier->push_back(
-        ModifierPtr(new FourWayRestrictorModifier(XBOX_AXIS_X2, XBOX_AXIS_Y2)));
+    modifier->push_back(ModifierPtr(new FourWayRestrictorModifier(XBOX_AXIS_X1, XBOX_AXIS_Y1)));
+    modifier->push_back(ModifierPtr(new FourWayRestrictorModifier(XBOX_AXIS_X2, XBOX_AXIS_Y2)));
   }
 
   if (!opts.relative_axis_map.empty()) {
     std::shared_ptr<AxismapModifier> axismap(new AxismapModifier);
 
-    for (std::map<XboxAxis, AxisFilterPtr>::const_iterator i =
-             opts.relative_axis_map.begin();
-         i != opts.relative_axis_map.end(); ++i) {
+    for (std::map<XboxAxis, AxisFilterPtr>::const_iterator i = opts.relative_axis_map.begin();
+         i != opts.relative_axis_map.end();
+         ++i) {
       axismap->add_filter(i->first, i->second);
     }
 
@@ -165,16 +172,15 @@ void ControllerSlotConfig::create_modifier(const ControllerOptions& opts,
   }
 
   if (opts.dpad_rotation) {
-    modifier->push_back(
-        ModifierPtr(new DpadRotationModifier(opts.dpad_rotation)));
+    modifier->push_back(ModifierPtr(new DpadRotationModifier(opts.dpad_rotation)));
   }
 
   if (!opts.autofire_map.empty()) {
     std::shared_ptr<ButtonmapModifier> buttonmap(new ButtonmapModifier);
 
-    for (std::map<XboxButton, ButtonFilterPtr>::const_iterator i =
-             opts.autofire_map.begin();
-         i != opts.autofire_map.end(); ++i) {
+    for (std::map<XboxButton, ButtonFilterPtr>::const_iterator i = opts.autofire_map.begin();
+         i != opts.autofire_map.end();
+         ++i) {
       buttonmap->add_filter(i->first, i->second);
     }
 

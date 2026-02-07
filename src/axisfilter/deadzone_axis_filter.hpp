@@ -25,7 +25,7 @@
 
 class DeadzoneAxisFilter : public AxisFilter {
  public:
-  static DeadzoneAxisFilter* from_string(const std::string& str);
+  static DeadzoneAxisFilter *from_string(const std::string &str);
 
  public:
   DeadzoneAxisFilter(int min_deadzone, int max_deathzone, bool smooth);

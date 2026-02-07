@@ -139,8 +139,7 @@ enum {
   OPTION_DAEMON_ON_DISCONNECT
 };
 
-CommandLineParser::CommandLineParser()
-    : m_argp(), m_ini(), m_options(), m_directory_context() {
+CommandLineParser::CommandLineParser() : m_argp(), m_ini(), m_options(), m_directory_context() {
   init_argp();
 }
 
@@ -151,300 +150,547 @@ void CommandLineParser::init_argp() {
 
       .add_text("General Options: ")
       .add_option(OPTION_HELP, 'h', "help", "", "display this help and exit")
-      .add_option(OPTION_VERSION, 'V', "version", "",
-                  "print the version number and exit")
+      .add_option(OPTION_VERSION, 'V', "version", "", "print the version number and exit")
       .add_option(OPTION_VERBOSE, 'v', "verbose", "", "print verbose messages")
-      .add_option(OPTION_DEBUG, 0, "debug", "",
-                  "be even more verbose then --verbose")
-      .add_option(OPTION_SILENT, 's', "silent", "",
-                  "do not display events on console")
+      .add_option(OPTION_DEBUG, 0, "debug", "", "be even more verbose then --verbose")
+      .add_option(OPTION_SILENT, 's', "silent", "", "do not display events on console")
       .add_option(OPTION_QUIET, 0, "quiet", "", "do not display startup text")
-      .add_option(OPTION_USB_DEBUG, 0, "usb-debug", "",
-                  "enable log messages from libusb")
-      .add_option(OPTION_PRIORITY, 0, "priority", "PRI",
-                  "increases process priority (default: normal)")
+      .add_option(OPTION_USB_DEBUG, 0, "usb-debug", "", "enable log messages from libusb")
+      .add_option(
+          OPTION_PRIORITY, 0, "priority", "PRI", "increases process priority (default: normal)"
+      )
       .add_newline()
 
       .add_text("List Options: ")
-      .add_option(OPTION_LIST_SUPPORTED_DEVICES, 0, "list-supported-devices",
-                  "", "list supported devices (used by xboxdrv-daemon.py)",
-                  false)
-      .add_option(OPTION_LIST_SUPPORTED_DEVICES_XPAD, 0,
-                  "list-supported-devices-xpad", "",
-                  "list supported devices in xpad.c style", false)
-      .add_option(OPTION_HELP_LED, 0, "help-led", "",
-                  "list possible values for the led")
-      .add_option(OPTION_HELP_DEVICES, 0, "help-devices", "",
-                  "list supported devices")
-      .add_option(OPTION_LIST_ABS, 0, "help-abs", "",
-                  "list all possible EV_ABS names")
-      .add_option(OPTION_LIST_REL, 0, "help-rel", "",
-                  "list all possible EV_REL names")
-      .add_option(OPTION_LIST_KEY, 0, "help-key", "",
-                  "list all possible EV_KEY names")
-      .add_option(OPTION_LIST_X11KEYSYM, 0, "help-x11keysym", "",
-                  "list all possible X11KeySym")
-      .add_option(OPTION_LIST_AXIS, 0, "help-axis", "",
-                  "list all possible XboxAxis")
-      .add_option(OPTION_LIST_BUTTON, 0, "help-button", "",
-                  "list all possible XboxButton")
+      .add_option(
+          OPTION_LIST_SUPPORTED_DEVICES,
+          0,
+          "list-supported-devices",
+          "",
+          "list supported devices (used by xboxdrv-daemon.py)",
+          false
+      )
+      .add_option(
+          OPTION_LIST_SUPPORTED_DEVICES_XPAD,
+          0,
+          "list-supported-devices-xpad",
+          "",
+          "list supported devices in xpad.c style",
+          false
+      )
+      .add_option(OPTION_HELP_LED, 0, "help-led", "", "list possible values for the led")
+      .add_option(OPTION_HELP_DEVICES, 0, "help-devices", "", "list supported devices")
+      .add_option(OPTION_LIST_ABS, 0, "help-abs", "", "list all possible EV_ABS names")
+      .add_option(OPTION_LIST_REL, 0, "help-rel", "", "list all possible EV_REL names")
+      .add_option(OPTION_LIST_KEY, 0, "help-key", "", "list all possible EV_KEY names")
+      .add_option(OPTION_LIST_X11KEYSYM, 0, "help-x11keysym", "", "list all possible X11KeySym")
+      .add_option(OPTION_LIST_AXIS, 0, "help-axis", "", "list all possible XboxAxis")
+      .add_option(OPTION_LIST_BUTTON, 0, "help-button", "", "list all possible XboxButton")
       .add_option(OPTION_LIST_ALL, 0, "help-all", "", "list all symbols above")
       .add_newline()
 
       .add_text("Config File Options: ")
-      .add_option(OPTION_CONFIG, 'c', "config", "FILE",
-                  "read configuration from FILE")
-      .add_option(OPTION_ALT_CONFIG, 0, "alt-config", "FILE",
-                  "read alternative configuration from FILE ")
-      .add_option(OPTION_CONFIG_OPTION, 'o', "option", "NAME=VALUE",
-                  "Set the given configuration option")
-      .add_option(OPTION_WRITE_CONFIG, 0, "write-config", "FILE",
-                  "write an example configuration to FILE")
+      .add_option(OPTION_CONFIG, 'c', "config", "FILE", "read configuration from FILE")
+      .add_option(
+          OPTION_ALT_CONFIG,
+          0,
+          "alt-config",
+          "FILE",
+          "read alternative configuration from FILE "
+      )
+      .add_option(
+          OPTION_CONFIG_OPTION,
+          'o',
+          "option",
+          "NAME=VALUE",
+          "Set the given configuration option"
+      )
+      .add_option(
+          OPTION_WRITE_CONFIG,
+          0,
+          "write-config",
+          "FILE",
+          "write an example configuration to FILE"
+      )
       .add_newline()
 
       .add_text("Daemon Options: ")
       .add_option(OPTION_DAEMON, 'D', "daemon", "", "Run as daemon")
-      .add_option(OPTION_DAEMON_DETACH, 0, "detach", "",
-                  "Detach the daemon from the current shell")
-      .add_option(OPTION_DAEMON_PID_FILE, 0, "pid-file", "FILE",
-                  "Write daemon pid to FILE")
-      .add_option(OPTION_DAEMON_NO_DBUS, 0, "no-dbus", "",
-                  "Disables D-Bus support in the daemon", false)
-      .add_option(OPTION_DAEMON_DBUS, 0, "dbus", "MODE",
-                  "Set D-Bus mode (auto, system, session, disabled)")
-      .add_option(OPTION_DAEMON_ON_CONNECT, 0, "on-connect", "FILE",
-                  "Launch EXE when a new controller is connected")
-      .add_option(OPTION_DAEMON_ON_DISCONNECT, 0, "on-disconnect", "FILE",
-                  "Launch EXE when a controller is disconnected")
+      .add_option(
+          OPTION_DAEMON_DETACH, 0, "detach", "", "Detach the daemon from the current shell"
+      )
+      .add_option(OPTION_DAEMON_PID_FILE, 0, "pid-file", "FILE", "Write daemon pid to FILE")
+      .add_option(
+          OPTION_DAEMON_NO_DBUS, 0, "no-dbus", "", "Disables D-Bus support in the daemon", false
+      )
+      .add_option(
+          OPTION_DAEMON_DBUS,
+          0,
+          "dbus",
+          "MODE",
+          "Set D-Bus mode (auto, system, session, disabled)"
+      )
+      .add_option(
+          OPTION_DAEMON_ON_CONNECT,
+          0,
+          "on-connect",
+          "FILE",
+          "Launch EXE when a new controller is connected"
+      )
+      .add_option(
+          OPTION_DAEMON_ON_DISCONNECT,
+          0,
+          "on-disconnect",
+          "FILE",
+          "Launch EXE when a controller is disconnected"
+      )
       .add_newline()
 
       .add_text("Device Options: ")
-      .add_option(OPTION_LIST_CONTROLLER, 'L', "list-controller", "",
-                  "list available controllers")
-      .add_option(OPTION_ID, 'i', "id", "N",
-                  "use controller with id N (default: 0)")
-      .add_option(OPTION_WID, 'w', "wid", "N",
-                  "use wireless controller with wid N (default: 0)")
-      .add_option(OPTION_DEVICE_BY_PATH, 0, "device-by-path", "BUS:DEV",
-                  "Use device BUS:DEV, do not do any scanning")
       .add_option(
-          OPTION_DEVICE_BY_ID, 0, "device-by-id", "VENDOR:PRODUCT",
-          "Use device that matches VENDOR:PRODUCT (as returned by lsusb)")
-      .add_option(OPTION_TYPE, 0, "type", "TYPE",
-                  "Ignore autodetection and enforce controller type (xbox, "
-                  "xbox-mat, xbox360, xbox360-wireless, xbox360-guitar)")
+          OPTION_LIST_CONTROLLER, 'L', "list-controller", "", "list available controllers"
+      )
+      .add_option(OPTION_ID, 'i', "id", "N", "use controller with id N (default: 0)")
       .add_option(
-          OPTION_DETACH_KERNEL_DRIVER, 'd', "detach-kernel-driver", "",
-          "Detaches the kernel driver currently associated with the device")
-      .add_option(OPTION_GENERIC_USB_SPEC, 0, "generic-usb-spec", "SPEC",
-                  "Specification for generic USB device")
+          OPTION_WID, 'w', "wid", "N", "use wireless controller with wid N (default: 0)"
+      )
+      .add_option(
+          OPTION_DEVICE_BY_PATH,
+          0,
+          "device-by-path",
+          "BUS:DEV",
+          "Use device BUS:DEV, do not do any scanning"
+      )
+      .add_option(
+          OPTION_DEVICE_BY_ID,
+          0,
+          "device-by-id",
+          "VENDOR:PRODUCT",
+          "Use device that matches VENDOR:PRODUCT (as returned by lsusb)"
+      )
+      .add_option(
+          OPTION_TYPE,
+          0,
+          "type",
+          "TYPE",
+          "Ignore autodetection and enforce controller type (xbox, "
+          "xbox-mat, xbox360, xbox360-wireless, xbox360-guitar)"
+      )
+      .add_option(
+          OPTION_DETACH_KERNEL_DRIVER,
+          'd',
+          "detach-kernel-driver",
+          "",
+          "Detaches the kernel driver currently associated with the device"
+      )
+      .add_option(
+          OPTION_GENERIC_USB_SPEC,
+          0,
+          "generic-usb-spec",
+          "SPEC",
+          "Specification for generic USB device"
+      )
       .add_newline()
 
       .add_text("Evdev Options: ")
-      .add_option(OPTION_EVDEV, 0, "evdev", "DEVICE",
-                  "Read events from a evdev device, instead of USB")
-      .add_option(OPTION_EVDEV_DEBUG, 0, "evdev-debug", "",
-                  "Print out all events received from evdev")
       .add_option(
-          OPTION_EVDEV_NO_GRAB, 0, "evdev-no-grab", "",
-          "Do not grab the event device, allow other apps to receive events")
-      .add_option(OPTION_EVDEV_ABSMAP, 0, "evdev-absmap", "MAP",
-                  "Map evdev key events to Xbox360 button events")
-      .add_option(OPTION_EVDEV_KEYMAP, 0, "evdev-keymap", "MAP",
-                  "Map evdev abs events to Xbox360 axis events")
+          OPTION_EVDEV, 0, "evdev", "DEVICE", "Read events from a evdev device, instead of USB"
+      )
+      .add_option(
+          OPTION_EVDEV_DEBUG, 0, "evdev-debug", "", "Print out all events received from evdev"
+      )
+      .add_option(
+          OPTION_EVDEV_NO_GRAB,
+          0,
+          "evdev-no-grab",
+          "",
+          "Do not grab the event device, allow other apps to receive events"
+      )
+      .add_option(
+          OPTION_EVDEV_ABSMAP,
+          0,
+          "evdev-absmap",
+          "MAP",
+          "Map evdev key events to Xbox360 button events"
+      )
+      .add_option(
+          OPTION_EVDEV_KEYMAP,
+          0,
+          "evdev-keymap",
+          "MAP",
+          "Map evdev abs events to Xbox360 axis events"
+      )
       .add_newline()
 
       .add_text("Status Options: ")
-      .add_option(OPTION_LED, 'l', "led", "STATUS",
-                  "set LED status, see --help-led for possible values")
-      .add_option(OPTION_RUMBLE, 'r', "rumble", "L,R",
-                  "set the speed for both rumble motors [0-255] (default: 0,0)")
-      .add_option(OPTION_QUIT, 'q', "quit", "",
-                  "only set led and rumble status then quit")
+      .add_option(
+          OPTION_LED, 'l', "led", "STATUS", "set LED status, see --help-led for possible values"
+      )
+      .add_option(
+          OPTION_RUMBLE,
+          'r',
+          "rumble",
+          "L,R",
+          "set the speed for both rumble motors [0-255] (default: 0,0)"
+      )
+      .add_option(OPTION_QUIT, 'q', "quit", "", "only set led and rumble status then quit")
       .add_newline()
 
       .add_text("Chatpad Options (experimental): ")
-      .add_option(OPTION_CHATPAD, 0, "chatpad", "",
-                  "Enable Chatpad support for Xbox360 USB controller")
-      .add_option(OPTION_CHATPAD_NO_INIT, 0, "chatpad-no-init", "",
-                  "To not send init code to the Chatpad")
-      .add_option(OPTION_CHATPAD_DEBUG, 0, "chatpad-debug", "",
-                  "To not send init code to the Chatpad")
+      .add_option(
+          OPTION_CHATPAD, 0, "chatpad", "", "Enable Chatpad support for Xbox360 USB controller"
+      )
+      .add_option(
+          OPTION_CHATPAD_NO_INIT,
+          0,
+          "chatpad-no-init",
+          "",
+          "To not send init code to the Chatpad"
+      )
+      .add_option(
+          OPTION_CHATPAD_DEBUG, 0, "chatpad-debug", "", "To not send init code to the Chatpad"
+      )
       .add_newline()
 
       .add_text("Headset Options (experimental, Xbox360 USB only): ")
       .add_option(
-          OPTION_HEADSET, 0, "headset", "",
-          "Enable Headset support for Xbox360 USB controller (not working)")
-      .add_option(OPTION_HEADSET_DUMP, 0, "headset-dump", "FILE",
-                  "Dump headset data to FILE")
-      .add_option(OPTION_HEADSET_PLAY, 0, "headset-play", "FILE",
-                  "Play FILE on the headset")
+          OPTION_HEADSET,
+          0,
+          "headset",
+          "",
+          "Enable Headset support for Xbox360 USB controller (not working)"
+      )
+      .add_option(OPTION_HEADSET_DUMP, 0, "headset-dump", "FILE", "Dump headset data to FILE")
+      .add_option(OPTION_HEADSET_PLAY, 0, "headset-play", "FILE", "Play FILE on the headset")
       .add_newline()
 
       .add_text("Force Feedback: ")
-      .add_option(OPTION_FORCE_FEEDBACK, 0, "force-feedback", "",
-                  "Enable force feedback support")
-      .add_option(OPTION_RUMBLE_GAIN, 0, "rumble-gain", "NUM",
-                  "Set relative rumble strength (default: 255)")
-      .add_option(OPTION_TEST_RUMBLE, 'R', "test-rumble", "",
-                  "map rumbling to LT and RT (for testing only)")
-      .add_option(OPTION_FF_DEVICE, 0, "ff-device", "DEV",
-                  "select to which evdev the force feedback should be "
-                  "connected (default: joystick)")
+      .add_option(
+          OPTION_FORCE_FEEDBACK, 0, "force-feedback", "", "Enable force feedback support"
+      )
+      .add_option(
+          OPTION_RUMBLE_GAIN,
+          0,
+          "rumble-gain",
+          "NUM",
+          "Set relative rumble strength (default: 255)"
+      )
+      .add_option(
+          OPTION_TEST_RUMBLE,
+          'R',
+          "test-rumble",
+          "",
+          "map rumbling to LT and RT (for testing only)"
+      )
+      .add_option(
+          OPTION_FF_DEVICE,
+          0,
+          "ff-device",
+          "DEV",
+          "select to which evdev the force feedback should be "
+          "connected (default: joystick)"
+      )
       .add_newline()
 
       .add_text("Controller Slot Options: ")
-      .add_option(OPTION_CONTROLLER_SLOT, 0, "controller-slot", "N",
-                  "Use controller slot N")
-      .add_option(OPTION_NEXT_CONTROLLER, 0, "next-controller", "",
-                  "Create a new controller entry")
-      .add_option(OPTION_DAEMON_MATCH, 0, "match", "RULES",
-                  "Only allow controllers that match any of RULES")
-      .add_option(OPTION_DAEMON_MATCH_GROUP, 0, "match-group", "RULES",
-                  "Only allow controllers that match all of RULES")
+      .add_option(OPTION_CONTROLLER_SLOT, 0, "controller-slot", "N", "Use controller slot N")
+      .add_option(
+          OPTION_NEXT_CONTROLLER, 0, "next-controller", "", "Create a new controller entry"
+      )
+      .add_option(
+          OPTION_DAEMON_MATCH,
+          0,
+          "match",
+          "RULES",
+          "Only allow controllers that match any of RULES"
+      )
+      .add_option(
+          OPTION_DAEMON_MATCH_GROUP,
+          0,
+          "match-group",
+          "RULES",
+          "Only allow controllers that match all of RULES"
+      )
       .add_newline()
 
       .add_text("Config Slot Options: ")
-      .add_option(OPTION_CONFIG_SLOT, 0, "config-slot", "N",
-                  "Use configuration slot N")
-      .add_option(OPTION_NEXT_CONFIG, 0, "ui-new", "", "",
-                  false)  // backward compatibility
-      .add_option(OPTION_NEXT_CONFIG, 0, "next-config", "",
-                  "Create a new configuration entry")
-      .add_option(OPTION_TOGGLE, 0, "toggle", "BTN",
-                  "Set button to use for toggling between configs")
-      .add_option(OPTION_TOGGLE, 0, "ui-toggle", "BTN", "",
-                  false)  // backward compatibility
+      .add_option(OPTION_CONFIG_SLOT, 0, "config-slot", "N", "Use configuration slot N")
+      .add_option(
+          OPTION_NEXT_CONFIG,
+          0,
+          "ui-new",
+          "",
+          "",
+          false
+      )  // backward compatibility
+      .add_option(OPTION_NEXT_CONFIG, 0, "next-config", "", "Create a new configuration entry")
+      .add_option(
+          OPTION_TOGGLE, 0, "toggle", "BTN", "Set button to use for toggling between configs"
+      )
+      .add_option(
+          OPTION_TOGGLE,
+          0,
+          "ui-toggle",
+          "BTN",
+          "",
+          false
+      )  // backward compatibility
       .add_newline()
 
       .add_text("Configuration Options:")
-      .add_option(OPTION_MODIFIER, 'm', "modifier", "MOD=ARG:..",
-                  "Add a modifier to the modifier spec")
-      .add_option(OPTION_TIMEOUT, 0, "timeout", "INT",
-                  "Amount of time to wait fo a device event before processing "
-                  "autofire, etc. (default: 25)")
       .add_option(
-          OPTION_BUTTONMAP, 'b', "buttonmap", "MAP",
-          "Remap the buttons as specified by MAP (example: B=A,X=A,Y=A)")
-      .add_option(OPTION_AXISMAP, 'a', "axismap", "MAP",
-                  "Remap the axis as specified by MAP (example: -Y1=Y1,X1=X2)")
+          OPTION_MODIFIER, 'm', "modifier", "MOD=ARG:..", "Add a modifier to the modifier spec"
+      )
+      .add_option(
+          OPTION_TIMEOUT,
+          0,
+          "timeout",
+          "INT",
+          "Amount of time to wait fo a device event before processing "
+          "autofire, etc. (default: 25)"
+      )
+      .add_option(
+          OPTION_BUTTONMAP,
+          'b',
+          "buttonmap",
+          "MAP",
+          "Remap the buttons as specified by MAP (example: B=A,X=A,Y=A)"
+      )
+      .add_option(
+          OPTION_AXISMAP,
+          'a',
+          "axismap",
+          "MAP",
+          "Remap the axis as specified by MAP (example: -Y1=Y1,X1=X2)"
+      )
       .add_newline()
 
       .add_text("Modifier Preset Options: ")
-      .add_option(OPTION_AUTOFIRE, 0, "autofire", "MAP",
-                  "Cause the given buttons to act as autofire (example: A=250)")
-      .add_option(OPTION_AXIS_SENSITIVITY, 0, "axis-sensitivity", "MAP",
-                  "Adjust the axis sensitivity (example: X1=2.0,Y1=1.0)")
-      .add_option(OPTION_CALIBRATION, 0, "calibration", "MAP",
-                  "Changes the calibration for the given axis (example: "
-                  "X2=-32768:0:32767)")
-      .add_option(OPTION_DEADZONE, 0, "deadzone", "INT",
-                  "Threshold under which axis events are ignored (default: 0)")
       .add_option(
-          OPTION_DEADZONE_TRIGGER, 0, "deadzone-trigger", "INT",
-          "Threshold under which trigger events are ignored (default: 0)")
+          OPTION_AUTOFIRE,
+          0,
+          "autofire",
+          "MAP",
+          "Cause the given buttons to act as autofire (example: A=250)"
+      )
       .add_option(
-          OPTION_DPAD_ROTATION, 0, "dpad-rotation", "DEGREE",
-          "Rotate the dpad by the given DEGREE, must be a multiple of 45")
-      .add_option(OPTION_FOUR_WAY_RESTRICTOR, 0, "four-way-restrictor", "",
-                  "Restrict axis movement to one axis at a time")
+          OPTION_AXIS_SENSITIVITY,
+          0,
+          "axis-sensitivity",
+          "MAP",
+          "Adjust the axis sensitivity (example: X1=2.0,Y1=1.0)"
+      )
       .add_option(
-          OPTION_RELATIVE_AXIS, 0, "relative-axis", "MAP",
-          "Make an axis emulate a joystick throttle (example: y2=64000)")
+          OPTION_CALIBRATION,
+          0,
+          "calibration",
+          "MAP",
+          "Changes the calibration for the given axis (example: "
+          "X2=-32768:0:32767)"
+      )
       .add_option(
-          OPTION_SQUARE_AXIS, 0, "square-axis", "",
-          "Cause the diagonals to be reported as (1,1) instead of (0.7, 0.7)")
+          OPTION_DEADZONE,
+          0,
+          "deadzone",
+          "INT",
+          "Threshold under which axis events are ignored (default: 0)"
+      )
+      .add_option(
+          OPTION_DEADZONE_TRIGGER,
+          0,
+          "deadzone-trigger",
+          "INT",
+          "Threshold under which trigger events are ignored (default: 0)"
+      )
+      .add_option(
+          OPTION_DPAD_ROTATION,
+          0,
+          "dpad-rotation",
+          "DEGREE",
+          "Rotate the dpad by the given DEGREE, must be a multiple of 45"
+      )
+      .add_option(
+          OPTION_FOUR_WAY_RESTRICTOR,
+          0,
+          "four-way-restrictor",
+          "",
+          "Restrict axis movement to one axis at a time"
+      )
+      .add_option(
+          OPTION_RELATIVE_AXIS,
+          0,
+          "relative-axis",
+          "MAP",
+          "Make an axis emulate a joystick throttle (example: y2=64000)"
+      )
+      .add_option(
+          OPTION_SQUARE_AXIS,
+          0,
+          "square-axis",
+          "",
+          "Cause the diagonals to be reported as (1,1) instead of (0.7, 0.7)"
+      )
       .add_newline()
 
       .add_text("Uinput Preset Configuration Options: ")
-      .add_option(OPTION_TRIGGER_AS_BUTTON, 0, "trigger-as-button", "",
-                  "LT and RT send button instead of axis events")
-      .add_option(OPTION_TRIGGER_AS_ZAXIS, 0, "trigger-as-zaxis", "",
-                  "Combine LT and RT to form a zaxis instead")
-      .add_option(OPTION_DPAD_AS_BUTTON, 0, "dpad-as-button", "",
-                  "DPad sends button instead of axis events")
-      .add_option(OPTION_DPAD_ONLY, 0, "dpad-only", "",
-                  "Both sticks are ignored, only DPad sends out axis events")
-      .add_option(OPTION_GUITAR, 0, "guitar", "",
-                  "Enables guitar button and axis mapping")
+      .add_option(
+          OPTION_TRIGGER_AS_BUTTON,
+          0,
+          "trigger-as-button",
+          "",
+          "LT and RT send button instead of axis events"
+      )
+      .add_option(
+          OPTION_TRIGGER_AS_ZAXIS,
+          0,
+          "trigger-as-zaxis",
+          "",
+          "Combine LT and RT to form a zaxis instead"
+      )
+      .add_option(
+          OPTION_DPAD_AS_BUTTON,
+          0,
+          "dpad-as-button",
+          "",
+          "DPad sends button instead of axis events"
+      )
+      .add_option(
+          OPTION_DPAD_ONLY,
+          0,
+          "dpad-only",
+          "",
+          "Both sticks are ignored, only DPad sends out axis events"
+      )
+      .add_option(OPTION_GUITAR, 0, "guitar", "", "Enables guitar button and axis mapping")
       .add_option(OPTION_MOUSE, 0, "mouse", "", "Enable mouse emulation")
-      .add_option(OPTION_MIMIC_XPAD, 0, "mimic-xpad", "",
-                  "Causes xboxdrv to use the same axis and button names as the "
-                  "xpad kernel driver for wired gamepads")
-      .add_option(OPTION_MIMIC_XPAD_WIRELESS, 0, "mimic-xpad-wireless", "",
-                  "Causes xboxdrv to use the same axis and button names as the "
-                  "xpad kernel driver for wireless gamepads")
+      .add_option(
+          OPTION_MIMIC_XPAD,
+          0,
+          "mimic-xpad",
+          "",
+          "Causes xboxdrv to use the same axis and button names as the "
+          "xpad kernel driver for wired gamepads"
+      )
+      .add_option(
+          OPTION_MIMIC_XPAD_WIRELESS,
+          0,
+          "mimic-xpad-wireless",
+          "",
+          "Causes xboxdrv to use the same axis and button names as the "
+          "xpad kernel driver for wireless gamepads"
+      )
       .add_newline()
 
       .add_text("Uinput Configuration Options: ")
-      .add_option(OPTION_NO_UINPUT, 0, "no-uinput", "",
-                  "do not try to start uinput event dispatching")
-      .add_option(OPTION_NO_EXTRA_DEVICES, 0, "no-extra-devices", "",
-                  "Do not create separate virtual keyboard and mouse devices, "
-                  "just use a single virtual device")
       .add_option(
-          OPTION_NO_EXTRA_EVENTS, 0, "no-extra-events", "",
-          "Do not create dummy events to facilitate device type detection")
+          OPTION_NO_UINPUT, 0, "no-uinput", "", "do not try to start uinput event dispatching"
+      )
       .add_option(
-          OPTION_DEVICE_NAME, 0, "device-name", "NAME",
-          "Changes the name prefix used for devices in the current slot")
-      .add_option(OPTION_DEVICE_NAMES, 0, "device-names", "DEVID=NAME,...",
-                  "Changes the descriptive name the given devices")
-      .add_option(OPTION_DEVICE_USBID, 0, "device-usbid",
-                  "VENDOR:PRODUCT:VERSION",
-                  "Changes the USB Id used for devices in the current slot")
-      .add_option(OPTION_DEVICE_USBIDS, 0, "device-usbids",
-                  "DEVID=VENDOR:PRODUCT:VERSION,...",
-                  "Changes the USB Id for the given devices")
-      .add_option(OPTION_UI_CLEAR, 0, "ui-clear", "",
-                  "Removes all existing uinput bindings")
-      .add_option(OPTION_UI_BUTTONMAP, 0, "ui-buttonmap", "MAP",
-                  "Changes the uinput events send when hitting a button "
-                  "(example: X=BTN_Y,A=KEY_A)")
-      .add_option(OPTION_UI_AXISMAP, 0, "ui-axismap", "MAP",
-                  "Changes the uinput events send when moving a axis (example: "
-                  "X1=ABS_X2)")
+          OPTION_NO_EXTRA_DEVICES,
+          0,
+          "no-extra-devices",
+          "",
+          "Do not create separate virtual keyboard and mouse devices, "
+          "just use a single virtual device"
+      )
+      .add_option(
+          OPTION_NO_EXTRA_EVENTS,
+          0,
+          "no-extra-events",
+          "",
+          "Do not create dummy events to facilitate device type detection"
+      )
+      .add_option(
+          OPTION_DEVICE_NAME,
+          0,
+          "device-name",
+          "NAME",
+          "Changes the name prefix used for devices in the current slot"
+      )
+      .add_option(
+          OPTION_DEVICE_NAMES,
+          0,
+          "device-names",
+          "DEVID=NAME,...",
+          "Changes the descriptive name the given devices"
+      )
+      .add_option(
+          OPTION_DEVICE_USBID,
+          0,
+          "device-usbid",
+          "VENDOR:PRODUCT:VERSION",
+          "Changes the USB Id used for devices in the current slot"
+      )
+      .add_option(
+          OPTION_DEVICE_USBIDS,
+          0,
+          "device-usbids",
+          "DEVID=VENDOR:PRODUCT:VERSION,...",
+          "Changes the USB Id for the given devices"
+      )
+      .add_option(OPTION_UI_CLEAR, 0, "ui-clear", "", "Removes all existing uinput bindings")
+      .add_option(
+          OPTION_UI_BUTTONMAP,
+          0,
+          "ui-buttonmap",
+          "MAP",
+          "Changes the uinput events send when hitting a button "
+          "(example: X=BTN_Y,A=KEY_A)"
+      )
+      .add_option(
+          OPTION_UI_AXISMAP,
+          0,
+          "ui-axismap",
+          "MAP",
+          "Changes the uinput events send when moving a axis (example: "
+          "X1=ABS_X2)"
+      )
       .add_newline()
 
       .add_text("Axis Filter:")
-      .add_pseudo("  cal, calibration MIN:CENTER:MAX",
-                  "Set the calibration values for the axis")
+      .add_pseudo(
+          "  cal, calibration MIN:CENTER:MAX", "Set the calibration values for the axis"
+      )
       .add_pseudo("  sen, sensitivity:SENSITIVITY", "Set the axis sensitivity")
       .add_pseudo("  dead:VALUE, dead:MIN:CENTER:MAX", "Set the axis deadzone")
       .add_pseudo("  rel, relative:SPEED", "Turn axis into a relative-axis")
-      .add_pseudo("  resp, response:VALUES:...",
-                  "Set values of the response curve")
+      .add_pseudo("  resp, response:VALUES:...", "Set values of the response curve")
       .add_pseudo("  log:STRING", "Print axis value to stdout")
       .add_newline()
 
       .add_text("Button Filter:")
       .add_pseudo("  tog, toggle", "Turn button into a toggle button")
       .add_pseudo("  inv, invert", "Invert the button value")
-      .add_pseudo("  auto, autofire:RATE:DELAY",
-                  "Enable automatic button press repetition")
+      .add_pseudo("  auto, autofire:RATE:DELAY", "Enable automatic button press repetition")
       .add_pseudo("  log:STRING", "Print button value to stdout")
       .add_newline()
 
       .add_text("Modifier:")
-      .add_pseudo("  dpad-rotate=DEGREE",
-                  "Rotate the dpad by the given number of degree")
-      .add_pseudo("  dpad-restrictor=RESTRICTION",
-                  "Restrict dpad movment to 'x-axis', 'y-axis' or 'four-way'")
-      .add_pseudo("  4wayrest, four-way-restrictor=XAXIS:YAXIS",
-                  "Restrict the given stick to four directions")
-      .add_pseudo("  square, square-axis=XAXIS:YAXIS",
-                  "Convert the circular motion range of the given stick to a "
-                  "square one")
-      .add_pseudo("  rotate=XAXIS:YAXIS:DEGREE[:MIRROR]",
-                  "Rotate the given stick by DEGREE, optionally also mirror it")
+      .add_pseudo("  dpad-rotate=DEGREE", "Rotate the dpad by the given number of degree")
+      .add_pseudo(
+          "  dpad-restrictor=RESTRICTION",
+          "Restrict dpad movment to 'x-axis', 'y-axis' or 'four-way'"
+      )
+      .add_pseudo(
+          "  4wayrest, four-way-restrictor=XAXIS:YAXIS",
+          "Restrict the given stick to four directions"
+      )
+      .add_pseudo(
+          "  square, square-axis=XAXIS:YAXIS",
+          "Convert the circular motion range of the given stick to a "
+          "square one"
+      )
+      .add_pseudo(
+          "  rotate=XAXIS:YAXIS:DEGREE[:MIRROR]",
+          "Rotate the given stick by DEGREE, optionally also mirror it"
+      )
       .add_newline()
 
       .add_text("See README for more documentation and examples.")
       .add_text("Report bugs to Ingo Ruhnke <grumbel@gmail.com>");
 }
 
-void CommandLineParser::init_ini(Options* opts) {
+void CommandLineParser::init_ini(Options *opts) {
   m_ini.clear();
 
   m_ini.section("xboxdrv")("verbose", std::bind(&Options::set_verbose, opts),
@@ -522,96 +768,89 @@ void CommandLineParser::init_ini(Options* opts) {
       "pid-file", &opts->pid_file)("on-connect", &opts->on_connect)(
       "on-disconnect", &opts->on_disconnect);
 
-  m_ini.section("modifier",
-                std::bind(&CommandLineParser::set_modifier, this, _1, _2));
+  m_ini.section("modifier", std::bind(&CommandLineParser::set_modifier, this, _1, _2));
   m_ini.section(
-      "ui-buttonmap",
-      std::bind(&CommandLineParser::set_ui_buttonmap_helper, this, _1, _2));
+      "ui-buttonmap", std::bind(&CommandLineParser::set_ui_buttonmap_helper, this, _1, _2)
+  );
   m_ini.section(
-      "ui-axismap",
-      std::bind(&CommandLineParser::set_ui_axismap_helper, this, _1, _2));
+      "ui-axismap", std::bind(&CommandLineParser::set_ui_axismap_helper, this, _1, _2)
+  );
 
-  m_ini.section("buttonmap",
-                std::bind(&CommandLineParser::set_buttonmap, this, _1, _2));
-  m_ini.section("axismap",
-                std::bind(&CommandLineParser::set_axismap, this, _1, _2));
+  m_ini.section("buttonmap", std::bind(&CommandLineParser::set_buttonmap, this, _1, _2));
+  m_ini.section("axismap", std::bind(&CommandLineParser::set_axismap, this, _1, _2));
 
-  m_ini.section("autofire",
-                std::bind(&CommandLineParser::set_autofire, this, _1, _2));
-  m_ini.section("relative-axis",
-                std::bind(&CommandLineParser::set_relative_axis, this, _1, _2));
-  m_ini.section("calibration",
-                std::bind(&CommandLineParser::set_calibration, this, _1, _2));
+  m_ini.section("autofire", std::bind(&CommandLineParser::set_autofire, this, _1, _2));
   m_ini.section(
-      "axis-sensitivity",
-      std::bind(&CommandLineParser::set_axis_sensitivity, this, _1, _2));
-  m_ini.section("device-name",
-                std::bind(&CommandLineParser::set_device_name, this, _1, _2));
-  m_ini.section("device-usbid",
-                std::bind(&CommandLineParser::set_device_usbid, this, _1, _2));
+      "relative-axis", std::bind(&CommandLineParser::set_relative_axis, this, _1, _2)
+  );
+  m_ini.section("calibration", std::bind(&CommandLineParser::set_calibration, this, _1, _2));
+  m_ini.section(
+      "axis-sensitivity", std::bind(&CommandLineParser::set_axis_sensitivity, this, _1, _2)
+  );
+  m_ini.section("device-name", std::bind(&CommandLineParser::set_device_name, this, _1, _2));
+  m_ini.section("device-usbid", std::bind(&CommandLineParser::set_device_usbid, this, _1, _2));
 
   for (int controller = 0; controller <= 9; ++controller) {
     for (int config = 0; config <= 9; ++config) {
       m_ini.section(
           std::format("controller{:d}/config{:d}/modifier", controller, config),
-          std::bind(&CommandLineParser::set_modifier_n, this, controller,
-                    config, _1, _2));
-      m_ini.section(std::format("controller{:d}/config{:d}/ui-buttonmap",
-                                controller, config),
-                    std::bind(&CommandLineParser::set_ui_buttonmap_n, this,
-                              controller, config, _1, _2));
-      m_ini.section(std::format("controller{:d}/config{:d}/ui-axismap",
-                                controller, config),
-                    std::bind(&CommandLineParser::set_ui_axismap_n, this,
-                              controller, config, _1, _2));
+          std::bind(&CommandLineParser::set_modifier_n, this, controller, config, _1, _2)
+      );
+      m_ini.section(
+          std::format("controller{:d}/config{:d}/ui-buttonmap", controller, config),
+          std::bind(&CommandLineParser::set_ui_buttonmap_n, this, controller, config, _1, _2)
+      );
+      m_ini.section(
+          std::format("controller{:d}/config{:d}/ui-axismap", controller, config),
+          std::bind(&CommandLineParser::set_ui_axismap_n, this, controller, config, _1, _2)
+      );
 
-      m_ini.section(std::format("controller{:d}/config{:d}/buttonmap",
-                                controller, config),
-                    std::bind(&CommandLineParser::set_buttonmap_n, this,
-                              controller, config, _1, _2));
+      m_ini.section(
+          std::format("controller{:d}/config{:d}/buttonmap", controller, config),
+          std::bind(&CommandLineParser::set_buttonmap_n, this, controller, config, _1, _2)
+      );
       m_ini.section(
           std::format("controller{:d}/config{:d}/axismap", controller, config),
-          std::bind(&CommandLineParser::set_axismap_n, this, controller, config,
-                    _1, _2));
+          std::bind(&CommandLineParser::set_axismap_n, this, controller, config, _1, _2)
+      );
 
       m_ini.section(
           std::format("controller{:d}/config{:d}/autofire", controller, config),
-          std::bind(&CommandLineParser::set_autofire_n, this, controller,
-                    config, _1, _2));
-      m_ini.section(std::format("controller{:d}/config{:d}/relative-axis",
-                                controller, config),
-                    std::bind(&CommandLineParser::set_relative_axis_n, this,
-                              controller, config, _1, _2));
-      m_ini.section(std::format("controller{:d}/config{:d}/calibration",
-                                controller, config),
-                    std::bind(&CommandLineParser::set_calibration_n, this,
-                              controller, config, _1, _2));
-      m_ini.section(std::format("controller{:d}/config{:d}/axis-sensitivity",
-                                controller, config),
-                    std::bind(&CommandLineParser::set_axis_sensitivity_n, this,
-                              controller, config, _1, _2));
+          std::bind(&CommandLineParser::set_autofire_n, this, controller, config, _1, _2)
+      );
+      m_ini.section(
+          std::format("controller{:d}/config{:d}/relative-axis", controller, config),
+          std::bind(&CommandLineParser::set_relative_axis_n, this, controller, config, _1, _2)
+      );
+      m_ini.section(
+          std::format("controller{:d}/config{:d}/calibration", controller, config),
+          std::bind(&CommandLineParser::set_calibration_n, this, controller, config, _1, _2)
+      );
+      m_ini.section(
+          std::format("controller{:d}/config{:d}/axis-sensitivity", controller, config),
+          std::bind(
+              &CommandLineParser::set_axis_sensitivity_n, this, controller, config, _1, _2
+          )
+      );
     }
   }
 
-  m_ini.section("evdev-absmap",
-                std::bind(&CommandLineParser::set_evdev_absmap, this, _1, _2));
-  m_ini.section("evdev-keymap",
-                std::bind(&CommandLineParser::set_evdev_keymap, this, _1, _2));
+  m_ini.section("evdev-absmap", std::bind(&CommandLineParser::set_evdev_absmap, this, _1, _2));
+  m_ini.section("evdev-keymap", std::bind(&CommandLineParser::set_evdev_keymap, this, _1, _2));
 }
 
-void CommandLineParser::parse_args(int argc, char** argv, Options* options) {
-  Options& opts = *options;
+void CommandLineParser::parse_args(int argc, char **argv, Options *options) {
+  Options &opts = *options;
 
   init_ini(options);
   m_options = options;
 
   ArgParser::ParsedOptions parsed = m_argp.parse_args(argc, argv);
 
-  for (ArgParser::ParsedOptions::const_iterator i = parsed.begin();
-       i != parsed.end(); ++i) {
+  for (ArgParser::ParsedOptions::const_iterator i = parsed.begin(); i != parsed.end(); ++i) {
     try {
       apply_opt(*i, opts);
-    } catch (std::exception const& err) {
+    } catch (const std::exception &err) {
       std::ostringstream out;
       out << "error: invalid argument ";
       if (i->argument.empty()) {
@@ -627,8 +866,7 @@ void CommandLineParser::parse_args(int argc, char** argv, Options* options) {
   options->finish();
 }
 
-void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
-                                  Options& opts) {
+void CommandLineParser::apply_opt(const ArgParser::ParsedOption &opt, Options &opts) {
   switch (opt.key) {
     case OPTION_HELP:
       opts.mode = Options::PRINT_HELP;
@@ -710,13 +948,13 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
       break;
 
     case OPTION_RUMBLE:
-      if (sscanf(opt.argument.c_str(), "%d,%d", &opts.rumble_l,
-                 &opts.rumble_r) == 2) {
+      if (sscanf(opt.argument.c_str(), "%d,%d", &opts.rumble_l, &opts.rumble_r) == 2) {
         opts.rumble_l = std::max(0, std::min(255, opts.rumble_l));
         opts.rumble_r = std::max(0, std::min(255, opts.rumble_r));
       } else {
-        raise_exception(std::runtime_error,
-                        opt.option << " expected an argument in form INT,INT");
+        raise_exception(
+            std::runtime_error, opt.option << " expected an argument in form INT,INT"
+        );
       }
       break;
 
@@ -768,18 +1006,20 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
       } else if (opt.argument == "generic-usb") {
         opts.gamepad_type = GAMEPAD_GENERIC_USB;
       } else {
-        raise_exception(std::runtime_error,
-                        "unknown type: " << opt.argument << '\n'
-                                         << "Possible types are:\n"
-                                         << " * xbox\n"
-                                         << " * xbox-mat\n"
-                                         << " * xbox360\n"
-                                         << " * xbox360-guitar\n"
-                                         << " * xbox360-wireless\n"
-                                         << " * firestorm\n"
-                                         << " * firestorm-vsb\n"
-                                         << " * saitek-p2500\n"
-                                         << " * generic-usb\n");
+        raise_exception(
+            std::runtime_error,
+            "unknown type: " << opt.argument << '\n'
+                             << "Possible types are:\n"
+                             << " * xbox\n"
+                             << " * xbox-mat\n"
+                             << " * xbox360\n"
+                             << " * xbox360-guitar\n"
+                             << " * xbox360-wireless\n"
+                             << " * firestorm\n"
+                             << " * firestorm-vsb\n"
+                             << " * saitek-p2500\n"
+                             << " * generic-usb\n"
+        );
       }
       break;
 
@@ -820,20 +1060,20 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
 
     case OPTION_MODIFIER:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_modifier, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_modifier, this, _1, _2)
+      );
       break;
 
     case OPTION_BUTTONMAP:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_buttonmap, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_buttonmap, this, _1, _2)
+      );
       break;
 
     case OPTION_AXISMAP:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_axismap, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_axismap, this, _1, _2)
+      );
       break;
 
     case OPTION_DEVICE_USBID:
@@ -842,8 +1082,8 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
 
     case OPTION_DEVICE_USBIDS:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_device_usbid, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_device_usbid, this, _1, _2)
+      );
       break;
 
     case OPTION_DEVICE_NAME:
@@ -852,8 +1092,8 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
 
     case OPTION_DEVICE_NAMES:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_device_name, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_device_name, this, _1, _2)
+      );
       break;
 
     case OPTION_NEXT_CONFIG:
@@ -882,14 +1122,14 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
 
     case OPTION_UI_AXISMAP:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_ui_axismap_helper, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_ui_axismap_helper, this, _1, _2)
+      );
       break;
 
     case OPTION_UI_BUTTONMAP:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_ui_buttonmap_helper, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_ui_buttonmap_helper, this, _1, _2)
+      );
       break;
 
     case OPTION_MOUSE:
@@ -918,14 +1158,14 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
 
     case OPTION_EVDEV_ABSMAP:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_evdev_absmap, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_evdev_absmap, this, _1, _2)
+      );
       break;
 
     case OPTION_EVDEV_KEYMAP:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_evdev_keymap, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_evdev_keymap, this, _1, _2)
+      );
       break;
 
     case OPTION_ID:
@@ -981,26 +1221,26 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
 
     case OPTION_AUTOFIRE:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_autofire, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_autofire, this, _1, _2)
+      );
       break;
 
     case OPTION_CALIBRATION:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_calibration, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_calibration, this, _1, _2)
+      );
       break;
 
     case OPTION_RELATIVE_AXIS:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_relative_axis, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_relative_axis, this, _1, _2)
+      );
       break;
 
     case OPTION_AXIS_SENSITIVITY:
       process_name_value_string(
-          opt.argument,
-          std::bind(&CommandLineParser::set_axis_sensitivity, this, _1, _2));
+          opt.argument, std::bind(&CommandLineParser::set_axis_sensitivity, this, _1, _2)
+      );
       break;
 
     case OPTION_FOUR_WAY_RESTRICTOR:
@@ -1046,27 +1286,28 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
     case OPTION_DEVICE_BY_ID: {
       unsigned int tmp_product_id;
       unsigned int tmp_vendor_id;
-      if (sscanf(opt.argument.c_str(), "%x:%x", &tmp_vendor_id,
-                 &tmp_product_id) == 2) {
+      if (sscanf(opt.argument.c_str(), "%x:%x", &tmp_vendor_id, &tmp_product_id) == 2) {
         opts.vendor_id = tmp_vendor_id;
         opts.product_id = tmp_product_id;
       } else {
-        raise_exception(std::runtime_error,
-                        opt.option << " expected an argument in form "
-                                      "PRODUCT:VENDOR (i.e. 046d:c626)");
+        raise_exception(
+            std::runtime_error,
+            opt.option << " expected an argument in form "
+                          "PRODUCT:VENDOR (i.e. 046d:c626)"
+        );
       }
       break;
     }
 
     case OPTION_DEVICE_BY_PATH: {
-      char busid[4] = {'\0'};
-      char devid[4] = {'\0'};
+      char busid[4] = { '\0' };
+      char devid[4] = { '\0' };
 
       if (sscanf(opt.argument.c_str(), "%3s:%3s", busid, devid) != 2) {
         raise_exception(
             std::runtime_error,
-            opt.option
-                << " expected an argument in form BUS:DEV (i.e. 006:003)");
+            opt.option << " expected an argument in form BUS:DEV (i.e. 006:003)"
+        );
       } else {
         opts.busid = busid;
         opts.devid = devid;
@@ -1133,13 +1374,14 @@ void CommandLineParser::apply_opt(ArgParser::ParsedOption const& opt,
       break;
 
     default:
-      raise_exception(std::runtime_error,
-                      "unknown command line option: " << opt.option);
+      raise_exception(std::runtime_error, "unknown command line option: " << opt.option);
       break;
   }
 }
 
-void CommandLineParser::print_help() const { m_argp.print_help(std::cout); }
+void CommandLineParser::print_help() const {
+  m_argp.print_help(std::cout);
+}
 
 void CommandLineParser::print_led_help() const {
   std::cout << "Possible values for '--led VALUE' are:\n\n"
@@ -1173,33 +1415,34 @@ void CommandLineParser::print_version() const {
             << "conditions; see the file COPYING for details.\n";
 }
 
-void CommandLineParser::set_modifier(const std::string& name,
-                                     const std::string& value) {
+void CommandLineParser::set_modifier(const std::string &name, const std::string &value) {
   m_options->get_controller_options().modifier.push_back(
-      ModifierPtr(Modifier::from_string(name, value)));
+      ModifierPtr(Modifier::from_string(name, value))
+  );
 }
 
-void CommandLineParser::set_device_usbid(const std::string& name,
-                                         const std::string& value) {
+void CommandLineParser::set_device_usbid(const std::string &name, const std::string &value) {
   uint32_t devid = UInput::parse_device_id(name);
   m_options->uinput_device_usbids[devid] = UInput::parse_input_id(value);
 }
 
-void CommandLineParser::set_device_name(const std::string& name,
-                                        const std::string& value) {
+void CommandLineParser::set_device_name(const std::string &name, const std::string &value) {
   uint32_t devid = UInput::parse_device_id(name);
   m_options->uinput_device_names[devid] = value;
 }
 
-void CommandLineParser::set_ui_buttonmap_helper(const std::string& name,
-                                                const std::string& value) {
-  set_ui_buttonmap(m_options->get_controller_options().uinput.get_btn_map(),
-                   name, value);
+void CommandLineParser::set_ui_buttonmap_helper(
+    const std::string &name,
+    const std::string &value
+) {
+  set_ui_buttonmap(m_options->get_controller_options().uinput.get_btn_map(), name, value);
 }
 
-void CommandLineParser::set_ui_buttonmap(ButtonMap& btn_map,
-                                         const std::string& name,
-                                         const std::string& value) {
+void CommandLineParser::set_ui_buttonmap(
+    ButtonMap &btn_map,
+    const std::string &name,
+    const std::string &value
+) {
   ButtonEventPtr event;
 
   XboxButton shift = XBOX_BTN_UNKNOWN;
@@ -1208,7 +1451,7 @@ void CommandLineParser::set_ui_buttonmap(ButtonMap& btn_map,
 
   std::vector<std::string> tokens = string_split(name, "^");
   int idx = 0;
-  for (auto& t : tokens) {
+  for (auto &t : tokens) {
     switch (idx) {
       case 0:  // shift+key portion
       {
@@ -1242,15 +1485,18 @@ void CommandLineParser::set_ui_buttonmap(ButtonMap& btn_map,
   }
 }
 
-void CommandLineParser::set_ui_axismap_helper(const std::string& name,
-                                              const std::string& value) {
-  set_ui_axismap(m_options->get_controller_options().uinput.get_axis_map(),
-                 name, value);
+void CommandLineParser::set_ui_axismap_helper(
+    const std::string &name,
+    const std::string &value
+) {
+  set_ui_axismap(m_options->get_controller_options().uinput.get_axis_map(), name, value);
 }
 
-void CommandLineParser::set_ui_axismap(AxisMap& axis_map,
-                                       const std::string& name,
-                                       const std::string& value) {
+void CommandLineParser::set_ui_axismap(
+    AxisMap &axis_map,
+    const std::string &name,
+    const std::string &value
+) {
   AxisEventPtr event;
 
   XboxButton shift = XBOX_BTN_UNKNOWN;
@@ -1259,7 +1505,7 @@ void CommandLineParser::set_ui_axismap(AxisMap& axis_map,
 
   std::vector<std::string> tokens = string_split(name, "^");
   int idx = 0;
-  for (auto& t : tokens) {
+  for (auto &t : tokens) {
     switch (idx) {
       case 0:  // shift+key portion
       {
@@ -1297,83 +1543,73 @@ void CommandLineParser::set_ui_axismap(AxisMap& axis_map,
   }
 }
 
-void CommandLineParser::set_axismap(const std::string& name,
-                                    const std::string& value) {
-  m_options->get_controller_options().axismap->add(
-      AxisMapping::from_string(name, value));
+void CommandLineParser::set_axismap(const std::string &name, const std::string &value) {
+  m_options->get_controller_options().axismap->add(AxisMapping::from_string(name, value));
 }
 
-void CommandLineParser::set_buttonmap(const std::string& name,
-                                      const std::string& value) {
-  m_options->get_controller_options().buttonmap->add(
-      ButtonMapping::from_string(name, value));
+void CommandLineParser::set_buttonmap(const std::string &name, const std::string &value) {
+  m_options->get_controller_options().buttonmap->add(ButtonMapping::from_string(name, value));
 }
 
-void CommandLineParser::set_evdev_absmap(const std::string& name,
-                                         const std::string& value) {
+void CommandLineParser::set_evdev_absmap(const std::string &name, const std::string &value) {
   if (!name.empty()) {
     XboxAxis axis = string2axis(value);
 
     switch (*name.rbegin()) {
       case '-':
-        m_options->evdev_absmap.bind_minus(
-            str2abs(name.substr(0, name.length() - 1)), axis);
+        m_options->evdev_absmap.bind_minus(str2abs(name.substr(0, name.length() - 1)), axis);
         break;
       case '+':
-        m_options->evdev_absmap.bind_plus(
-            str2abs(name.substr(0, name.length() - 1)), axis);
+        m_options->evdev_absmap.bind_plus(str2abs(name.substr(0, name.length() - 1)), axis);
         break;
       default:
         m_options->evdev_absmap.bind_both(str2abs(name), axis);
         break;
     }
   } else {
-    throw std::runtime_error("invalid evdev-absmap argument: " + name + "=" +
-                             value);
+    throw std::runtime_error("invalid evdev-absmap argument: " + name + "=" + value);
   }
 }
 
-void CommandLineParser::set_evdev_keymap(const std::string& name,
-                                         const std::string& value) {
+void CommandLineParser::set_evdev_keymap(const std::string &name, const std::string &value) {
   m_options->evdev_keymap[str2key(name)] = string2btn(value);
 }
 
-void CommandLineParser::set_relative_axis(const std::string& name,
-                                          const std::string& value) {
+void CommandLineParser::set_relative_axis(const std::string &name, const std::string &value) {
   m_options->get_controller_options().relative_axis_map[string2axis(name)] =
       AxisFilterPtr(new RelativeAxisFilter(std::stoi(value)));
 }
 
-void CommandLineParser::set_autofire(const std::string& name,
-                                     const std::string& value) {
+void CommandLineParser::set_autofire(const std::string &name, const std::string &value) {
   m_options->get_controller_options().autofire_map[string2btn(name)] =
       ButtonFilterPtr(new AutofireButtonFilter(std::stoi(value), 0));
 }
 
-void CommandLineParser::set_calibration(const std::string& name,
-                                        const std::string& value) {
+void CommandLineParser::set_calibration(const std::string &name, const std::string &value) {
   std::vector<std::string> args = string_split(value, ":");
 
   if (args.size() != 3) {
     throw std::runtime_error("calibration requires MIN:CENTER:MAX as argument");
   } else {
-    m_options->get_controller_options().calibration_map[string2axis(name)] =
-        AxisFilterPtr(new CalibrationAxisFilter(
-            std::stoi(args[0]), std::stoi(args[1]), std::stoi(args[2])));
+    m_options->get_controller_options().calibration_map[string2axis(name)] = AxisFilterPtr(
+        new CalibrationAxisFilter(std::stoi(args[0]), std::stoi(args[1]), std::stoi(args[2]))
+    );
   }
 }
 
-void CommandLineParser::set_axis_sensitivity(const std::string& name,
-                                             const std::string& value) {
+void CommandLineParser::set_axis_sensitivity(
+    const std::string &name,
+    const std::string &value
+) {
   m_options->get_controller_options().sensitivity_map[string2axis(name)] =
       AxisFilterPtr(new SensitivityAxisFilter(std::stof(value)));
 }
 
-void CommandLineParser::set_deadzone(const std::string& value) {
+void CommandLineParser::set_deadzone(const std::string &value) {
   m_options->get_controller_options().deadzone = to_number(32767, value);
 }
 
-void CommandLineParser::set_deadzone_trigger(const std::string& value) {
+void CommandLineParser::set_deadzone_trigger(const std::string &value) {
   m_options->get_controller_options().deadzone_trigger = to_number(255, value);
 }
 
@@ -1385,25 +1621,28 @@ void CommandLineParser::set_four_way_restrictor() {
   m_options->get_controller_options().four_way_restrictor = true;
 }
 
-void CommandLineParser::set_dpad_rotation(const std::string& value) {
+void CommandLineParser::set_dpad_rotation(const std::string &value) {
   int degree = std::stoi(value);
   degree /= 45;
   degree %= 8;
-  if (degree < 0) degree += 8;
+  if (degree < 0) {
+    degree += 8;
+  }
 
   m_options->get_controller_options().dpad_rotation = degree;
 }
 
-void CommandLineParser::read_buildin_config_file(const std::string& filename,
-                                                 const char* data,
-                                                 unsigned int data_len) {
+void CommandLineParser::read_buildin_config_file(
+    const std::string &filename,
+    const char *data,
+    unsigned int data_len
+) {
   log_info("reading 'buildin://" << filename << "'");
 
   std::string str(data, data_len);
   std::istringstream in(str);
   if (!in) {
-    raise_exception(std::runtime_error,
-                    "couldn't open: buildin://" << filename);
+    raise_exception(std::runtime_error, "couldn't open: buildin://" << filename);
   } else {
     INISchemaBuilder builder(m_ini);
     INIParser parser(in, builder, filename);
@@ -1411,7 +1650,7 @@ void CommandLineParser::read_buildin_config_file(const std::string& filename,
   }
 }
 
-void CommandLineParser::read_config_file(const std::string& filename) {
+void CommandLineParser::read_config_file(const std::string &filename) {
   log_info("reading '" << filename << "'");
 
   std::ifstream in(filename.c_str());
@@ -1428,79 +1667,108 @@ void CommandLineParser::read_config_file(const std::string& filename) {
   }
 }
 
-void CommandLineParser::read_alt_config_file(const std::string& filename) {
+void CommandLineParser::read_alt_config_file(const std::string &filename) {
   m_options->next_config();
   read_config_file(filename);
 }
 
-void CommandLineParser::set_ui_buttonmap_n(int controller, int config,
-                                           const std::string& name,
-                                           const std::string& value) {
-  set_ui_buttonmap(m_options->controller_slots[controller]
-                       .get_options(config)
-                       .uinput.get_btn_map(),
-                   name, value);
+void CommandLineParser::set_ui_buttonmap_n(
+    int controller,
+    int config,
+    const std::string &name,
+    const std::string &value
+) {
+  set_ui_buttonmap(
+      m_options->controller_slots[controller].get_options(config).uinput.get_btn_map(),
+      name,
+      value
+  );
 }
 
-void CommandLineParser::set_ui_axismap_n(int controller, int config,
-                                         const std::string& name,
-                                         const std::string& value) {
-  set_ui_axismap(m_options->controller_slots[controller]
-                     .get_options(config)
-                     .uinput.get_axis_map(),
-                 name, value);
+void CommandLineParser::set_ui_axismap_n(
+    int controller,
+    int config,
+    const std::string &name,
+    const std::string &value
+) {
+  set_ui_axismap(
+      m_options->controller_slots[controller].get_options(config).uinput.get_axis_map(),
+      name,
+      value
+  );
 }
 
-void CommandLineParser::set_modifier_n(int controller, int config,
-                                       const std::string& name,
-                                       const std::string& value) {
-  m_options->controller_slots[controller]
-      .get_options(config)
-      .modifier.push_back(ModifierPtr(Modifier::from_string(name, value)));
+void CommandLineParser::set_modifier_n(
+    int controller,
+    int config,
+    const std::string &name,
+    const std::string &value
+) {
+  m_options->controller_slots[controller].get_options(config).modifier.push_back(
+      ModifierPtr(Modifier::from_string(name, value))
+  );
 }
 
-void CommandLineParser::set_axismap_n(int controller, int config,
-                                      const std::string& name,
-                                      const std::string& value) {
+void CommandLineParser::set_axismap_n(
+    int controller,
+    int config,
+    const std::string &name,
+    const std::string &value
+) {
   m_options->controller_slots[controller].get_options(config).axismap->add(
-      AxisMapping::from_string(name, value));
+      AxisMapping::from_string(name, value)
+  );
 }
 
-void CommandLineParser::set_buttonmap_n(int controller, int config,
-                                        const std::string& name,
-                                        const std::string& value) {
+void CommandLineParser::set_buttonmap_n(
+    int controller,
+    int config,
+    const std::string &name,
+    const std::string &value
+) {
   m_options->controller_slots[controller].get_options(config).buttonmap->add(
-      ButtonMapping::from_string(name, value));
+      ButtonMapping::from_string(name, value)
+  );
 }
 
-void CommandLineParser::set_relative_axis_n(int controller, int config,
-                                            const std::string& name,
-                                            const std::string& value) {
+void CommandLineParser::set_relative_axis_n(
+    int controller,
+    int config,
+    const std::string &name,
+    const std::string &value
+) {
   m_options->controller_slots[controller]
       .get_options(config)
       .relative_axis_map[string2axis(name)] =
       AxisFilterPtr(new RelativeAxisFilter(std::stoi(value)));
 }
 
-void CommandLineParser::set_autofire_n(int controller, int config,
-                                       const std::string& name,
-                                       const std::string& value) {
-  m_options->controller_slots[controller]
-      .get_options(config)
-      .autofire_map[string2btn(name)] =
+void CommandLineParser::set_autofire_n(
+    int controller,
+    int config,
+    const std::string &name,
+    const std::string &value
+) {
+  m_options->controller_slots[controller].get_options(config).autofire_map[string2btn(name)] =
       ButtonFilterPtr(new AutofireButtonFilter(std::stoi(value), 0));
 }
 
-void CommandLineParser::set_calibration_n(int controller, int config,
-                                          const std::string& name,
-                                          const std::string& value) {
+void CommandLineParser::set_calibration_n(
+    int controller,
+    int config,
+    const std::string &name,
+    const std::string &value
+) {
   // FIXME: not implemented
   assert(!"implement me");
 }
 
-void CommandLineParser::set_axis_sensitivity_n(int controller, int config,
-                                               const std::string& name,
-                                               const std::string& value) {
+void CommandLineParser::set_axis_sensitivity_n(
+    int controller,
+    int config,
+    const std::string &name,
+    const std::string &value
+) {
   m_options->controller_slots[controller]
       .get_options(config)
       .sensitivity_map[string2axis(name)] =
@@ -1508,14 +1776,15 @@ void CommandLineParser::set_axis_sensitivity_n(int controller, int config,
 }
 
 void CommandLineParser::mouse() {
-  read_buildin_config_file("examples/mouse.xboxdrv",
-                           xboxdrv_vfs::examples_mouse_xboxdrv,
-                           sizeof(xboxdrv_vfs::examples_mouse_xboxdrv));
+  read_buildin_config_file(
+      "examples/mouse.xboxdrv",
+      xboxdrv_vfs::examples_mouse_xboxdrv,
+      sizeof(xboxdrv_vfs::examples_mouse_xboxdrv)
+  );
 }
 
-void CommandLineParser::set_generic_usb_spec(const std::string& spec) {
-  m_options->m_generic_usb_specs.push_back(
-      Options::GenericUSBSpec::from_string(spec));
+void CommandLineParser::set_generic_usb_spec(const std::string &spec) {
+  m_options->m_generic_usb_specs.push_back(Options::GenericUSBSpec::from_string(spec));
 }
 
 std::string CommandLineParser::get_directory_context() const {

@@ -8,11 +8,11 @@
 
 class INIParserTestBuilder : public INIBuilder {
  public:
-  void send_section(const std::string& section) {
+  void send_section(const std::string &section) {
     std::cout << "[" << section << "]" << std::endl;
   }
 
-  void send_pair(const std::string& name, const std::string& value) {
+  void send_pair(const std::string &name, const std::string &value) {
     std::cout << "\"" << name << "\" = \"" << value << "\"" << std::endl;
   }
 };
@@ -30,14 +30,15 @@ int main() try {
       "  name#empty \n"
       "  name#empty =\n"
       "\"name#not-empty\" = \"value#foo\" # comment\n"
-      "  foo    bar     =       oing    # foo");
+      "  foo    bar     =       oing    # foo"
+  );
 
   INIParserTestBuilder builder;
   INIParser parser(in, builder, "test");
   parser.run();
 
   return 0;
-} catch (const std::exception& err) {
+} catch (const std::exception &err) {
   std::cout << "exception: " << err.what() << std::endl;
 }
 

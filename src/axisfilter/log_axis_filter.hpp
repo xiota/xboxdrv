@@ -25,10 +25,10 @@
 
 class LogAxisFilter : public AxisFilter {
  public:
-  static LogAxisFilter* from_string(const std::string& str);
+  static LogAxisFilter *from_string(const std::string &str);
 
  public:
-  LogAxisFilter(const std::string& name);
+  LogAxisFilter(const std::string &name);
 
   int filter(int value, int min, int max);
   std::string str() const;

@@ -29,14 +29,12 @@
 #include "usb_helper.hpp"
 #include "xboxmsg.hpp"
 
-Xbox360WirelessController::Xbox360WirelessController(libusb_device* dev,
-                                                     int controller_id,
-                                                     bool try_detach)
-    : USBController(dev),
-      m_endpoint(),
-      m_interface(),
-      m_battery_status(),
-      m_serial() {
+Xbox360WirelessController::Xbox360WirelessController(
+    libusb_device *dev,
+    int controller_id,
+    bool try_detach
+)
+    : USBController(dev), m_endpoint(), m_interface(), m_battery_status(), m_serial() {
   // FIXME: A little bit of a hack
   m_is_active = false;
 
@@ -55,23 +53,21 @@ Xbox360WirelessController::~Xbox360WirelessController() {}
 void Xbox360WirelessController::set_rumble_real(uint8_t left, uint8_t right) {
   //                                       +-- typo? might be 0x0c, i.e. length
   //                                       v
-  uint8_t rumblecmd[] = {0x00,  0x01, 0x0f, 0xc0, 0x00, left,
-                         right, 0x00, 0x00, 0x00, 0x00, 0x00};
+  uint8_t rumblecmd[] = { 0x00,  0x01, 0x0f, 0xc0, 0x00, left,
+                          right, 0x00, 0x00, 0x00, 0x00, 0x00 };
   usb_write(m_endpoint, rumblecmd, sizeof(rumblecmd));
 }
 
 void Xbox360WirelessController::set_led_real(uint8_t status) {
   //                                +--- Why not just status?
   //                                v
-  uint8_t ledcmd[] = {
-      0x00, 0x00, 0x08, static_cast<uint8_t>(0x40 + (status % 0x0e)),
-      0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00};
+  uint8_t ledcmd[] = { 0x00, 0x00, 0x08, static_cast<uint8_t>(0x40 + (status % 0x0e)),
+                       0x00, 0x00, 0x00, 0x00,
+                       0x00, 0x00, 0x00, 0x00 };
   usb_write(m_endpoint, ledcmd, sizeof(ledcmd));
 }
 
-bool Xbox360WirelessController::parse(uint8_t* data, int len,
-                                      XboxGenericMsg* msg_out) {
+bool Xbox360WirelessController::parse(uint8_t *data, int len, XboxGenericMsg *msg_out) {
   if (len == 0) {
     return false;
   } else {
@@ -101,20 +97,25 @@ bool Xbox360WirelessController::parse(uint8_t* data, int len,
 
       if (data[0] == 0x00 && data[1] == 0x0f && data[2] == 0x00 &&
           data[3] == 0xf0) {  // Initial Announc Message
-        m_serial =
-            std::format("{:#2x}:{:#2x}:{:#2x}:{:#2x}:{:#2x}:{:#2x}:{:#2x}",
-                        int(data[7]), int(data[8]), int(data[9]), int(data[10]),
-                        int(data[11]), int(data[12]), int(data[13]));
+        m_serial = std::format(
+            "{:#2x}:{:#2x}:{:#2x}:{:#2x}:{:#2x}:{:#2x}:{:#2x}",
+            int(data[7]),
+            int(data[8]),
+            int(data[9]),
+            int(data[10]),
+            int(data[11]),
+            int(data[12]),
+            int(data[13])
+        );
         m_battery_status = data[17];
         log_info("Serial: " << m_serial);
         log_info("Battery Status: " << m_battery_status);
-      } else if (data[0] == 0x00 && data[1] == 0x01 && data[2] == 0x00 &&
-                 data[3] == 0xf0 && data[4] == 0x00 &&
-                 data[5] == 0x13) {  // Event message
+      } else if (data[0] == 0x00 && data[1] == 0x01 && data[2] == 0x00 && data[3] == 0xf0 &&
+                 data[4] == 0x00 && data[5] == 0x13) {  // Event message
         msg_out->type = XBOX_MSG_XBOX360;
-        Xbox360Msg& msg = msg_out->xbox360;
+        Xbox360Msg &msg = msg_out->xbox360;
 
-        uint8_t* ptr = data + 4;
+        uint8_t *ptr = data + 4;
 
         msg.type = ptr[0];
         msg.length = ptr[1];
@@ -156,8 +157,7 @@ bool Xbox360WirelessController::parse(uint8_t* data, int len,
                  data[3] == 0x13) {  // Battery status
         m_battery_status = data[4];
         log_info("battery status: " << m_battery_status);
-      } else if (data[0] == 0x00 && data[1] == 0x00 && data[2] == 0x00 &&
-                 data[3] == 0xf0) {
+      } else if (data[0] == 0x00 && data[1] == 0x00 && data[2] == 0x00 && data[3] == 0xf0) {
         // 0x00 0x00 0x00 0xf0 0x00 ... is send after each button
         // press, doesn't seem to contain any information
       } else {

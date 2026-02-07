@@ -31,8 +31,7 @@
 USBSubsystem::USBSubsystem() : m_usb_gsource() {
   int ret = libusb_init(NULL);
   if (ret != LIBUSB_SUCCESS) {
-    raise_exception(std::runtime_error,
-                    "libusb_init() failed: " << usb_strerror(ret));
+    raise_exception(std::runtime_error, "libusb_init() failed: " << usb_strerror(ret));
   }
 
   m_usb_gsource.reset(new USBGSource);
@@ -44,18 +43,22 @@ USBSubsystem::~USBSubsystem() {
   libusb_exit(NULL);
 }
 
-void USBSubsystem::find_controller(libusb_device** dev, XPadDevice& dev_type,
-                                   const Options& opts) {
+void USBSubsystem::find_controller(
+    libusb_device **dev,
+    XPadDevice &dev_type,
+    const Options &opts
+) {
   if (opts.busid[0] != '\0' && opts.devid[0] != '\0') {
     if (opts.gamepad_type == GAMEPAD_UNKNOWN) {
       throw std::runtime_error(
           "--device-by-path BUS:DEV option must be used in combination with "
-          "--type TYPE option");
+          "--type TYPE option"
+      );
     } else {
       if (!find_controller_by_path(opts.busid, opts.devid, dev)) {
-        raise_exception(std::runtime_error, "couldn't find device "
-                                                << opts.busid << ":"
-                                                << opts.devid);
+        raise_exception(
+            std::runtime_error, "couldn't find device " << opts.busid << ":" << opts.devid
+        );
       } else {
         dev_type.type = opts.gamepad_type;
         dev_type.name = "unknown";
@@ -70,13 +73,16 @@ void USBSubsystem::find_controller(libusb_device** dev, XPadDevice& dev_type,
     if (opts.gamepad_type == GAMEPAD_UNKNOWN) {
       throw std::runtime_error(
           "--device-by-id VENDOR:PRODUCT option must be used in combination "
-          "with --type TYPE option");
+          "with --type TYPE option"
+      );
     } else {
-      if (!find_controller_by_id(opts.controller_id, opts.vendor_id,
-                                 opts.product_id, dev)) {
-        raise_exception(std::runtime_error,
-                        std::format("couldn't find device with {:#04x}:{:#04x}",
-                                    opts.vendor_id, opts.product_id));
+      if (!find_controller_by_id(opts.controller_id, opts.vendor_id, opts.product_id, dev)) {
+        raise_exception(
+            std::runtime_error,
+            std::format(
+                "couldn't find device with {:#04x}:{:#04x}", opts.vendor_id, opts.product_id
+            )
+        );
       } else {
         dev_type.type = opts.gamepad_type;
         dev_type.idVendor = opts.vendor_id;
@@ -91,20 +97,21 @@ void USBSubsystem::find_controller(libusb_device** dev, XPadDevice& dev_type,
   }
 }
 
-bool USBSubsystem::find_controller_by_path(const std::string& busid_str,
-                                           const std::string& devid_str,
-                                           libusb_device** xbox_device) {
+bool USBSubsystem::find_controller_by_path(
+    const std::string &busid_str,
+    const std::string &devid_str,
+    libusb_device **xbox_device
+) {
   int busid = std::stoi(busid_str);
   int devid = std::stoi(devid_str);
 
-  libusb_device** list;
+  libusb_device **list;
   ssize_t num_devices = libusb_get_device_list(NULL, &list);
 
   for (ssize_t dev_it = 0; dev_it < num_devices; ++dev_it) {
-    libusb_device* dev = list[dev_it];
+    libusb_device *dev = list[dev_it];
 
-    if (libusb_get_bus_number(dev) == busid &&
-        libusb_get_device_address(dev) == devid) {
+    if (libusb_get_bus_number(dev) == busid && libusb_get_device_address(dev) == devid) {
       *xbox_device = dev;
 
       // incrementing ref count, user must call unref
@@ -118,14 +125,18 @@ bool USBSubsystem::find_controller_by_path(const std::string& busid_str,
   return false;
 }
 
-bool USBSubsystem::find_controller_by_id(int id, int vendor_id, int product_id,
-                                         libusb_device** xbox_device) {
-  libusb_device** list;
+bool USBSubsystem::find_controller_by_id(
+    int id,
+    int vendor_id,
+    int product_id,
+    libusb_device **xbox_device
+) {
+  libusb_device **list;
   ssize_t num_devices = libusb_get_device_list(NULL, &list);
 
   int id_count = 0;
   for (ssize_t dev_it = 0; dev_it < num_devices; ++dev_it) {
-    libusb_device* dev = list[dev_it];
+    libusb_device *dev = list[dev_it];
     libusb_device_descriptor desc;
 
     int ret = libusb_get_device_descriptor(dev, &desc);
@@ -150,14 +161,17 @@ bool USBSubsystem::find_controller_by_id(int id, int vendor_id, int product_id,
   return false;
 }
 
-bool USBSubsystem::find_xbox360_controller(int id, libusb_device** xbox_device,
-                                           XPadDevice* type) {
-  libusb_device** list;
+bool USBSubsystem::find_xbox360_controller(
+    int id,
+    libusb_device **xbox_device,
+    XPadDevice *type
+) {
+  libusb_device **list;
   ssize_t num_devices = libusb_get_device_list(NULL, &list);
 
   int id_count = 0;
   for (ssize_t dev_it = 0; dev_it < num_devices; ++dev_it) {
-    libusb_device* dev = list[dev_it];
+    libusb_device *dev = list[dev_it];
     libusb_device_descriptor desc;
 
     int ret = libusb_get_device_descriptor(dev, &desc);

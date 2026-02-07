@@ -28,26 +28,26 @@
 
 class Headset {
  private:
-  libusb_device_handle* m_handle;
+  libusb_device_handle *m_handle;
   std::shared_ptr<USBInterface> m_interface;
 
   std::shared_ptr<std::ofstream> m_fout;
   std::shared_ptr<std::ifstream> m_fin;
 
  public:
-  Headset(libusb_device_handle* handle, bool debug);
+  Headset(libusb_device_handle *handle, bool debug);
   ~Headset();
 
-  void play_file(const std::string& play_filename);
-  void record_file(const std::string& dump_filename);
+  void play_file(const std::string &play_filename);
+  void record_file(const std::string &dump_filename);
 
  private:
-  bool send_data(libusb_transfer* transfer);
-  bool receive_data(uint8_t* data, int len);
+  bool send_data(libusb_transfer *transfer);
+  bool receive_data(uint8_t *data, int len);
 
  private:
-  Headset(const Headset&);
-  Headset& operator=(const Headset&);
+  Headset(const Headset &);
+  Headset &operator=(const Headset &);
 };
 
 #endif

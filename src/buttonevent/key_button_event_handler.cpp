@@ -27,15 +27,14 @@
 #include "helper.hpp"
 #include "uinput.hpp"
 
-KeyButtonEventHandler* KeyButtonEventHandler::from_string(
-    const std::string& str) {
+KeyButtonEventHandler *KeyButtonEventHandler::from_string(const std::string &str) {
   // std::cout << " KeyButtonEventHandler::from_string: " << str << std::endl;
 
   std::unique_ptr<KeyButtonEventHandler> ev;
 
   std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
-  for (auto& i : tokens) {
+  for (auto &i : tokens) {
     switch (idx) {
       case 0: {
         ev.reset(new KeyButtonEventHandler());
@@ -64,11 +63,7 @@ KeyButtonEventHandler* KeyButtonEventHandler::from_string(
 }
 
 KeyButtonEventHandler::KeyButtonEventHandler()
-    : m_state(false),
-      m_codes(),
-      m_secondary_codes(),
-      m_hold_threshold(0),
-      m_hold_counter(0) {}
+    : m_state(false), m_codes(), m_secondary_codes(), m_hold_threshold(0), m_hold_counter(0) {}
 
 KeyButtonEventHandler::KeyButtonEventHandler(int device_id, int code)
     : m_state(false),
@@ -77,7 +72,7 @@ KeyButtonEventHandler::KeyButtonEventHandler(int device_id, int code)
       m_hold_threshold(0),
       m_hold_counter(0) {}
 
-void KeyButtonEventHandler::init(UInput& uinput, int slot, bool extra_devices) {
+void KeyButtonEventHandler::init(UInput &uinput, int slot, bool extra_devices) {
   m_codes.init(uinput, slot, extra_devices);
 
   if (m_hold_threshold) {
@@ -85,7 +80,7 @@ void KeyButtonEventHandler::init(UInput& uinput, int slot, bool extra_devices) {
   }
 }
 
-void KeyButtonEventHandler::send(UInput& uinput, bool value) {
+void KeyButtonEventHandler::send(UInput &uinput, bool value) {
   if (m_state != value) {
     m_state = value;
 
@@ -116,10 +111,9 @@ void KeyButtonEventHandler::send(UInput& uinput, bool value) {
   }
 }
 
-void KeyButtonEventHandler::update(UInput& uinput, int msec_delta) {
+void KeyButtonEventHandler::update(UInput &uinput, int msec_delta) {
   if (m_state && m_hold_threshold) {
-    if (m_hold_counter < m_hold_threshold &&
-        m_hold_counter + msec_delta >= m_hold_threshold) {
+    if (m_hold_counter < m_hold_threshold && m_hold_counter + msec_delta >= m_hold_threshold) {
       // start sending the secondary events
       m_secondary_codes.send(uinput, true);
       uinput.sync();
@@ -133,8 +127,7 @@ void KeyButtonEventHandler::update(UInput& uinput, int msec_delta) {
 
 std::string KeyButtonEventHandler::str() const {
   std::ostringstream out;
-  out << m_codes.str() << ":" << m_secondary_codes.str() << ":"
-      << m_hold_threshold;
+  out << m_codes.str() << ":" << m_secondary_codes.str() << ":" << m_hold_threshold;
   return out.str();
 }
 

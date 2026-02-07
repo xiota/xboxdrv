@@ -24,22 +24,25 @@
 
 WordWrap::WordWrap(int terminal_width) : m_terminal_width(terminal_width) {}
 
-void WordWrap::println(const std::string_view& str) {
+void WordWrap::println(const std::string_view &str) {
   std::cout << str << std::endl;
 }
 
-void WordWrap::newline() { std::cout << std::endl; }
+void WordWrap::newline() {
+  std::cout << std::endl;
+}
 
-void WordWrap::para(const std::string_view& str) const { para("", str); }
+void WordWrap::para(const std::string_view &str) const {
+  para("", str);
+}
 
-void WordWrap::para(const std::string_view& prefix,
-                    const std::string_view& str) const {
+void WordWrap::para(const std::string_view &prefix, const std::string_view &str) const {
   std::vector<std::string> words = string_split(str, " ");
 
   int len = prefix.size();
   std::cout << prefix;
 
-  for (auto& i : words) {
+  for (auto &i : words) {
     if (len + static_cast<int>(i.size()) + 1 >= m_terminal_width) {
       std::cout << std::endl;
       std::cout << prefix;

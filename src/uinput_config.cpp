@@ -37,11 +37,13 @@ int16_t u8_to_s16(uint8_t value) {
 }
 }  // namespace
 
-UInputConfig::UInputConfig(UInput& uinput, int slot, bool extra_devices,
-                           const UInputOptions& opts)
-    : m_uinput(uinput),
-      m_btn_map(opts.get_btn_map()),
-      m_axis_map(opts.get_axis_map()) {
+UInputConfig::UInputConfig(
+    UInput &uinput,
+    int slot,
+    bool extra_devices,
+    const UInputOptions &opts
+)
+    : m_uinput(uinput), m_btn_map(opts.get_btn_map()), m_axis_map(opts.get_axis_map()) {
   std::fill_n(axis_state, static_cast<int>(XBOX_AXIS_MAX), 0);
   std::fill_n(button_state, static_cast<int>(XBOX_BTN_MAX), false);
   std::fill_n(last_button_state, static_cast<int>(XBOX_BTN_MAX), false);
@@ -50,7 +52,7 @@ UInputConfig::UInputConfig(UInput& uinput, int slot, bool extra_devices,
   m_axis_map.init(uinput, slot, extra_devices);
 }
 
-void UInputConfig::send(XboxGenericMsg& msg) {
+void UInputConfig::send(XboxGenericMsg &msg) {
   std::copy(button_state, button_state + XBOX_BTN_MAX, last_button_state);
 
   switch (msg.type) {
@@ -73,7 +75,7 @@ void UInputConfig::send(XboxGenericMsg& msg) {
   m_uinput.sync();
 }
 
-void UInputConfig::send(Xbox360Msg& msg) {
+void UInputConfig::send(Xbox360Msg &msg) {
   // analog stick button
   send_button(XBOX_BTN_THUMB_L, msg.thumb_l);
   send_button(XBOX_BTN_THUMB_R, msg.thumb_r);
@@ -117,22 +119,24 @@ void UInputConfig::send(Xbox360Msg& msg) {
   send_axis(XBOX_AXIS_Y2, s16_invert(msg.y2));
 
   // dpad
-  if (msg.dpad_up)
+  if (msg.dpad_up) {
     send_axis(XBOX_AXIS_DPAD_Y, -1);
-  else if (msg.dpad_down)
+  } else if (msg.dpad_down) {
     send_axis(XBOX_AXIS_DPAD_Y, 1);
-  else
+  } else {
     send_axis(XBOX_AXIS_DPAD_Y, 0);
+  }
 
-  if (msg.dpad_left)
+  if (msg.dpad_left) {
     send_axis(XBOX_AXIS_DPAD_X, -1);
-  else if (msg.dpad_right)
+  } else if (msg.dpad_right) {
     send_axis(XBOX_AXIS_DPAD_X, 1);
-  else
+  } else {
     send_axis(XBOX_AXIS_DPAD_X, 0);
+  }
 }
 
-void UInputConfig::send(XboxMsg& msg) {
+void UInputConfig::send(XboxMsg &msg) {
   // analog stick button
   send_button(XBOX_BTN_THUMB_L, msg.thumb_l);
   send_button(XBOX_BTN_THUMB_R, msg.thumb_r);
@@ -173,19 +177,21 @@ void UInputConfig::send(XboxMsg& msg) {
   send_axis(XBOX_AXIS_Y2, s16_invert(msg.y2));
 
   // dpad as axis
-  if (msg.dpad_up)
+  if (msg.dpad_up) {
     send_axis(XBOX_AXIS_DPAD_Y, -1);
-  else if (msg.dpad_down)
+  } else if (msg.dpad_down) {
     send_axis(XBOX_AXIS_DPAD_Y, 1);
-  else
+  } else {
     send_axis(XBOX_AXIS_DPAD_Y, 0);
+  }
 
-  if (msg.dpad_left)
+  if (msg.dpad_left) {
     send_axis(XBOX_AXIS_DPAD_X, -1);
-  else if (msg.dpad_right)
+  } else if (msg.dpad_right) {
     send_axis(XBOX_AXIS_DPAD_X, 1);
-  else
+  } else {
     send_axis(XBOX_AXIS_DPAD_X, 0);
+  }
 
   send_axis(XBOX_AXIS_A, msg.a);
   send_axis(XBOX_AXIS_B, msg.b);
@@ -195,7 +201,7 @@ void UInputConfig::send(XboxMsg& msg) {
   send_axis(XBOX_AXIS_WHITE, msg.white);
 }
 
-void UInputConfig::send(Playstation3USBMsg& msg) {
+void UInputConfig::send(Playstation3USBMsg &msg) {
   // analog stick button
   send_button(XBOX_BTN_THUMB_L, msg.l3);
   send_button(XBOX_BTN_THUMB_R, msg.r3);
@@ -237,19 +243,21 @@ void UInputConfig::send(Playstation3USBMsg& msg) {
   send_axis(XBOX_AXIS_Y2, u8_to_s16(msg.y2));
 
   // dpad as axis
-  if (msg.dpad_up)
+  if (msg.dpad_up) {
     send_axis(XBOX_AXIS_DPAD_Y, -1);
-  else if (msg.dpad_down)
+  } else if (msg.dpad_down) {
     send_axis(XBOX_AXIS_DPAD_Y, 1);
-  else
+  } else {
     send_axis(XBOX_AXIS_DPAD_Y, 0);
+  }
 
-  if (msg.dpad_left)
+  if (msg.dpad_left) {
     send_axis(XBOX_AXIS_DPAD_X, -1);
-  else if (msg.dpad_right)
+  } else if (msg.dpad_right) {
     send_axis(XBOX_AXIS_DPAD_X, 1);
-  else
+  } else {
     send_axis(XBOX_AXIS_DPAD_X, 0);
+  }
 
   send_axis(XBOX_AXIS_A, msg.a_cross);
   send_axis(XBOX_AXIS_B, msg.a_circle);
@@ -275,14 +283,13 @@ void UInputConfig::send_button(XboxButton code, bool value) {
     for (int i = 1; i < XBOX_BTN_MAX; ++i)  // iterate over all buttons
     {
       if (button_state[i]) {
-        const ButtonEventPtr& event =
-            m_btn_map.lookup(code, static_cast<XboxButton>(i));
+        const ButtonEventPtr &event = m_btn_map.lookup(code, static_cast<XboxButton>(i));
         if (event) {
-          for (int j = 0; j < XBOX_BTN_MAX;
-               ++j)  // iterate over all shift buttons
+          for (int j = 0; j < XBOX_BTN_MAX; ++j)  // iterate over all shift buttons
           {
-            m_btn_map.send(m_uinput, static_cast<XboxButton>(j),
-                           static_cast<XboxButton>(i), false);
+            m_btn_map.send(
+                m_uinput, static_cast<XboxButton>(j), static_cast<XboxButton>(i), false
+            );
           }
         }
       }
@@ -319,8 +326,7 @@ void UInputConfig::send_axis(XboxAxis code, int32_t value) {
   // find the curren AxisEvent bound to current axis code
   for (int shift = 1; shift < XBOX_BTN_MAX; ++shift) {
     if (button_state[shift]) {
-      AxisEventPtr new_ev =
-          m_axis_map.lookup(static_cast<XboxButton>(shift), code);
+      AxisEventPtr new_ev = m_axis_map.lookup(static_cast<XboxButton>(shift), code);
       if (new_ev) {
         ev = new_ev;
         break;
@@ -331,8 +337,7 @@ void UInputConfig::send_axis(XboxAxis code, int32_t value) {
   // find the last AxisEvent bound to current axis code
   for (int shift = 1; shift < XBOX_BTN_MAX; ++shift) {
     if (last_button_state[shift]) {
-      AxisEventPtr new_ev =
-          m_axis_map.lookup(static_cast<XboxButton>(shift), code);
+      AxisEventPtr new_ev = m_axis_map.lookup(static_cast<XboxButton>(shift), code);
       if (new_ev) {
         last_ev = new_ev;
       }
@@ -342,12 +347,18 @@ void UInputConfig::send_axis(XboxAxis code, int32_t value) {
 
   if (last_ev != ev) {
     // a shift key was released
-    if (last_ev) last_ev->send(m_uinput, 0);
-    if (ev) ev->send(m_uinput, value);
+    if (last_ev) {
+      last_ev->send(m_uinput, 0);
+    }
+    if (ev) {
+      ev->send(m_uinput, value);
+    }
   } else {
     // no shift was touched, so only send events when the value changed
     if (axis_state[code] != value) {
-      if (ev) ev->send(m_uinput, value);
+      if (ev) {
+        ev->send(m_uinput, value);
+      }
     }
   }
 

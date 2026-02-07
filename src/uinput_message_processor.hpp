@@ -29,7 +29,7 @@ class Controller;
 
 class UInputMessageProcessor : public MessageProcessor {
  private:
-  UInput& m_uinput;
+  UInput &m_uinput;
   ControllerSlotConfigPtr m_config;
 
   XboxGenericMsg m_oldmsg;  /// last data send to uinput
@@ -37,22 +37,23 @@ class UInputMessageProcessor : public MessageProcessor {
 
   int m_rumble_gain;
   bool m_rumble_test;
-  Controller* m_controller;
+  Controller *m_controller;
 
  public:
-  UInputMessageProcessor(UInput& uinput, ControllerSlotConfigPtr config,
-                         const Options& opts);
+  UInputMessageProcessor(UInput &uinput, ControllerSlotConfigPtr config, const Options &opts);
   ~UInputMessageProcessor();
 
-  void send(const XboxGenericMsg& msg, int msec_delta);
+  void send(const XboxGenericMsg &msg, int msec_delta);
   void set_rumble(uint8_t lhs, uint8_t rhs);
-  virtual void set_controller(Controller* controller);
+  virtual void set_controller(Controller *controller);
   void set_config(int num);
-  ControllerSlotConfigPtr get_config() const { return m_config; }
+  ControllerSlotConfigPtr get_config() const {
+    return m_config;
+  }
 
  private:
-  UInputMessageProcessor(const UInputMessageProcessor&);
-  UInputMessageProcessor& operator=(const UInputMessageProcessor&);
+  UInputMessageProcessor(const UInputMessageProcessor &);
+  UInputMessageProcessor &operator=(const UInputMessageProcessor &);
 };
 
 #endif

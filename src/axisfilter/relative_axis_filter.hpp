@@ -25,7 +25,7 @@
 
 class RelativeAxisFilter : public AxisFilter {
  public:
-  static RelativeAxisFilter* from_string(const std::string& str);
+  static RelativeAxisFilter *from_string(const std::string &str);
 
  public:
   RelativeAxisFilter(int speed);

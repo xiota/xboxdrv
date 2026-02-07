@@ -22,11 +22,11 @@
 #include <sstream>
 #include <string>
 
-LogButtonFilter* LogButtonFilter::from_string(const std::string& str) {
+LogButtonFilter *LogButtonFilter::from_string(const std::string &str) {
   return new LogButtonFilter(str);
 }
 
-LogButtonFilter::LogButtonFilter(const std::string& name) : m_name(name) {}
+LogButtonFilter::LogButtonFilter(const std::string &name) : m_name(name) {}
 
 bool LogButtonFilter::filter(bool value) {
   if (m_name.empty()) {

@@ -40,8 +40,7 @@ void EvdevAbsMap::clear() {
   m_both_map.clear();
 }
 
-void EvdevAbsMap::process(XboxGenericMsg& msg, int code, int value, int min,
-                          int max) const {
+void EvdevAbsMap::process(XboxGenericMsg &msg, int code, int value, int min, int max) const {
   {  // process plus map
     std::map<int, XboxAxis>::const_iterator it = m_plus_map.find(code);
     if (it != m_plus_map.end()) {

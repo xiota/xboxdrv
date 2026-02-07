@@ -18,8 +18,7 @@
 
 #include "usb_helper.hpp"
 
-int usb_claim_n_detach_interface(libusb_device_handle* handle, int interface,
-                                 bool try_detach) {
+int usb_claim_n_detach_interface(libusb_device_handle *handle, int interface, bool try_detach) {
   int ret = libusb_claim_interface(handle, interface);
 
   if (ret == LIBUSB_ERROR_BUSY) {
@@ -40,7 +39,7 @@ int usb_claim_n_detach_interface(libusb_device_handle* handle, int interface,
   }
 }
 
-const char* usb_strerror(int err) {
+const char *usb_strerror(int err) {
   switch (err) {
     case LIBUSB_SUCCESS:
       return "LIBUSB_SUCCESS";
@@ -75,7 +74,7 @@ const char* usb_strerror(int err) {
   }
 }
 
-const char* usb_transfer_strerror(libusb_transfer_status err) {
+const char *usb_transfer_strerror(libusb_transfer_status err) {
   switch (err) {
     case LIBUSB_TRANSFER_COMPLETED:
       return "LIBUSB_TRANSFER_COMPLETED";
@@ -96,16 +95,15 @@ const char* usb_transfer_strerror(libusb_transfer_status err) {
   }
 }
 
-libusb_device* usb_find_device_by_path(uint8_t busnum, uint8_t devnum) {
-  libusb_device* ret_device = 0;
+libusb_device *usb_find_device_by_path(uint8_t busnum, uint8_t devnum) {
+  libusb_device *ret_device = 0;
 
-  libusb_device** list;
+  libusb_device **list;
   ssize_t num_devices = libusb_get_device_list(NULL, &list);
   for (ssize_t dev_it = 0; dev_it < num_devices; ++dev_it) {
-    libusb_device* dev = list[dev_it];
+    libusb_device *dev = list[dev_it];
 
-    if (busnum == libusb_get_bus_number(dev) &&
-        devnum == libusb_get_device_address(dev)) {
+    if (busnum == libusb_get_bus_number(dev) && devnum == libusb_get_device_address(dev)) {
       ret_device = dev;
       libusb_ref_device(ret_device);
       break;

@@ -24,12 +24,12 @@
 
 #include "helper.hpp"
 
-RelativeAxisFilter* RelativeAxisFilter::from_string(const std::string& str) {
+RelativeAxisFilter *RelativeAxisFilter::from_string(const std::string &str) {
   int speed = 20000;
 
   std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
-  for (auto& t : tokens) {
+  for (auto &t : tokens) {
     switch (idx) {
       case 0:
         speed = std::stoi(t);

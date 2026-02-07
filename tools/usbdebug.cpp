@@ -14,16 +14,15 @@
 class USBDevice;
 class EndpointListenerThread;
 
-void print_raw_data(std::ostream& out, uint8_t* data, int len);
+void print_raw_data(std::ostream &out, uint8_t *data, int len);
 bool global_interrupt = false;
 
-struct usb_device* find_usb_device(uint16_t idVendor, uint16_t idProduct) {
-  struct usb_bus* busses = usb_get_busses();
+struct usb_device *find_usb_device(uint16_t idVendor, uint16_t idProduct) {
+  struct usb_bus *busses = usb_get_busses();
 
-  for (struct usb_bus* bus = busses; bus; bus = bus->next) {
-    for (struct usb_device* dev = bus->devices; dev; dev = dev->next) {
-      if (dev->descriptor.idVendor == idVendor &&
-          dev->descriptor.idProduct == idProduct) {
+  for (struct usb_bus *bus = busses; bus; bus = bus->next) {
+    for (struct usb_device *dev = bus->devices; dev; dev = dev->next) {
+      if (dev->descriptor.idVendor == idVendor && dev->descriptor.idProduct == idProduct) {
         return dev;
       }
     }
@@ -33,19 +32,21 @@ struct usb_device* find_usb_device(uint16_t idVendor, uint16_t idProduct) {
 
 class USBDevice {
  private:
-  static USBDevice* current_;
+  static USBDevice *current_;
 
  public:
-  static USBDevice* current() { return current_; }
+  static USBDevice *current() {
+    return current_;
+  }
 
  private:
-  struct usb_device* dev;
-  struct usb_dev_handle* handle;
+  struct usb_device *dev;
+  struct usb_dev_handle *handle;
 
-  std::vector<EndpointListenerThread*> threads;
+  std::vector<EndpointListenerThread *> threads;
 
  public:
-  USBDevice(struct usb_device* dev_) : dev(dev_) {
+  USBDevice(struct usb_device *dev_) : dev(dev_) {
     USBDevice::current_ = this;
 
     handle = usb_open(dev);
@@ -54,7 +55,9 @@ class USBDevice {
     }
   }
 
-  ~USBDevice() { usb_close(handle); }
+  ~USBDevice() {
+    usb_close(handle);
+  }
 
   void clear_halt(int ep) {
     if (usb_clear_halt(handle, ep) != 0) {
@@ -108,12 +111,12 @@ class USBDevice {
     }
   }
 
-  int read(int endpoint, uint8_t* data, int len) {
-    return usb_interrupt_read(handle, endpoint, (char*)data, len, 0);
+  int read(int endpoint, uint8_t *data, int len) {
+    return usb_interrupt_read(handle, endpoint, (char *)data, len, 0);
   }
 
-  int write(int endpoint, uint8_t* data, int len) {
-    return usb_interrupt_write(handle, endpoint, (char*)data, len, 0);
+  int write(int endpoint, uint8_t *data, int len) {
+    return usb_interrupt_write(handle, endpoint, (char *)data, len, 0);
   }
 
   /* uint8_t  requesttype
@@ -122,10 +125,10 @@ class USBDevice {
      uint16_t index;
      uint16_t length;
    */
-  int ctrl_msg(int requesttype, int request, int value, int index,
-               uint8_t* data, int size) {
-    return usb_control_msg(handle, requesttype, request, value, index,
-                           (char*)data, size, 0 /* timeout */);
+  int ctrl_msg(int requesttype, int request, int value, int index, uint8_t *data, int size) {
+    return usb_control_msg(
+        handle, requesttype, request, value, index, (char *)data, size, 0 /* timeout */
+    );
   }
 
   void print_info() {
@@ -134,25 +137,16 @@ class USBDevice {
       for (int j = 0; j < dev->config[i].bNumInterfaces; ++j) {
         std::cout << "  Interface " << j << ":" << std::endl;
         for (int k = 0; k < dev->config[i].interface[j].num_altsetting; ++k) {
-          for (int l = 0;
-               l < dev->config[i].interface[j].altsetting[k].bNumEndpoints;
-               ++l) {
-            std::cout << "    Endpoint: "
-                      << int(dev->config[i]
-                                 .interface[j]
-                                 .altsetting[k]
-                                 .endpoint[l]
-                                 .bEndpointAddress &
-                             USB_ENDPOINT_ADDRESS_MASK)
-                      << ((dev->config[i]
-                               .interface[j]
-                               .altsetting[k]
-                               .endpoint[l]
-                               .bEndpointAddress &
-                           USB_ENDPOINT_DIR_MASK)
-                              ? " (IN)"
-                              : " (OUT)")
-                      << std::endl;
+          for (int l = 0; l < dev->config[i].interface[j].altsetting[k].bNumEndpoints; ++l) {
+            std::cout
+                << "    Endpoint: "
+                << int(dev->config[i].interface[j].altsetting[k].endpoint[l].bEndpointAddress &
+                       USB_ENDPOINT_ADDRESS_MASK)
+                << ((dev->config[i].interface[j].altsetting[k].endpoint[l].bEndpointAddress &
+                     USB_ENDPOINT_DIR_MASK)
+                        ? " (IN)"
+                        : " (OUT)")
+                << std::endl;
           }
         }
       }
@@ -162,7 +156,7 @@ class USBDevice {
   void launch_listener_thread(int endpoint);
 };
 
-USBDevice* USBDevice::current_ = 0;
+USBDevice *USBDevice::current_ = 0;
 
 class EndpointListenerThread {
  private:
@@ -180,9 +174,8 @@ class EndpointListenerThread {
     pthread_create(&thread, NULL, &EndpointListenerThread::callback, this);
   }
 
-  static void* callback(void* userdata) {
-    EndpointListenerThread* thread =
-        static_cast<EndpointListenerThread*>(userdata);
+  static void *callback(void *userdata) {
+    EndpointListenerThread *thread = static_cast<EndpointListenerThread *>(userdata);
     thread->run();
     pthread_exit(NULL);
   }
@@ -209,15 +202,15 @@ class EndpointListenerThread {
 
 void USBDevice::launch_listener_thread(int endpoint) {
   try {
-    EndpointListenerThread* thread = new EndpointListenerThread(endpoint);
+    EndpointListenerThread *thread = new EndpointListenerThread(endpoint);
     threads.push_back(thread);
     thread->start();
-  } catch (std::exception& err) {
+  } catch (std::exception &err) {
     std::cout << "Error: " << err.what() << std::endl;
   }
 }
 
-bool has_prefix(const std::string& lhs, const std::string rhs) {
+bool has_prefix(const std::string &lhs, const std::string rhs) {
   if (lhs.length() < rhs.length()) {
     return false;
   } else {
@@ -225,15 +218,14 @@ bool has_prefix(const std::string& lhs, const std::string rhs) {
   }
 }
 
-bool readline(const std::string& prompt, std::string& line) {
+bool readline(const std::string &prompt, std::string &line) {
   std::cout << prompt << std::flush;
   bool ret = !std::getline(std::cin, line).eof();
   // line = strip(line);
   return ret;
 }
 
-std::vector<std::string> tokenize(const std::string& str,
-                                  const std::string& delimiters = " ") {
+std::vector<std::string> tokenize(const std::string &str, const std::string &delimiters = " ") {
   std::vector<std::string> tokens;
 
   // Skip delimiters at beginning.
@@ -253,7 +245,7 @@ std::vector<std::string> tokenize(const std::string& str,
   return tokens;
 }
 
-void print_raw_data(std::ostream& out, uint8_t* data, int len) {
+void print_raw_data(std::ostream &out, uint8_t *data, int len) {
   std::cout << "[" << len << "] { ";
 
   for (int i = 0; i < len; ++i) {
@@ -266,7 +258,7 @@ void print_raw_data(std::ostream& out, uint8_t* data, int len) {
   std::cout << " }";
 }
 
-void console_listen_cmd(const std::vector<std::string>& args) {
+void console_listen_cmd(const std::vector<std::string> &args) {
   if (args.size() < 2) {
     std::cout << "Usage: listen [ENDPOINT]..." << std::endl;
   } else {
@@ -277,7 +269,7 @@ void console_listen_cmd(const std::vector<std::string>& args) {
   }
 }
 
-void console_claim_cmd(const std::vector<std::string>& args) {
+void console_claim_cmd(const std::vector<std::string> &args) {
   if (args.size() < 2) {
     std::cout << "Usage: claim [INTERFACE]..." << std::endl;
   } else {
@@ -285,18 +277,17 @@ void console_claim_cmd(const std::vector<std::string>& args) {
       int interface = atoi(args[i].c_str());
       try {
         USBDevice::current()->claim_interface(interface);
-      } catch (std::exception& err) {
+      } catch (std::exception &err) {
         std::cout << "Error: " << err.what() << std::endl;
         goto end;
       }
-      std::cout << "Interface " << interface << " successfully claimed"
-                << std::endl;
+      std::cout << "Interface " << interface << " successfully claimed" << std::endl;
     end:;
     }
   }
 }
 
-void console_release_cmd(const std::vector<std::string>& args) {
+void console_release_cmd(const std::vector<std::string> &args) {
   if (args.size() < 2) {
     std::cout << "Usage: release [INTERFACE]..." << std::endl;
   } else {
@@ -304,18 +295,17 @@ void console_release_cmd(const std::vector<std::string>& args) {
       int interface = atoi(args[i].c_str());
       try {
         USBDevice::current()->release_interface(interface);
-      } catch (std::exception& err) {
+      } catch (std::exception &err) {
         std::cout << "Error: " << err.what() << std::endl;
         goto end;
       }
-      std::cout << "Interface " << interface << " successfully releaseed"
-                << std::endl;
+      std::cout << "Interface " << interface << " successfully releaseed" << std::endl;
     end:;
     }
   }
 }
 
-void console_detach_cmd(const std::vector<std::string>& args) {
+void console_detach_cmd(const std::vector<std::string> &args) {
   if (args.size() < 2) {
     std::cout << "Usage: detach [INTERFACE]..." << std::endl;
   } else {
@@ -323,18 +313,17 @@ void console_detach_cmd(const std::vector<std::string>& args) {
       int interface = atoi(args[i].c_str());
       try {
         USBDevice::current()->detach_kernel_driver(interface);
-      } catch (std::exception& err) {
+      } catch (std::exception &err) {
         std::cout << "Error: " << err.what() << std::endl;
         goto end;
       }
-      std::cout << "Interface " << interface << " successfully detached"
-                << std::endl;
+      std::cout << "Interface " << interface << " successfully detached" << std::endl;
     end:;
     }
   }
 }
 
-void console_info_cmd(const std::vector<std::string>& args) {
+void console_info_cmd(const std::vector<std::string> &args) {
   USBDevice::current()->print_info();
 }
 
@@ -375,7 +364,9 @@ class Sequence {
     }
   }
 
-  void reset() { idx = start; }
+  void reset() {
+    idx = start;
+  }
 
   std::string to_string() const {
     std::ostringstream str;
@@ -395,30 +386,29 @@ class SequenceGenerator {
 
  public:
   /** spec: NUM or [NUM, NUM, NUM-NUM]*/
-  SequenceGenerator(const std::string& spec) {
+  SequenceGenerator(const std::string &spec) {
     std::vector<std::string> tokens = tokenize(spec, ",");
 
-    for (std::vector<std::string>::iterator i = tokens.begin();
-         i != tokens.end(); ++i) {
+    for (std::vector<std::string>::iterator i = tokens.begin(); i != tokens.end(); ++i) {
       int start, end;
       if (sscanf(i->c_str(), "%x-%x", &start, &end) == 2) {
         sequences.push_back(Sequence(start, end));
       } else if (sscanf(i->c_str(), "%x", &start) == 1) {
         sequences.push_back(Sequence(start));
       } else {
-        throw std::runtime_error(
-            "Syntax Error in sequence, couldn't convert: " + *i);
+        throw std::runtime_error("Syntax Error in sequence, couldn't convert: " + *i);
       }
     }
 
     idx = 0;
   }
 
-  bool eol() { return (idx == sequences.size()); }
+  bool eol() {
+    return (idx == sequences.size());
+  }
 
   void reset() {
-    for (std::vector<Sequence>::iterator i = sequences.begin();
-         i != sequences.end(); ++i) {
+    for (std::vector<Sequence>::iterator i = sequences.begin(); i != sequences.end(); ++i) {
       i->reset();
     }
     idx = 0;
@@ -451,7 +441,7 @@ class SequenceGenerator {
 
     str << "{ ";
     while (i != sequences.end()) {
-      const Sequence& seq = *i;
+      const Sequence &seq = *i;
 
       str << seq.to_string();
 
@@ -466,7 +456,7 @@ class SequenceGenerator {
   }
 };
 
-bool eol(std::vector<SequenceGenerator>& sequences) {
+bool eol(std::vector<SequenceGenerator> &sequences) {
   if (sequences.empty()) {
     return true;
   } else {
@@ -474,7 +464,7 @@ bool eol(std::vector<SequenceGenerator>& sequences) {
   }
 }
 
-void next(std::vector<SequenceGenerator>& sequences, int idx) {
+void next(std::vector<SequenceGenerator> &sequences, int idx) {
   if (idx < int(sequences.size())) {
     if (!sequences[idx].eol()) {
       sequences[idx].next();
@@ -488,13 +478,13 @@ void next(std::vector<SequenceGenerator>& sequences, int idx) {
   }
 }
 
-void next(std::vector<SequenceGenerator>& sequences) {
+void next(std::vector<SequenceGenerator> &sequences) {
   if (!sequences.empty()) {
     next(sequences, 0);
   }
 }
 
-void console_probe_cmd(const std::vector<std::string>& args) {
+void console_probe_cmd(const std::vector<std::string> &args) {
   if (args.size() < 3) {
     std::cout << "Usage: send [EP] [DATA]..." << std::endl;
   } else {
@@ -516,8 +506,7 @@ void console_probe_cmd(const std::vector<std::string>& args) {
 
       std::cout << "Data Ep: " << endpoint << ": ";
       print_raw_data(std::cout, &*data.begin(), data.size());
-      int ret =
-          USBDevice::current()->write(endpoint, &*data.begin(), data.size());
+      int ret = USBDevice::current()->write(endpoint, &*data.begin(), data.size());
       std::cout << " -> " << ret;
       std::cout << std::endl;
 
@@ -529,7 +518,7 @@ void console_probe_cmd(const std::vector<std::string>& args) {
   }
 }
 
-void console_wait_cmd(const std::vector<std::string>& args) {
+void console_wait_cmd(const std::vector<std::string> &args) {
   if (args.size() != 2) {
     std::cout << "Usage: wait [SECONDS]" << std::endl;
   } else {
@@ -540,7 +529,7 @@ void console_wait_cmd(const std::vector<std::string>& args) {
   }
 }
 
-void console_send_cmd(const std::vector<std::string>& args) {
+void console_send_cmd(const std::vector<std::string> &args) {
   if (args.size() < 3) {
     std::cout << "Usage: send [EP] [DATA]..." << std::endl;
   } else {
@@ -552,16 +541,14 @@ void console_send_cmd(const std::vector<std::string>& args) {
 
     std::cout << "Sending to endpoint " << endpoint << ": ";
     print_raw_data(std::cout, &*data.begin(), data.size());
-    int ret =
-        USBDevice::current()->write(endpoint, &*data.begin(), data.size());
+    int ret = USBDevice::current()->write(endpoint, &*data.begin(), data.size());
     std::cout << " -> " << ret << std::endl;
   }
 }
 
-void console_ctrlreq_cmd(const std::vector<std::string>& args) {
+void console_ctrlreq_cmd(const std::vector<std::string> &args) {
   if (args.size() < 5) {
-    std::cout << "Usage: ctrlreq REQUESTTYPE REQUEST VALUE INDEX LEN"
-              << std::endl;
+    std::cout << "Usage: ctrlreq REQUESTTYPE REQUEST VALUE INDEX LEN" << std::endl;
   } else {  // See USB Specification (usb_20.pdf) page 248
     int requesttype = strtol(args[1].c_str(), NULL, 16);
     int request = strtol(args[2].c_str(), NULL, 16);
@@ -569,14 +556,13 @@ void console_ctrlreq_cmd(const std::vector<std::string>& args) {
     int index = strtol(args[4].c_str(), NULL, 16);
     int len = strtol(args[5].c_str(), NULL, 16);
 
-    std::cout << "Sending to ctrl: " << requesttype << " " << request << " "
-              << value << " " << index << " " << len << ": ";
+    std::cout << "Sending to ctrl: " << requesttype << " " << request << " " << value << " "
+              << index << " " << len << ": ";
 
-    uint8_t* data = (len == 0) ? NULL : new uint8_t[len];
+    uint8_t *data = (len == 0) ? NULL : new uint8_t[len];
     memset(data, 0, len * sizeof(uint8_t));
 
-    int ret = USBDevice::current()->ctrl_msg(requesttype, request, value, index,
-                                             data, len);
+    int ret = USBDevice::current()->ctrl_msg(requesttype, request, value, index, data, len);
     std::cout << " -> " << ret << " '" << strerror(-ret) << "'" << std::endl;
 
     if (!data) {
@@ -591,7 +577,7 @@ void console_ctrlreq_cmd(const std::vector<std::string>& args) {
   }
 }
 
-void console_setconfiguration_cmd(const std::vector<std::string>& args) {
+void console_setconfiguration_cmd(const std::vector<std::string> &args) {
   if (args.size() != 2) {
     std::cout << "Usage: setconfiguration CFG" << std::endl;
   } else {
@@ -599,7 +585,7 @@ void console_setconfiguration_cmd(const std::vector<std::string>& args) {
   }
 }
 
-void console_setaltinterface_cmd(const std::vector<std::string>& args) {
+void console_setaltinterface_cmd(const std::vector<std::string> &args) {
   if (args.size() != 2) {
     std::cout << "Usage: " << args[0] << " INTERFACE" << std::endl;
   } else {
@@ -607,7 +593,7 @@ void console_setaltinterface_cmd(const std::vector<std::string>& args) {
   }
 }
 
-void console_reset_ep_cmd(const std::vector<std::string>& args) {
+void console_reset_ep_cmd(const std::vector<std::string> &args) {
   if (args.size() != 2) {
     std::cout << "Usage: clear_halt ENDPOINT" << std::endl;
   } else {
@@ -615,14 +601,13 @@ void console_reset_ep_cmd(const std::vector<std::string>& args) {
   }
 }
 
-void console_reset_cmd(const std::vector<std::string>& args) {
+void console_reset_cmd(const std::vector<std::string> &args) {
   USBDevice::current()->reset();
 }
 
-void console_ctrl_cmd(const std::vector<std::string>& args) {
+void console_ctrl_cmd(const std::vector<std::string> &args) {
   if (args.size() < 5) {
-    std::cout << "Usage: ctrl REQUESTTYPE REQUEST VALUE INDEX [DATA]..."
-              << std::endl;
+    std::cout << "Usage: ctrl REQUESTTYPE REQUEST VALUE INDEX [DATA]..." << std::endl;
   } else {  // See USB Specification (usb_20.pdf) page 248
     int requesttype = strtol(args[1].c_str(), NULL, 16);
     int request = strtol(args[2].c_str(), NULL, 16);
@@ -634,8 +619,8 @@ void console_ctrl_cmd(const std::vector<std::string>& args) {
       data.push_back(strtol(args[i].c_str(), NULL, 16));
     }
 
-    std::cout << "Sending to ctrl: " << requesttype << " " << request << " "
-              << value << " " << index << ": ";
+    std::cout << "Sending to ctrl: " << requesttype << " " << request << " " << value << " "
+              << index << ": ";
     if (data.empty()) {
       std::cout << "no data";
     } else {
@@ -643,13 +628,13 @@ void console_ctrl_cmd(const std::vector<std::string>& args) {
     }
 
     int ret = USBDevice::current()->ctrl_msg(
-        requesttype, request, value, index,
-        data.empty() ? NULL : &*data.begin(), data.size());
+        requesttype, request, value, index, data.empty() ? NULL : &*data.begin(), data.size()
+    );
     std::cout << " -> " << ret << " '" << strerror(-ret) << "'" << std::endl;
   }
 }
 
-std::string strip_comment(const std::string& line) {
+std::string strip_comment(const std::string &line) {
   std::string::size_type p = line.find_first_of('#');
   if (p != std::string::npos) {
     return line.substr(0, p);
@@ -660,7 +645,7 @@ std::string strip_comment(const std::string& line) {
 
 bool quit = false;
 
-void dispatch_command(const std::vector<std::string>& args) {
+void dispatch_command(const std::vector<std::string> &args) {
   if (0) {
     for (int i = 0; i < int(args.size()); ++i) {
       std::cout << i << ":'" << args[i] << "' ";
@@ -671,19 +656,13 @@ void dispatch_command(const std::vector<std::string>& args) {
   if (args[0] == "help") {
     std::cout << "help:\n   Print this help\n" << std::endl;
     std::cout << "quit:\n   Exit usbdebug\n" << std::endl;
-    std::cout << "claim [INTERFACE]...\n   Claim the given interfaces\n"
+    std::cout << "claim [INTERFACE]...\n   Claim the given interfaces\n" << std::endl;
+    std::cout << "release [INTERFACE]...\n   Release the given interfaces\n" << std::endl;
+    std::cout << "detach [INTERFACE]...\n   Detach kernel driver from interfaces\n"
               << std::endl;
-    std::cout << "release [INTERFACE]...\n   Release the given interfaces\n"
-              << std::endl;
-    std::cout
-        << "detach [INTERFACE]...\n   Detach kernel driver from interfaces\n"
-        << std::endl;
-    std::cout << "listen [ENDPOINT]...\n   On the given endpoints\n"
-              << std::endl;
-    std::cout << "info\n   Print some info on the current device\n"
-              << std::endl;
-    std::cout << "send [ENDPOINT] [DATA]...\n   Send data to an USB Endpoint\n"
-              << std::endl;
+    std::cout << "listen [ENDPOINT]...\n   On the given endpoints\n" << std::endl;
+    std::cout << "info\n   Print some info on the current device\n" << std::endl;
+    std::cout << "send [ENDPOINT] [DATA]...\n   Send data to an USB Endpoint\n" << std::endl;
   } else if (args[0] == "listen") {
     console_listen_cmd(args);
   } else if (args[0] == "info") {
@@ -721,12 +700,11 @@ void dispatch_command(const std::vector<std::string>& args) {
   }
 }
 
-void eval_console_cmd(const std::string& line_) {
+void eval_console_cmd(const std::string &line_) {
   std::string line = strip_comment(line_);
 
   std::vector<std::string> lines = tokenize(line, ";");
-  for (std::vector<std::string>::iterator i = lines.begin(); i != lines.end();
-       ++i) {
+  for (std::vector<std::string>::iterator i = lines.begin(); i != lines.end(); ++i) {
     std::vector<std::string> args = tokenize(*i);
     if (!args.empty()) {
       dispatch_command(args);
@@ -741,8 +719,7 @@ void run_console() {
 
   while (!quit && readline("\033[32musb\033[0m> ", line)) {
     std::vector<std::string> cmds = tokenize(line, ";");
-    for (std::vector<std::string>::iterator i = cmds.begin(); i != cmds.end();
-         ++i) {
+    for (std::vector<std::string>::iterator i = cmds.begin(); i != cmds.end(); ++i) {
       eval_console_cmd(*i);
     }
     global_interrupt = false;
@@ -759,7 +736,7 @@ void signal_callback(int) {
   }
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc != 2) {
     std::cout << "Usage: " << argv[0] << " [idVendor:idProduct]" << std::endl;
   } else {
@@ -770,15 +747,16 @@ int main(int argc, char** argv) {
     uint16_t idVendor;
     uint16_t idProduct;
     if (sscanf(argv[1], "%hx:%hx", &idVendor, &idProduct) == 2) {
-      struct usb_device* dev = find_usb_device(idVendor, idProduct);
+      struct usb_device *dev = find_usb_device(idVendor, idProduct);
 
       if (dev) {
-        std::cout
-            << std::format(
-                   "Opening device with idVendor: {:#04x}, idProduct: {:#04x}",
-                   idVendor, idProduct)
-            << std::endl;
-        USBDevice* usbdev = new USBDevice(dev);
+        std::cout << std::format(
+                         "Opening device with idVendor: {:#04x}, idProduct: {:#04x}",
+                         idVendor,
+                         idProduct
+                     )
+                  << std::endl;
+        USBDevice *usbdev = new USBDevice(dev);
         signal(SIGINT, signal_callback);
         run_console();
         delete usbdev;
@@ -786,8 +764,7 @@ int main(int argc, char** argv) {
         std::cout << "Couldn't device with " << argv[1] << std::endl;
       }
     } else {
-      std::cout << "Syntax error, must be idVendor:idProduct (ex: 045e:028e)"
-                << std::endl;
+      std::cout << "Syntax error, must be idVendor:idProduct (ex: 045e:028e)" << std::endl;
     }
   }
 

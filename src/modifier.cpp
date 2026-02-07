@@ -28,8 +28,7 @@
 #include "modifier/square_axis_modifier.hpp"
 #include "modifier/statistic_modifier.hpp"
 
-Modifier* Modifier::from_string(const std::string& name,
-                                const std::string& value) {
+Modifier *Modifier::from_string(const std::string &name, const std::string &value) {
   if (name == "axismap") {
     // return AxismapModifier::from_string(value);
     throw std::runtime_error("unknown modifier: " + name);

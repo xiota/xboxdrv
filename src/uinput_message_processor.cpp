@@ -23,9 +23,11 @@
 #include "log.hpp"
 #include "uinput.hpp"
 
-UInputMessageProcessor::UInputMessageProcessor(UInput& uinput,
-                                               ControllerSlotConfigPtr config,
-                                               const Options& opts)
+UInputMessageProcessor::UInputMessageProcessor(
+    UInput &uinput,
+    ControllerSlotConfigPtr config,
+    const Options &opts
+)
     : m_uinput(uinput),
       m_config(config),
       m_oldmsg(),
@@ -38,14 +40,14 @@ UInputMessageProcessor::UInputMessageProcessor(UInput& uinput,
 
 UInputMessageProcessor::~UInputMessageProcessor() {}
 
-void UInputMessageProcessor::send(const XboxGenericMsg& msg_in,
-                                  int msec_delta) {
+void UInputMessageProcessor::send(const XboxGenericMsg &msg_in, int msec_delta) {
   if (!m_config->empty()) {
     XboxGenericMsg msg = msg_in;
 
     if (m_rumble_test) {
-      log_debug("rumble: " << get_axis(msg, XBOX_AXIS_LT) << " "
-                           << get_axis(msg, XBOX_AXIS_RT));
+      log_debug(
+          "rumble: " << get_axis(msg, XBOX_AXIS_LT) << " " << get_axis(msg, XBOX_AXIS_RT)
+      );
 
       set_rumble(get_axis(msg, XBOX_AXIS_LT), get_axis(msg, XBOX_AXIS_RT));
     }
@@ -67,9 +69,9 @@ void UInputMessageProcessor::send(const XboxGenericMsg& msg_in,
     }
 
     // run the controller message through all modifier
-    for (std::vector<ModifierPtr>::iterator i =
-             m_config->get_config()->get_modifier().begin();
-         i != m_config->get_config()->get_modifier().end(); ++i) {
+    for (std::vector<ModifierPtr>::iterator i = m_config->get_config()->get_modifier().begin();
+         i != m_config->get_config()->get_modifier().end();
+         ++i) {
       (*i)->update(msec_delta, msg);
     }
 
@@ -105,7 +107,7 @@ void UInputMessageProcessor::set_config(int num) {
   m_config->set_current_config(num);
 }
 
-void UInputMessageProcessor::set_controller(Controller* controller) {
+void UInputMessageProcessor::set_controller(Controller *controller) {
   m_controller = controller;
   // m_config->set_controller(controller);
 }

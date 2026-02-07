@@ -26,12 +26,12 @@
 
 class RotateAxisModifier : public Modifier {
  public:
-  static RotateAxisModifier* from_string(const std::vector<std::string>& args);
+  static RotateAxisModifier *from_string(const std::vector<std::string> &args);
 
  public:
   RotateAxisModifier(XboxAxis xaxis, XboxAxis yaxis, float angle, bool mirror);
 
-  void update(int msec_delta, XboxGenericMsg& msg);
+  void update(int msec_delta, XboxGenericMsg &msg);
   std::string str() const;
 
  private:

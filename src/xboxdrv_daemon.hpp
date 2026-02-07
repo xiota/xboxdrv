@@ -39,11 +39,11 @@ struct XPadDevice;
 
 class XboxdrvDaemon {
  private:
-  static XboxdrvDaemon* s_current;
+  static XboxdrvDaemon *s_current;
 
  private:
-  const Options& m_opts;
-  GMainLoop* m_gmain;
+  const Options &m_opts;
+  GMainLoop *m_gmain;
 
   typedef std::vector<ControllerSlotPtr> ControllerSlots;
   ControllerSlots m_controller_slots;
@@ -55,10 +55,12 @@ class XboxdrvDaemon {
 
  private:
   static void on_sigint(int);
-  static XboxdrvDaemon* current() { return s_current; }
+  static XboxdrvDaemon *current() {
+    return s_current;
+  }
 
  public:
-  XboxdrvDaemon(const Options& opts);
+  XboxdrvDaemon(const Options &opts);
   ~XboxdrvDaemon();
 
   void run();
@@ -70,12 +72,16 @@ class XboxdrvDaemon {
   void create_pid_file();
   void init_uinput();
 
-  ControllerSlotPtr find_free_slot(udev_device* dev);
+  ControllerSlotPtr find_free_slot(udev_device *dev);
 
-  void process_match(struct udev_device* device);
-  void print_info(struct udev_device* device);
-  void launch_controller_thread(udev_device* dev, const XPadDevice& dev_type,
-                                uint8_t busnum, uint8_t devnum);
+  void process_match(struct udev_device *device);
+  void print_info(struct udev_device *device);
+  void launch_controller_thread(
+      udev_device *dev,
+      const XPadDevice &dev_type,
+      uint8_t busnum,
+      uint8_t devnum
+  );
   int get_free_slot_count() const;
 
   void connect(ControllerSlotPtr slot, ControllerPtr controller);
@@ -89,18 +95,18 @@ class XboxdrvDaemon {
 
  private:
   static gboolean on_controller_disconnect_wrap(gpointer data) {
-    static_cast<XboxdrvDaemon*>(data)->on_controller_disconnect();
+    static_cast<XboxdrvDaemon *>(data)->on_controller_disconnect();
     return false;
   }
 
   static gboolean on_controller_activate_wrap(gpointer data) {
-    static_cast<XboxdrvDaemon*>(data)->on_controller_activate();
+    static_cast<XboxdrvDaemon *>(data)->on_controller_activate();
     return false;
   }
 
  private:
-  XboxdrvDaemon(const XboxdrvDaemon&);
-  XboxdrvDaemon& operator=(const XboxdrvDaemon&);
+  XboxdrvDaemon(const XboxdrvDaemon &);
+  XboxdrvDaemon &operator=(const XboxdrvDaemon &);
 };
 
 #endif

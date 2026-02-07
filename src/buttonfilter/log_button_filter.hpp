@@ -25,10 +25,10 @@
 
 class LogButtonFilter : public ButtonFilter {
  public:
-  static LogButtonFilter* from_string(const std::string& str);
+  static LogButtonFilter *from_string(const std::string &str);
 
  public:
-  LogButtonFilter(const std::string& name);
+  LogButtonFilter(const std::string &name);
 
   bool filter(bool value);
   std::string str() const;

@@ -42,8 +42,7 @@ ArgParser::ParsedOptions ArgParser::parse_args(int argc, char **argv) {
           // Got a '--', so we stop evaluating arguments
           ++i;
           while (i < argc) {
-            parsed_options.push_back(
-                ParsedOption(ArgParser::REST_ARG, "", argv[i]));
+            parsed_options.push_back(ParsedOption(ArgParser::REST_ARG, "", argv[i]));
             ++i;
           }
         } else {
@@ -65,26 +64,27 @@ ArgParser::ParsedOptions ArgParser::parse_args(int argc, char **argv) {
 
           if (option) {
             if (option->argument.empty()) {
-              parsed_options.push_back(
-                  ParsedOption(option->key, "--" + long_opt, ""));
+              parsed_options.push_back(ParsedOption(option->key, "--" + long_opt, ""));
             } else {
               if (pos != std::string::npos) {
                 parsed_options.push_back(
-                    ParsedOption(option->key, "--" + long_opt, long_opt_arg));
+                    ParsedOption(option->key, "--" + long_opt, long_opt_arg)
+                );
               } else {
                 if (i == argc - 1) {
-                  throw std::runtime_error("option '" + std::string(argv[i]) +
-                                           "' requires an argument");
+                  throw std::runtime_error(
+                      "option '" + std::string(argv[i]) + "' requires an argument"
+                  );
                 } else {
                   parsed_options.push_back(
-                      ParsedOption(option->key, "--" + long_opt, argv[i + 1]));
+                      ParsedOption(option->key, "--" + long_opt, argv[i + 1])
+                  );
                   ++i;
                 }
               }
             }
           } else {
-            throw std::runtime_error("unrecognized option '" +
-                                     std::string(argv[i]) + "'");
+            throw std::runtime_error("unrecognized option '" + std::string(argv[i]) + "'");
           }
         }
       } else {
@@ -99,22 +99,20 @@ ArgParser::ParsedOptions ArgParser::parse_args(int argc, char **argv) {
 
             if (option) {
               if (option->argument.empty()) {
-                parsed_options.push_back(
-                    ParsedOption(option->key, argv[i], ""));
+                parsed_options.push_back(ParsedOption(option->key, argv[i], ""));
               } else {
                 if (i == argc - 1 || *(p + 1) != '\0') {
                   // No more arguments
-                  throw std::runtime_error("option requires an argument -- " +
-                                           std::string(argv[i]));
+                  throw std::runtime_error(
+                      "option requires an argument -- " + std::string(argv[i])
+                  );
                 } else {
-                  parsed_options.push_back(
-                      ParsedOption(option->key, argv[i], argv[i + 1]));
+                  parsed_options.push_back(ParsedOption(option->key, argv[i], argv[i + 1]));
                   ++i;
                 }
               }
             } else {
-              throw std::runtime_error("invalid option -- " +
-                                       std::string(argv[i]));
+              throw std::runtime_error("invalid option -- " + std::string(argv[i]));
             }
             ++p;
           }
@@ -139,8 +137,7 @@ ArgParser::Option *ArgParser::lookup_short_option(char short_option) {
   return 0;
 }
 
-ArgParser::Option *ArgParser::lookup_long_option(
-    const std::string &long_option) {
+ArgParser::Option *ArgParser::lookup_long_option(const std::string &long_option) {
   for (Options::iterator i = options.begin(); i != options.end(); ++i) {
     if (i->long_option == long_option) {
       return &*i;
@@ -180,8 +177,7 @@ void ArgParser::print_help(std::ostream &out) const {
     column_width = std::max(column_width, 5);
   }
 
-  PrettyPrinter pprint(
-      terminal_width);  // -1 so we have a whitespace on the right side
+  PrettyPrinter pprint(terminal_width);  // -1 so we have a whitespace on the right side
 
   bool first_usage = true;
   for (Options::const_iterator i = options.begin(); i != options.end(); ++i) {
@@ -198,15 +194,14 @@ void ArgParser::print_help(std::ostream &out) const {
       } else if (i->key == PSEUDO) {
         pprint.print(std::string(column_width, ' '), i->long_option, i->help);
       } else {
-        char option[256] = {0};
-        char argument[256] = {0};
+        char option[256] = { 0 };
+        char argument[256] = { 0 };
 
         if (i->short_option) {
           if (i->long_option.empty()) {
             snprintf(option, 256, "-%c", i->short_option);
           } else {
-            snprintf(option, 256, "-%c, --%s", i->short_option,
-                     i->long_option.c_str());
+            snprintf(option, 256, "-%c, --%s", i->short_option, i->long_option.c_str());
           }
         } else {
           snprintf(option, 256, "--%s", i->long_option.c_str());
@@ -243,8 +238,7 @@ ArgParser &ArgParser::add_usage(const std::string &usage) {
   return *this;
 }
 
-ArgParser &ArgParser::add_pseudo(const std::string &left,
-                                 const std::string &doc) {
+ArgParser &ArgParser::add_pseudo(const std::string &left, const std::string &doc) {
   Option option;
 
   option.key = PSEUDO;
@@ -275,10 +269,14 @@ ArgParser &ArgParser::add_text(const std::string &grouptopic) {
   return *this;
 }
 
-ArgParser &ArgParser::add_option(int key, char short_option,
-                                 const std::string &long_option,
-                                 const std::string &argument,
-                                 const std::string &help, bool visible) {
+ArgParser &ArgParser::add_option(
+    int key,
+    char short_option,
+    const std::string &long_option,
+    const std::string &argument,
+    const std::string &help,
+    bool visible
+) {
   assert(short_option || (!short_option && !long_option.empty()));
 
   Option option;

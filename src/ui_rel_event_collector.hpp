@@ -28,15 +28,15 @@ class UIRelEventCollector : public UIEventCollector {
   Emitters m_emitters;
 
  public:
-  UIRelEventCollector(UInput& uinput, uint32_t device_id, int type, int code);
+  UIRelEventCollector(UInput &uinput, uint32_t device_id, int type, int code);
 
   UIEventEmitterPtr create_emitter();
   void send(int value);
   void sync();
 
  private:
-  UIRelEventCollector(const UIRelEventCollector&);
-  UIRelEventCollector& operator=(const UIRelEventCollector&);
+  UIRelEventCollector(const UIRelEventCollector &);
+  UIRelEventCollector &operator=(const UIRelEventCollector &);
 };
 
 #endif

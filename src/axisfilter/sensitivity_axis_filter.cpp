@@ -24,14 +24,13 @@
 
 #include "helper.hpp"
 
-SensitivityAxisFilter* SensitivityAxisFilter::from_string(
-    const std::string& str) {
+SensitivityAxisFilter *SensitivityAxisFilter::from_string(const std::string &str) {
   std::vector<std::string> tokens = string_split(str, ":");
 
   float sensitivity = 0.0f;
 
   int idx = 0;
-  for (auto& i : tokens) {
+  for (auto &i : tokens) {
     switch (idx) {
       case 0:
         sensitivity = std::stof(i);
@@ -46,8 +45,7 @@ SensitivityAxisFilter* SensitivityAxisFilter::from_string(
   return new SensitivityAxisFilter(sensitivity);
 }
 
-SensitivityAxisFilter::SensitivityAxisFilter(float sensitivity)
-    : m_sensitivity(sensitivity) {}
+SensitivityAxisFilter::SensitivityAxisFilter(float sensitivity) : m_sensitivity(sensitivity) {}
 
 int SensitivityAxisFilter::filter(int value, int min, int max) {
   float pos = to_float(value, min, max);

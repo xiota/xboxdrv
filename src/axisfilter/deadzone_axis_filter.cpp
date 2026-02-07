@@ -23,14 +23,14 @@
 
 #include "helper.hpp"
 
-DeadzoneAxisFilter* DeadzoneAxisFilter::from_string(const std::string& str) {
+DeadzoneAxisFilter *DeadzoneAxisFilter::from_string(const std::string &str) {
   int min_deadzone = 0;
   int max_deadzone = 0;
   bool smooth = true;
 
   std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
-  for (auto& t : tokens) {
+  for (auto &t : tokens) {
     switch (idx) {
       case 0:
         max_deadzone = std::stoi(t);
@@ -56,11 +56,8 @@ DeadzoneAxisFilter* DeadzoneAxisFilter::from_string(const std::string& str) {
   return new DeadzoneAxisFilter(min_deadzone, max_deadzone, smooth);
 }
 
-DeadzoneAxisFilter::DeadzoneAxisFilter(int min_deadzone, int max_deadzone,
-                                       bool smooth)
-    : m_min_deadzone(min_deadzone),
-      m_max_deadzone(max_deadzone),
-      m_smooth(smooth) {}
+DeadzoneAxisFilter::DeadzoneAxisFilter(int min_deadzone, int max_deadzone, bool smooth)
+    : m_min_deadzone(min_deadzone), m_max_deadzone(max_deadzone), m_smooth(smooth) {}
 
 int DeadzoneAxisFilter::filter(int value, int min, int max) {
   if (!m_smooth) {
@@ -83,8 +80,7 @@ int DeadzoneAxisFilter::filter(int value, int min, int max) {
 
 std::string DeadzoneAxisFilter::str() const {
   std::ostringstream out;
-  out << "deadzone:" << m_min_deadzone << ":" << m_max_deadzone << ":"
-      << m_smooth;
+  out << "deadzone:" << m_min_deadzone << ":" << m_max_deadzone << ":" << m_smooth;
   return out.str();
 }
 

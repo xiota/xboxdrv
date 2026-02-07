@@ -35,23 +35,31 @@ class ControllerSlotOptions {
 
   void add_match_rule(ControllerMatchRulePtr rule);
 
-  ControllerOptions& get_options(int num);
-  const ControllerOptions& get_options(int num) const;
+  ControllerOptions &get_options(int num);
+  const ControllerOptions &get_options(int num) const;
 
-  const std::vector<ControllerMatchRulePtr>& get_match_rules() const;
-  const std::map<int, ControllerOptions>& get_options() const;
+  const std::vector<ControllerMatchRulePtr> &get_match_rules() const;
+  const std::map<int, ControllerOptions> &get_options() const;
 
-  void set_force_feedback(bool value) { m_force_feedback = value; }
-  bool get_force_feedback() const { return m_force_feedback; }
+  void set_force_feedback(bool value) {
+    m_force_feedback = value;
+  }
+  bool get_force_feedback() const {
+    return m_force_feedback;
+  }
 
-  void set_ff_device(const std::string& device);
+  void set_ff_device(const std::string &device);
   int get_ff_device() const;
 
   void set_rumble_gain(int gain);
   int get_rumble_gain() const;
 
-  int get_led_status() const { return m_led_status; }
-  void set_led_status(int v) { m_led_status = v; }
+  int get_led_status() const {
+    return m_led_status;
+  }
+  void set_led_status(int v) {
+    m_led_status = v;
+  }
 
  private:
   std::map<int, ControllerOptions> m_options;

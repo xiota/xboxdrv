@@ -37,7 +37,7 @@ class UIEventSequence {
   /**
       "KEY_LEFTSHIFT+KEY_B"
   */
-  static UIEventSequence from_string(const std::string& value);
+  static UIEventSequence from_string(const std::string &value);
 
  private:
   typedef std::vector<UIEvent> UIEvents;
@@ -47,11 +47,11 @@ class UIEventSequence {
 
  public:
   UIEventSequence();
-  UIEventSequence(const UIEvents& sequence);
-  UIEventSequence(const UIEvent& event);
+  UIEventSequence(const UIEvents &sequence);
+  UIEventSequence(const UIEvent &event);
 
-  void init(UInput& uinput, int slot, bool extra_devices);
-  void send(UInput& uinput, int value);
+  void init(UInput &uinput, int slot, bool extra_devices);
+  void send(UInput &uinput, int value);
 
   void clear();
 

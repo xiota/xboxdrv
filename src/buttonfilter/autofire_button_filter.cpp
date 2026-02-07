@@ -23,14 +23,13 @@
 
 #include "helper.hpp"
 
-AutofireButtonFilter* AutofireButtonFilter::from_string(
-    const std::string& str) {
+AutofireButtonFilter *AutofireButtonFilter::from_string(const std::string &str) {
   int rate = 50;
   int delay = 0;
 
   std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
-  for (auto& t : tokens) {
+  for (auto &t : tokens) {
     switch (idx) {
       case 0:
         rate = std::stoi(t);
@@ -49,11 +48,7 @@ AutofireButtonFilter* AutofireButtonFilter::from_string(
 }
 
 AutofireButtonFilter::AutofireButtonFilter(int rate, int delay)
-    : m_state(false),
-      m_autofire(false),
-      m_rate(rate),
-      m_delay(delay),
-      m_counter(0) {}
+    : m_state(false), m_autofire(false), m_rate(rate), m_delay(delay), m_counter(0) {}
 
 void AutofireButtonFilter::update(int msec_delta) {
   if (m_state) {

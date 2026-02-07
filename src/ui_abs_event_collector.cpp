@@ -20,8 +20,7 @@
 
 #include "uinput.hpp"
 
-UIAbsEventCollector::UIAbsEventCollector(UInput& uinput, uint32_t device_id,
-                                         int type, int code)
+UIAbsEventCollector::UIAbsEventCollector(UInput &uinput, uint32_t device_id, int type, int code)
     : UIEventCollector(uinput, device_id, type, code), m_emitters() {}
 
 UIEventEmitterPtr UIAbsEventCollector::create_emitter() {

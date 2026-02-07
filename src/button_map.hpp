@@ -35,12 +35,11 @@ class ButtonMap {
   ButtonEventPtr lookup(XboxButton code) const;
   ButtonEventPtr lookup(XboxButton shift_code, XboxButton code) const;
 
-  void init(UInput& uinput, int slot, bool extra_devices) const;
+  void init(UInput &uinput, int slot, bool extra_devices) const;
 
-  bool send(UInput& uinput, XboxButton code, bool value) const;
-  bool send(UInput& uinput, XboxButton shift_code, XboxButton code,
-            bool value) const;
-  void update(UInput& uinput, int msec_delta);
+  bool send(UInput &uinput, XboxButton code, bool value) const;
+  bool send(UInput &uinput, XboxButton shift_code, XboxButton code, bool value) const;
+  void update(UInput &uinput, int msec_delta);
 
   void clear();
 };

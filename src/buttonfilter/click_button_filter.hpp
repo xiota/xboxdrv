@@ -39,8 +39,8 @@ class ClickButtonFilter : public ButtonFilter {
   bool m_last_value;
 
  private:
-  ClickButtonFilter(const ClickButtonFilter&);
-  ClickButtonFilter& operator=(const ClickButtonFilter&);
+  ClickButtonFilter(const ClickButtonFilter &);
+  ClickButtonFilter &operator=(const ClickButtonFilter &);
 };
 
 #endif

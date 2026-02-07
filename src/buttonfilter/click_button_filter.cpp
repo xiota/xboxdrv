@@ -21,8 +21,7 @@
 #include <cassert>
 #include <string>
 
-ClickButtonFilter::ClickButtonFilter(Mode mode)
-    : m_mode(mode), m_last_value(false) {}
+ClickButtonFilter::ClickButtonFilter(Mode mode) : m_mode(mode), m_last_value(false) {}
 
 bool ClickButtonFilter::filter(bool value) {
   if (m_last_value != value) {

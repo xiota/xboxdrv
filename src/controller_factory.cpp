@@ -31,9 +31,8 @@
 #include "xbox360_wireless_controller.hpp"
 #include "xbox_controller.hpp"
 
-ControllerPtr ControllerFactory::create(const XPadDevice& dev_type,
-                                        libusb_device* dev,
-                                        const Options& opts) {
+ControllerPtr
+ControllerFactory::create(const XPadDevice &dev_type, libusb_device *dev, const Options &opts) {
   switch (dev_type.type) {
     case GAMEPAD_XBOX360_PLAY_N_CHARGE:
       // FIXME: only trigger this error message in single-instance mode, not in
@@ -46,7 +45,8 @@ ControllerPtr ControllerFactory::create(const XPadDevice& dev_type,
           "\n"
           "  * "
           "http://www.xbox.com/en-ca/hardware/x/"
-          "xbox360wirelessgamingreceiver/");
+          "xbox360wirelessgamingreceiver/"
+      );
       break;
 
     case GAMEPAD_XBOX:
@@ -56,44 +56,47 @@ ControllerPtr ControllerFactory::create(const XPadDevice& dev_type,
     case GAMEPAD_XBOX360:
     case GAMEPAD_XBOX360_GUITAR:
       return ControllerPtr(new Xbox360Controller(
-          dev, opts.chatpad, opts.chatpad_no_init, opts.chatpad_debug,
-          opts.headset, opts.headset_debug, opts.headset_dump,
-          opts.headset_play, opts.detach_kernel_driver));
+          dev,
+          opts.chatpad,
+          opts.chatpad_no_init,
+          opts.chatpad_debug,
+          opts.headset,
+          opts.headset_debug,
+          opts.headset_dump,
+          opts.headset_play,
+          opts.detach_kernel_driver
+      ));
       break;
 
     case GAMEPAD_XBOX360_WIRELESS:
-      return ControllerPtr(new Xbox360WirelessController(
-          dev, opts.wireless_id, opts.detach_kernel_driver));
+      return ControllerPtr(
+          new Xbox360WirelessController(dev, opts.wireless_id, opts.detach_kernel_driver)
+      );
 
     case GAMEPAD_FIRESTORM:
-      return ControllerPtr(
-          new FirestormDualController(dev, false, opts.detach_kernel_driver));
+      return ControllerPtr(new FirestormDualController(dev, false, opts.detach_kernel_driver));
 
     case GAMEPAD_FIRESTORM_VSB:
-      return ControllerPtr(
-          new FirestormDualController(dev, true, opts.detach_kernel_driver));
+      return ControllerPtr(new FirestormDualController(dev, true, opts.detach_kernel_driver));
 
     case GAMEPAD_T_WIRELESS:
-      return ControllerPtr(
-          new TWirelessController(dev, opts.detach_kernel_driver));
+      return ControllerPtr(new TWirelessController(dev, opts.detach_kernel_driver));
 
     case GAMEPAD_SAITEK_P2500:
-      return ControllerPtr(
-          new SaitekP2500Controller(dev, opts.detach_kernel_driver));
+      return ControllerPtr(new SaitekP2500Controller(dev, opts.detach_kernel_driver));
 
     case GAMEPAD_SAITEK_P3600:
-      return ControllerPtr(
-          new SaitekP3600Controller(dev, opts.detach_kernel_driver));
+      return ControllerPtr(new SaitekP3600Controller(dev, opts.detach_kernel_driver));
 
     case GAMEPAD_PLAYSTATION3_USB:
-      return ControllerPtr(
-          new Playstation3USBController(dev, opts.detach_kernel_driver));
+      return ControllerPtr(new Playstation3USBController(dev, opts.detach_kernel_driver));
 
     case GAMEPAD_GENERIC_USB: {
       Options::GenericUSBSpec spec =
           opts.find_generic_usb_spec(dev_type.idVendor, dev_type.idProduct);
       return ControllerPtr(new GenericUSBController(
-          dev, spec.m_interface, spec.m_endpoint, opts.detach_kernel_driver));
+          dev, spec.m_interface, spec.m_endpoint, opts.detach_kernel_driver
+      ));
     }
 
     default:
@@ -102,7 +105,10 @@ ControllerPtr ControllerFactory::create(const XPadDevice& dev_type,
 }
 
 std::vector<ControllerPtr> ControllerFactory::create_multiple(
-    const XPadDevice& dev_type, libusb_device* dev, const Options& opts) {
+    const XPadDevice &dev_type,
+    libusb_device *dev,
+    const Options &opts
+) {
   std::vector<ControllerPtr> lst;
 
   switch (dev_type.type) {
@@ -117,65 +123,74 @@ std::vector<ControllerPtr> ControllerFactory::create_multiple(
           "\n"
           "  * "
           "http://www.xbox.com/en-ca/hardware/x/"
-          "xbox360wirelessgamingreceiver/");
+          "xbox360wirelessgamingreceiver/"
+      );
       break;
 
     case GAMEPAD_XBOX:
     case GAMEPAD_XBOX_MAT:
-      lst.push_back(
-          ControllerPtr(new XboxController(dev, opts.detach_kernel_driver)));
+      lst.push_back(ControllerPtr(new XboxController(dev, opts.detach_kernel_driver)));
       break;
 
     case GAMEPAD_XBOX360:
     case GAMEPAD_XBOX360_GUITAR:
       lst.push_back(ControllerPtr(new Xbox360Controller(
-          dev, opts.chatpad, opts.chatpad_no_init, opts.chatpad_debug,
-          opts.headset, opts.headset_debug, opts.headset_dump,
-          opts.headset_play, opts.detach_kernel_driver)));
+          dev,
+          opts.chatpad,
+          opts.chatpad_no_init,
+          opts.chatpad_debug,
+          opts.headset,
+          opts.headset_debug,
+          opts.headset_dump,
+          opts.headset_play,
+          opts.detach_kernel_driver
+      )));
       break;
 
     case GAMEPAD_XBOX360_WIRELESS:
       for (int wireless_id = 0; wireless_id < 4; ++wireless_id) {
-        lst.push_back(ControllerPtr(new Xbox360WirelessController(
-            dev, wireless_id, opts.detach_kernel_driver)));
+        lst.push_back(ControllerPtr(
+            new Xbox360WirelessController(dev, wireless_id, opts.detach_kernel_driver)
+        ));
       }
       break;
 
     case GAMEPAD_FIRESTORM:
-      lst.push_back(ControllerPtr(
-          new FirestormDualController(dev, false, opts.detach_kernel_driver)));
+      lst.push_back(
+          ControllerPtr(new FirestormDualController(dev, false, opts.detach_kernel_driver))
+      );
       break;
 
     case GAMEPAD_FIRESTORM_VSB:
-      lst.push_back(ControllerPtr(
-          new FirestormDualController(dev, true, opts.detach_kernel_driver)));
+      lst.push_back(
+          ControllerPtr(new FirestormDualController(dev, true, opts.detach_kernel_driver))
+      );
       break;
 
     case GAMEPAD_T_WIRELESS:
-      lst.push_back(ControllerPtr(
-          new TWirelessController(dev, opts.detach_kernel_driver)));
+      lst.push_back(ControllerPtr(new TWirelessController(dev, opts.detach_kernel_driver)));
       break;
 
     case GAMEPAD_SAITEK_P2500:
-      lst.push_back(ControllerPtr(
-          new SaitekP2500Controller(dev, opts.detach_kernel_driver)));
+      lst.push_back(ControllerPtr(new SaitekP2500Controller(dev, opts.detach_kernel_driver)));
       break;
 
     case GAMEPAD_SAITEK_P3600:
-      lst.push_back(ControllerPtr(
-          new SaitekP3600Controller(dev, opts.detach_kernel_driver)));
+      lst.push_back(ControllerPtr(new SaitekP3600Controller(dev, opts.detach_kernel_driver)));
       break;
 
     case GAMEPAD_PLAYSTATION3_USB:
-      lst.push_back(ControllerPtr(
-          new Playstation3USBController(dev, opts.detach_kernel_driver)));
+      lst.push_back(
+          ControllerPtr(new Playstation3USBController(dev, opts.detach_kernel_driver))
+      );
       break;
 
     case GAMEPAD_GENERIC_USB: {
       Options::GenericUSBSpec spec =
           opts.find_generic_usb_spec(dev_type.idVendor, dev_type.idProduct);
       lst.push_back(ControllerPtr(new GenericUSBController(
-          dev, spec.m_interface, spec.m_endpoint, opts.detach_kernel_driver)));
+          dev, spec.m_interface, spec.m_endpoint, opts.detach_kernel_driver
+      )));
     } break;
 
     default:

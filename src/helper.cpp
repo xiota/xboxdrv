@@ -34,25 +34,24 @@
 #include "helper.hpp"
 #include "raise_exception.hpp"
 
-int hexstr2int(const std::string& str) {
+int hexstr2int(const std::string &str) {
   unsigned int value = 0;
   if (sscanf(str.c_str(), "%x", &value) == 1) {
     return value;
   } else if (sscanf(str.c_str(), "0x%x", &value) == 1) {
     return value;
   } else {
-    raise_exception(std::runtime_error,
-                    "couldn't convert '" << str << "' to int");
+    raise_exception(std::runtime_error, "couldn't convert '" << str << "' to int");
   }
 }
 
-bool str2bool(std::string const& str) {
+bool str2bool(const std::string &str) {
   bool b;
   std::istringstream(str) >> std::boolalpha >> b;
   return b;
 }
 
-std::string raw2str(uint8_t* data, int len) {
+std::string raw2str(uint8_t *data, int len) {
   std::ostringstream out;
   out << "len: " << len << " data: ";
 
@@ -63,19 +62,17 @@ std::string raw2str(uint8_t* data, int len) {
   return out.str();
 }
 
-std::string to_lower(const std::string& str) {
+std::string to_lower(const std::string &str) {
   std::string lower_impl = str;
 
-  for (std::string::iterator i = lower_impl.begin(); i != lower_impl.end();
-       ++i) {
+  for (std::string::iterator i = lower_impl.begin(); i != lower_impl.end(); ++i) {
     *i = static_cast<char>(tolower(*i));
   }
 
   return lower_impl;
 }
 
-void split_string_at(const std::string& str, char c, std::string* lhs,
-                     std::string* rhs) {
+void split_string_at(const std::string &str, char c, std::string *lhs, std::string *rhs) {
   std::string::size_type p = str.find(c);
   if (p == std::string::npos) {
     *lhs = str;
@@ -85,8 +82,7 @@ void split_string_at(const std::string& str, char c, std::string* lhs,
   }
 }
 
-std::vector<std::string> string_split(std::string_view text,
-                                      std::string_view delimiter) {
+std::vector<std::string> string_split(std::string_view text, std::string_view delimiter) {
   std::vector<std::string> result;
 
   std::string::size_type pos = 0;
@@ -104,18 +100,19 @@ std::vector<std::string> string_split(std::string_view text,
 }
 
 void process_name_value_string(
-    const std::string& str,
-    const std::function<void(const std::string&, const std::string&)>& func) {
+    const std::string &str,
+    const std::function<void(const std::string &, const std::string &)> &func
+) {
   std::vector<std::string> tokens = string_split(str, ",");
 
-  for (auto& i : tokens) {
+  for (auto &i : tokens) {
     std::string lhs, rhs;
     split_string_at(i, '=', &lhs, &rhs);
     func(lhs, rhs);
   }
 }
 
-bool is_number(const std::string& str) {
+bool is_number(const std::string &str) {
   for (std::string::const_iterator i = str.begin(); i != str.end(); ++i) {
     if (!isdigit(*i)) {
       return false;
@@ -124,7 +121,7 @@ bool is_number(const std::string& str) {
   return true;
 }
 
-int to_number(int range, const std::string& str) {
+int to_number(int range, const std::string &str) {
   if (str.empty()) {
     return 0;
   } else {
@@ -150,12 +147,10 @@ float to_float_no_range_check(int value, int min, int max) {
   int center = (max + min + 1) / 2;
 
   if (value < center) {
-    return static_cast<float>(value - center) /
-           static_cast<float>(center - min);
+    return static_cast<float>(value - center) / static_cast<float>(center - min);
   } else  // (value >= center)
   {
-    return static_cast<float>(value - center) /
-           static_cast<float>(max - center);
+    return static_cast<float>(value - center) / static_cast<float>(max - center);
   }
 }
 
@@ -176,19 +171,18 @@ int get_terminal_width() {
   }
 }
 
-pid_t spawn_exe(const std::string& arg0) {
+pid_t spawn_exe(const std::string &arg0) {
   std::vector<std::string> args;
   args.push_back(arg0);
   return spawn_exe(args);
 }
 
-pid_t spawn_exe(const std::vector<std::string>& args) {
+pid_t spawn_exe(const std::vector<std::string> &args) {
   assert(!args.empty());
 
   pid_t pid = fork();
   if (pid == 0) {
-    char** argv =
-        static_cast<char**>(malloc(sizeof(char*) * (args.size() + 1)));
+    char **argv = static_cast<char **>(malloc(sizeof(char *) * (args.size() + 1)));
     for (size_t i = 0; i < args.size(); ++i) {
       argv[i] = strdup(args[i].c_str());
     }

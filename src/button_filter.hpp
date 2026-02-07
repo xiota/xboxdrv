@@ -28,7 +28,7 @@ typedef std::shared_ptr<ButtonFilter> ButtonFilterPtr;
 
 class ButtonFilter {
  public:
-  static ButtonFilterPtr from_string(const std::string& str);
+  static ButtonFilterPtr from_string(const std::string &str);
 
  public:
   ButtonFilter() {}

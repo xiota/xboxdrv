@@ -30,12 +30,12 @@ class MessageProcessor {
   MessageProcessor() {}
   virtual ~MessageProcessor() {}
 
-  virtual void send(const XboxGenericMsg& msg, int msec_delta) = 0;
-  virtual void set_controller(Controller* controller) = 0;
+  virtual void send(const XboxGenericMsg &msg, int msec_delta) = 0;
+  virtual void set_controller(Controller *controller) = 0;
 
  private:
-  MessageProcessor(const MessageProcessor&);
-  MessageProcessor& operator=(const MessageProcessor&);
+  MessageProcessor(const MessageProcessor &);
+  MessageProcessor &operator=(const MessageProcessor &);
 };
 
 #endif

@@ -79,8 +79,11 @@ struct FirestormMsg {
   unsigned int y2 : 8;
 } __attribute__((__packed__));
 
-FirestormDualController::FirestormDualController(libusb_device* dev,
-                                                 bool is_vsb_, bool try_detach)
+FirestormDualController::FirestormDualController(
+    libusb_device *dev,
+    bool is_vsb_,
+    bool try_detach
+)
     : USBController(dev), is_vsb(is_vsb_) {
   usb_claim_interface(0, try_detach);
 
@@ -94,7 +97,7 @@ FirestormDualController::FirestormDualController(libusb_device* dev,
 FirestormDualController::~FirestormDualController() {}
 
 void FirestormDualController::set_rumble_real(uint8_t left, uint8_t right) {
-  uint8_t cmd[] = {left, right, 0x00, 0x00};
+  uint8_t cmd[] = { left, right, 0x00, 0x00 };
   if (is_vsb) {
     usb_control(0x21, 0x09, 0x0200, 0x00, cmd, sizeof(cmd));
   } else {
@@ -106,12 +109,11 @@ void FirestormDualController::set_led_real(uint8_t status) {
   // not supported
 }
 
-bool FirestormDualController::parse_vsb(uint8_t* data_in, int len,
-                                        XboxGenericMsg* msg_out) {
+bool FirestormDualController::parse_vsb(uint8_t *data_in, int len, XboxGenericMsg *msg_out) {
   Firestorm_vsb_Msg data;
 
   if (len == sizeof(data)) {
-    XboxGenericMsg& msg = *msg_out;
+    XboxGenericMsg &msg = *msg_out;
 
     memcpy(&data, data_in, sizeof(data));
     memset(&msg, 0, sizeof(msg));
@@ -147,17 +149,21 @@ bool FirestormDualController::parse_vsb(uint8_t* data_in, int len,
     // data.dpad == 0xf0 -> dpad centered
     // data.dpad == 0xe0 -> dpad-only mode is enabled
 
-    if (data.dpad == 0x0 || data.dpad == 0x7 || data.dpad == 0x1)
+    if (data.dpad == 0x0 || data.dpad == 0x7 || data.dpad == 0x1) {
       msg.xbox360.dpad_up = 1;
+    }
 
-    if (data.dpad == 0x1 || data.dpad == 0x2 || data.dpad == 0x3)
+    if (data.dpad == 0x1 || data.dpad == 0x2 || data.dpad == 0x3) {
       msg.xbox360.dpad_right = 1;
+    }
 
-    if (data.dpad == 0x3 || data.dpad == 0x4 || data.dpad == 0x5)
+    if (data.dpad == 0x3 || data.dpad == 0x4 || data.dpad == 0x5) {
       msg.xbox360.dpad_down = 1;
+    }
 
-    if (data.dpad == 0x5 || data.dpad == 0x6 || data.dpad == 0x7)
+    if (data.dpad == 0x5 || data.dpad == 0x6 || data.dpad == 0x7) {
       msg.xbox360.dpad_left = 1;
+    }
 
     return true;
   } else {
@@ -165,12 +171,15 @@ bool FirestormDualController::parse_vsb(uint8_t* data_in, int len,
   }
 }
 
-bool FirestormDualController::parse_default(uint8_t* data_in, int len,
-                                            XboxGenericMsg* msg_out) {
+bool FirestormDualController::parse_default(
+    uint8_t *data_in,
+    int len,
+    XboxGenericMsg *msg_out
+) {
   FirestormMsg data;
 
   if (len == sizeof(data)) {
-    XboxGenericMsg& msg = *msg_out;
+    XboxGenericMsg &msg = *msg_out;
 
     memcpy(&data, data_in, sizeof(data));
     memset(&msg, 0, sizeof(msg));
@@ -206,17 +215,21 @@ bool FirestormDualController::parse_default(uint8_t* data_in, int len,
     // data.dpad == 0xf0 -> dpad centered
     // data.dpad == 0xe0 -> dpad-only mode is enabled
 
-    if (data.dpad == 0x00 || data.dpad == 0x70 || data.dpad == 0x10)
+    if (data.dpad == 0x00 || data.dpad == 0x70 || data.dpad == 0x10) {
       msg.xbox360.dpad_up = 1;
+    }
 
-    if (data.dpad == 0x10 || data.dpad == 0x20 || data.dpad == 0x30)
+    if (data.dpad == 0x10 || data.dpad == 0x20 || data.dpad == 0x30) {
       msg.xbox360.dpad_right = 1;
+    }
 
-    if (data.dpad == 0x30 || data.dpad == 0x40 || data.dpad == 0x50)
+    if (data.dpad == 0x30 || data.dpad == 0x40 || data.dpad == 0x50) {
       msg.xbox360.dpad_down = 1;
+    }
 
-    if (data.dpad == 0x50 || data.dpad == 0x60 || data.dpad == 0x70)
+    if (data.dpad == 0x50 || data.dpad == 0x60 || data.dpad == 0x70) {
       msg.xbox360.dpad_left = 1;
+    }
 
     return true;
   } else {
@@ -224,8 +237,7 @@ bool FirestormDualController::parse_default(uint8_t* data_in, int len,
   }
 }
 
-bool FirestormDualController::parse(uint8_t* data, int len,
-                                    XboxGenericMsg* msg_out) {
+bool FirestormDualController::parse(uint8_t *data, int len, XboxGenericMsg *msg_out) {
   if (is_vsb) {
     return parse_vsb(data, len, msg_out);
   } else {

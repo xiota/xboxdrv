@@ -25,7 +25,7 @@
 
 class AutofireButtonFilter : public ButtonFilter {
  public:
-  static AutofireButtonFilter* from_string(const std::string& str);
+  static AutofireButtonFilter *from_string(const std::string &str);
 
  public:
   AutofireButtonFilter(int rate, int delay);

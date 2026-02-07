@@ -34,83 +34,98 @@ GQuark xboxdrv_controller_error_quark() {
  * xboxdrv_g_controller_parent_class */
 G_DEFINE_TYPE(XboxdrvGController, xboxdrv_g_controller, G_TYPE_OBJECT)
 
-static GObject* xboxdrv_g_controller_constructor(
-    GType gtype, guint n_properties, GObjectConstructParam* properties) {
+static GObject *xboxdrv_g_controller_constructor(
+    GType gtype,
+    guint n_properties,
+    GObjectConstructParam *properties
+) {
   // Always chain up to the parent constructor
-  GObjectClass* parent_class =
-      G_OBJECT_CLASS(xboxdrv_g_controller_parent_class);
+  GObjectClass *parent_class = G_OBJECT_CLASS(xboxdrv_g_controller_parent_class);
   return parent_class->constructor(gtype, n_properties, properties);
 }
 
-static void xboxdrv_g_controller_class_init(XboxdrvGControllerClass* klass) {
-  GObjectClass* gobject_class = G_OBJECT_CLASS(klass);
+static void xboxdrv_g_controller_class_init(XboxdrvGControllerClass *klass) {
+  GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
   gobject_class->constructor = xboxdrv_g_controller_constructor;
 }
 
-static void xboxdrv_g_controller_init(XboxdrvGController* self) {
+static void xboxdrv_g_controller_init(XboxdrvGController *self) {
   self->controller = NULL;
 }
 
-XboxdrvGController* xboxdrv_g_controller_new(ControllerSlot* controller) {
-  XboxdrvGController* self = static_cast<XboxdrvGController*>(
-      g_object_new(XBOXDRV_TYPE_G_CONTROLLER, NULL));
+XboxdrvGController *xboxdrv_g_controller_new(ControllerSlot *controller) {
+  XboxdrvGController *self =
+      static_cast<XboxdrvGController *>(g_object_new(XBOXDRV_TYPE_G_CONTROLLER, NULL));
   self->controller = controller;
   return self;
 }
 
-gboolean xboxdrv_g_controller_set_led(XboxdrvGController* self, int status,
-                                      GError** error) {
-  log_info("D-Bus: xboxdrv_g_controller_set_led(" << self << ", " << status
-                                                  << ")");
+gboolean xboxdrv_g_controller_set_led(XboxdrvGController *self, int status, GError **error) {
+  log_info("D-Bus: xboxdrv_g_controller_set_led(" << self << ", " << status << ")");
 
   if (self->controller && self->controller->get_controller()) {
     self->controller->get_controller()->set_led(status);
     return TRUE;
   } else {
-    g_set_error(error, XBOXDRV_CONTROLLER_ERROR,
-                XBOXDRV_CONTROLLER_ERROR_FAILED, "could't access controller");
+    g_set_error(
+        error,
+        XBOXDRV_CONTROLLER_ERROR,
+        XBOXDRV_CONTROLLER_ERROR_FAILED,
+        "could't access controller"
+    );
     return FALSE;
   }
 }
 
-gboolean xboxdrv_g_controller_set_rumble(XboxdrvGController* self, int strong,
-                                         int weak, GError** error) {
-  log_info("D-Bus: xboxdrv_g_controller_set_rumble(" << self << ", " << strong
-                                                     << ", " << weak << ")");
+gboolean xboxdrv_g_controller_set_rumble(
+    XboxdrvGController *self,
+    int strong,
+    int weak,
+    GError **error
+) {
+  log_info(
+      "D-Bus: xboxdrv_g_controller_set_rumble(" << self << ", " << strong << ", " << weak << ")"
+  );
 
   if (self->controller && self->controller->get_controller()) {
     self->controller->get_controller()->set_rumble(strong, weak);
     return TRUE;
   } else {
-    g_set_error(error, XBOXDRV_CONTROLLER_ERROR,
-                XBOXDRV_CONTROLLER_ERROR_FAILED, "could't access controller");
+    g_set_error(
+        error,
+        XBOXDRV_CONTROLLER_ERROR,
+        XBOXDRV_CONTROLLER_ERROR_FAILED,
+        "could't access controller"
+    );
     return FALSE;
   }
 }
 
-gboolean xboxdrv_g_controller_set_config(XboxdrvGController* self,
-                                         int config_num, GError** error) {
-  log_info("D-Bus: xboxdrv_g_controller_set_config(" << self << ", "
-                                                     << config_num << ")");
+gboolean
+xboxdrv_g_controller_set_config(XboxdrvGController *self, int config_num, GError **error) {
+  log_info("D-Bus: xboxdrv_g_controller_set_config(" << self << ", " << config_num << ")");
 
   if (self->controller && self->controller->get_thread() &&
       self->controller->get_thread()->get_controller()) {
-    MessageProcessor* gen_msg_proc =
-        self->controller->get_thread()->get_message_proc();
-    UInputMessageProcessor* msg_proc =
-        dynamic_cast<UInputMessageProcessor*>(gen_msg_proc);
+    MessageProcessor *gen_msg_proc = self->controller->get_thread()->get_message_proc();
+    UInputMessageProcessor *msg_proc = dynamic_cast<UInputMessageProcessor *>(gen_msg_proc);
 
     try {
       msg_proc->set_config(config_num);
       return TRUE;
-    } catch (const std::exception& err) {
-      g_set_error(error, XBOXDRV_CONTROLLER_ERROR,
-                  XBOXDRV_CONTROLLER_ERROR_FAILED, "%s", err.what());
+    } catch (const std::exception &err) {
+      g_set_error(
+          error, XBOXDRV_CONTROLLER_ERROR, XBOXDRV_CONTROLLER_ERROR_FAILED, "%s", err.what()
+      );
       return FALSE;
     }
   } else {
-    g_set_error(error, XBOXDRV_CONTROLLER_ERROR,
-                XBOXDRV_CONTROLLER_ERROR_FAILED, "could't access controller");
+    g_set_error(
+        error,
+        XBOXDRV_CONTROLLER_ERROR,
+        XBOXDRV_CONTROLLER_ERROR_FAILED,
+        "could't access controller"
+    );
     return FALSE;
   }
 }

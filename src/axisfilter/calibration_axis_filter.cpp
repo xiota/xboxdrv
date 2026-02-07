@@ -24,8 +24,7 @@
 
 #include "helper.hpp"
 
-CalibrationAxisFilter* CalibrationAxisFilter::from_string(
-    const std::string& str) {
+CalibrationAxisFilter *CalibrationAxisFilter::from_string(const std::string &str) {
   std::vector<std::string> tokens = string_split(str, ":");
 
   int min = 0;
@@ -33,7 +32,7 @@ CalibrationAxisFilter* CalibrationAxisFilter::from_string(
   int max = 0;
 
   int idx = 0;
-  for (auto& i : tokens) {
+  for (auto &i : tokens) {
     switch (idx) {
       case 0:
         min = std::stoi(i);
@@ -57,12 +56,13 @@ CalibrationAxisFilter::CalibrationAxisFilter(int min, int center, int max)
     : m_min(min), m_center(center), m_max(max) {}
 
 int CalibrationAxisFilter::filter(int value, int min, int max) {
-  if (value < m_center)
+  if (value < m_center) {
     value = -min * (value - m_center) / (m_center - m_min);
-  else if (value > m_center)
+  } else if (value > m_center) {
     value = max * (value - m_center) / (m_max - m_center);
-  else
+  } else {
     value = 0;
+  }
 
   return std::clamp(value, min, max);
 }

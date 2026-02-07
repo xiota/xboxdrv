@@ -25,7 +25,7 @@
 #include "usb_helper.hpp"
 #include "xboxmsg.hpp"
 
-XboxController::XboxController(libusb_device* dev, bool try_detach)
+XboxController::XboxController(libusb_device *dev, bool try_detach)
     : USBController(dev), m_endpoint_in(1), m_endpoint_out(2) {
   // find endpoints
   m_endpoint_in = usb_find_ep(LIBUSB_ENDPOINT_IN, 88, 66, 0);
@@ -38,7 +38,7 @@ XboxController::XboxController(libusb_device* dev, bool try_detach)
 XboxController::~XboxController() {}
 
 void XboxController::set_rumble_real(uint8_t left, uint8_t right) {
-  uint8_t rumblecmd[] = {0x00, 0x06, 0x00, left, 0x00, right};
+  uint8_t rumblecmd[] = { 0x00, 0x06, 0x00, left, 0x00, right };
   usb_write(m_endpoint_out, rumblecmd, sizeof(rumblecmd));
 }
 
@@ -46,7 +46,7 @@ void XboxController::set_led_real(uint8_t status) {
   // Controller doesn't have a LED
 }
 
-bool XboxController::parse(uint8_t* data, int len, XboxGenericMsg* msg_out) {
+bool XboxController::parse(uint8_t *data, int len, XboxGenericMsg *msg_out) {
   if (len == 20 && data[0] == 0x00 && data[1] == 0x14) {
     msg_out->type = XBOX_MSG_XBOX;
     memcpy(&msg_out->xbox, data, sizeof(XboxMsg));

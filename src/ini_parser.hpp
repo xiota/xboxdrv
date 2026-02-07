@@ -26,20 +26,20 @@ class INIBuilder;
 
 class INIParser {
  private:
-  std::istream& m_in;
-  INIBuilder& m_builder;
+  std::istream &m_in;
+  INIBuilder &m_builder;
   std::string m_context;
   int m_line;
   int m_column;
   int m_current_char;
 
  public:
-  INIParser(std::istream& in, INIBuilder& builder, const std::string& context);
+  INIParser(std::istream &in, INIBuilder &builder, const std::string &context);
 
   void run();
 
  private:
-  void error(const std::string& message);
+  void error(const std::string &message);
   int peek();
   void next();
   bool accept(char c);
@@ -56,8 +56,8 @@ class INIParser {
   int getchar();
 
  private:
-  INIParser(const INIParser&);
-  INIParser& operator=(const INIParser&);
+  INIParser(const INIParser &);
+  INIParser &operator=(const INIParser &);
 };
 
 #endif

@@ -33,14 +33,13 @@ typedef std::shared_ptr<ControllerMatchRule> ControllerMatchRulePtr;
 
 class ControllerMatchRule {
  public:
-  static ControllerMatchRulePtr from_string(const std::string& lhs,
-                                            const std::string& rhs);
+  static ControllerMatchRulePtr from_string(const std::string &lhs, const std::string &rhs);
 
  public:
   ControllerMatchRule() {}
   virtual ~ControllerMatchRule() {}
 
-  virtual bool match(udev_device* device) const = 0;
+  virtual bool match(udev_device *device) const = 0;
 };
 
 class ControllerMatchRuleGroup : public ControllerMatchRule {
@@ -52,8 +51,8 @@ class ControllerMatchRuleGroup : public ControllerMatchRule {
   ControllerMatchRuleGroup();
 
   void add_rule(ControllerMatchRulePtr rule);
-  void add_rule_from_string(const std::string& lhs, const std::string& rhs);
-  bool match(udev_device* device) const;
+  void add_rule_from_string(const std::string &lhs, const std::string &rhs);
+  bool match(udev_device *device) const;
 };
 
 #endif

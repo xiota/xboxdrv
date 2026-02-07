@@ -29,17 +29,17 @@ class Playstation3USBController : public USBController {
   int endpoint_out;
 
  public:
-  Playstation3USBController(libusb_device* dev, bool try_detach);
+  Playstation3USBController(libusb_device *dev, bool try_detach);
   ~Playstation3USBController();
 
   void set_rumble_real(uint8_t left, uint8_t right);
   void set_led_real(uint8_t status);
 
-  bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
+  bool parse(uint8_t *data, int len, XboxGenericMsg *msg_out);
 
  private:
-  Playstation3USBController(const Playstation3USBController&);
-  Playstation3USBController& operator=(const Playstation3USBController&);
+  Playstation3USBController(const Playstation3USBController &);
+  Playstation3USBController &operator=(const Playstation3USBController &);
 };
 
 #endif

@@ -23,8 +23,7 @@
 
 #include "ini_builder.hpp"
 
-INIParser::INIParser(std::istream& in, INIBuilder& builder,
-                     const std::string& context)
+INIParser::INIParser(std::istream &in, INIBuilder &builder, const std::string &context)
     : m_in(in),
       m_builder(builder),
       m_context(context),
@@ -84,14 +83,15 @@ void INIParser::run() {
   }
 }
 
-void INIParser::error(const std::string& message) {
+void INIParser::error(const std::string &message) {
   std::ostringstream str;
-  str << m_context << ":" << m_line << ":" << m_column
-      << ": error: " << message;
+  str << m_context << ":" << m_line << ":" << m_column << ": error: " << message;
   throw std::runtime_error(str.str());
 }
 
-int INIParser::peek() { return m_current_char; }
+int INIParser::peek() {
+  return m_current_char;
+}
 
 void INIParser::next() {
   if (m_in.eof()) {
@@ -276,6 +276,8 @@ void INIParser::whitespace() {
   }
 }
 
-int INIParser::getchar() { return m_in.get(); }
+int INIParser::getchar() {
+  return m_in.get();
+}
 
 /* EOF */

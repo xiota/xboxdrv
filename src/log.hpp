@@ -24,7 +24,7 @@
 
 /** Takes __PRETTY_FUNCTION__ and tries to shorten it to the form:
     Classname::function() */
-std::string log_pretty_print(const std::string& str);
+std::string log_pretty_print(const std::string &str);
 
 class Logger {
  public:
@@ -55,8 +55,8 @@ class Logger {
   void incr_log_level(LogLevel level);
   void set_log_level(LogLevel level);
   LogLevel get_log_level() const;
-  void append(LogLevel level, const std::string& str);
-  void append_unchecked(LogLevel level, const std::string& str);
+  void append(LogLevel level, const std::string &str);
+  void append_unchecked(LogLevel level, const std::string &str);
 };
 
 #define log_debug(text)                                                   \

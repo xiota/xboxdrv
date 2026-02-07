@@ -34,9 +34,11 @@
 #include "path.hpp"
 #include "uinput.hpp"
 
-ButtonEventPtr ButtonEvent::invalid() { return ButtonEventPtr(); }
+ButtonEventPtr ButtonEvent::invalid() {
+  return ButtonEventPtr();
+}
 
-ButtonEventPtr ButtonEvent::create(ButtonEventHandler* handler) {
+ButtonEventPtr ButtonEvent::create(ButtonEventHandler *handler) {
   return ButtonEventPtr(new ButtonEvent(handler));
 }
 
@@ -58,16 +60,18 @@ ButtonEventPtr ButtonEvent::create_key() {
 
 ButtonEventPtr ButtonEvent::create_rel(int code) {
   return ButtonEvent::create(
-      new RelButtonEventHandler(UIEvent::create(DEVICEID_AUTO, EV_REL, code)));
+      new RelButtonEventHandler(UIEvent::create(DEVICEID_AUTO, EV_REL, code))
+  );
 }
 
-ButtonEventPtr ButtonEvent::from_string(const std::string& str,
-                                        const std::string& directory) {
+ButtonEventPtr ButtonEvent::from_string(const std::string &str, const std::string &directory) {
   std::string::size_type p = str.find(':');
-  const std::string& token = str.substr(0, p);
+  const std::string &token = str.substr(0, p);
   std::string rest;
 
-  if (p != std::string::npos) rest = str.substr(p + 1);
+  if (p != std::string::npos) {
+    rest = str.substr(p + 1);
+  }
 
   if (token == "abs") {
     return ButtonEvent::create(AbsButtonEventHandler::from_string(rest));
@@ -76,23 +80,20 @@ ButtonEventPtr ButtonEvent::from_string(const std::string& str,
   } else if (token == "key") {
     return ButtonEvent::create(KeyButtonEventHandler::from_string(rest));
   } else if (token == "cycle-key") {
-    return ButtonEvent::create(
-        CycleKeyButtonEventHandler::from_string(rest, true));
+    return ButtonEvent::create(CycleKeyButtonEventHandler::from_string(rest, true));
   } else if (token == "cycle-key-named") {
-    return ButtonEvent::create(
-        CycleKeyButtonEventHandler::from_string_named(rest, true));
+    return ButtonEvent::create(CycleKeyButtonEventHandler::from_string_named(rest, true));
   } else if (token == "sequence-key-named" || token == "seq-key-named") {
-    return ButtonEvent::create(
-        CycleKeyButtonEventHandler::from_string_named(rest, false));
+    return ButtonEvent::create(CycleKeyButtonEventHandler::from_string_named(rest, false));
   } else if (token == "cycle-key-ref" || token == "seq-key-ref" ||
              token == "sequence-key-ref") {
-    return ButtonEvent::create(
-        CycleKeyButtonEventHandler::from_string_ref(rest));
+    return ButtonEvent::create(CycleKeyButtonEventHandler::from_string_ref(rest));
   } else if (token == "exec") {
     return ButtonEvent::create(ExecButtonEventHandler::from_string(rest));
   } else if (token == "macro") {
     return ButtonEvent::create(
-        MacroButtonEventHandler::from_string(path::join(directory, rest)));
+        MacroButtonEventHandler::from_string(path::join(directory, rest))
+    );
   } else {
     // try to guess the type of event on the type of the first event code
     switch (get_event_type(token)) {
@@ -110,13 +111,10 @@ ButtonEventPtr ButtonEvent::from_string(const std::string& str,
   }
 }
 
-ButtonEvent::ButtonEvent(ButtonEventHandler* handler)
-    : m_last_send_state(false),
-      m_last_raw_state(false),
-      m_handler(handler),
-      m_filters() {}
+ButtonEvent::ButtonEvent(ButtonEventHandler *handler)
+    : m_last_send_state(false), m_last_raw_state(false), m_handler(handler), m_filters() {}
 
-void ButtonEvent::add_filters(const std::vector<ButtonFilterPtr>& filters) {
+void ButtonEvent::add_filters(const std::vector<ButtonFilterPtr> &filters) {
   std::copy(filters.begin(), filters.end(), std::back_inserter(m_filters));
 }
 
@@ -124,17 +122,17 @@ void ButtonEvent::add_filter(ButtonFilterPtr filter) {
   m_filters.push_back(filter);
 }
 
-void ButtonEvent::init(UInput& uinput, int slot, bool extra_devices) {
+void ButtonEvent::init(UInput &uinput, int slot, bool extra_devices) {
   return m_handler->init(uinput, slot, extra_devices);
 }
 
-void ButtonEvent::send(UInput& uinput, bool raw_state) {
+void ButtonEvent::send(UInput &uinput, bool raw_state) {
   m_last_raw_state = raw_state;
   bool filtered_state = raw_state;
 
   // filter values
-  for (std::vector<ButtonFilterPtr>::const_iterator i = m_filters.begin();
-       i != m_filters.end(); ++i) {
+  for (std::vector<ButtonFilterPtr>::const_iterator i = m_filters.begin(); i != m_filters.end();
+       ++i) {
     filtered_state = (*i)->filter(filtered_state);
   }
 
@@ -146,9 +144,9 @@ void ButtonEvent::send(UInput& uinput, bool raw_state) {
   }
 }
 
-void ButtonEvent::update(UInput& uinput, int msec_delta) {
-  for (std::vector<ButtonFilterPtr>::const_iterator i = m_filters.begin();
-       i != m_filters.end(); ++i) {
+void ButtonEvent::update(UInput &uinput, int msec_delta) {
+  for (std::vector<ButtonFilterPtr>::const_iterator i = m_filters.begin(); i != m_filters.end();
+       ++i) {
     (*i)->update(msec_delta);
   }
 
@@ -157,6 +155,8 @@ void ButtonEvent::update(UInput& uinput, int msec_delta) {
   send(uinput, m_last_raw_state);
 }
 
-std::string ButtonEvent::str() const { return m_handler->str(); }
+std::string ButtonEvent::str() const {
+  return m_handler->str();
+}
 
 /* EOF */

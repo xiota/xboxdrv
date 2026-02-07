@@ -27,8 +27,7 @@
 #include "log.hpp"
 #include "usb_helper.hpp"
 
-USBGSource::USBGSource()
-    : m_source_funcs(), m_source(), m_source_id(), m_pollfds() {
+USBGSource::USBGSource() : m_source_funcs(), m_source(), m_source_id(), m_pollfds() {
   // create the source functions
   m_source_funcs.prepare = &USBGSource::on_source_prepare;
   m_source_funcs.check = &USBGSource::on_source_check;
@@ -39,22 +38,21 @@ USBGSource::USBGSource()
   m_source_funcs.closure_marshal = NULL;
 
   // create the source itself
-  m_source = reinterpret_cast<GUSBSource*>(
-      g_source_new(&m_source_funcs, sizeof(GUSBSource)));
+  m_source = reinterpret_cast<GUSBSource *>(g_source_new(&m_source_funcs, sizeof(GUSBSource)));
   m_source->usb_source = this;
-  g_source_set_callback(&m_source->source, &USBGSource::on_source_wrap, this,
-                        NULL);
+  g_source_set_callback(&m_source->source, &USBGSource::on_source_wrap, this, NULL);
 
   // add pollfds to source
-  const libusb_pollfd** fds = libusb_get_pollfds(NULL);
-  for (const libusb_pollfd** i = fds; *i != NULL; ++i) {
+  const libusb_pollfd **fds = libusb_get_pollfds(NULL);
+  for (const libusb_pollfd **i = fds; *i != NULL; ++i) {
     on_usb_pollfd_added((*i)->fd, (*i)->events);
   }
   free(fds);
 
   // register pollfd callbacks
-  libusb_set_pollfd_notifiers(NULL, &USBGSource::on_usb_pollfd_added_wrap,
-                              &USBGSource::on_usb_pollfd_removed_wrap, this);
+  libusb_set_pollfd_notifiers(
+      NULL, &USBGSource::on_usb_pollfd_added_wrap, &USBGSource::on_usb_pollfd_removed_wrap, this
+  );
 }
 
 USBGSource::~USBGSource() {
@@ -62,16 +60,16 @@ USBGSource::~USBGSource() {
   libusb_set_pollfd_notifiers(NULL, NULL, NULL, NULL);
 
   // get rid of the GSource created in the constructor
-  g_source_unref(reinterpret_cast<GSource*>(m_source));
+  g_source_unref(reinterpret_cast<GSource *>(m_source));
 }
 
-void USBGSource::attach(GMainContext* context) {
+void USBGSource::attach(GMainContext *context) {
   // attach source
   m_source_id = g_source_attach(&m_source->source, context);
 }
 
 void USBGSource::on_usb_pollfd_added(int fd, short events) {
-  GPollFD* gfd = new GPollFD;
+  GPollFD *gfd = new GPollFD;
 
   gfd->fd = fd;
   gfd->events = events;
@@ -84,9 +82,8 @@ void USBGSource::on_usb_pollfd_added(int fd, short events) {
 
 void USBGSource::on_usb_pollfd_removed(int fd) {
   // find the GPollFD that matched the given \a fd
-  std::list<GPollFD*>::iterator it = m_pollfds.end();
-  for (std::list<GPollFD*>::iterator i = m_pollfds.begin();
-       i != m_pollfds.end(); ++i) {
+  std::list<GPollFD *>::iterator it = m_pollfds.end();
+  for (std::list<GPollFD *>::iterator i = m_pollfds.begin(); i != m_pollfds.end(); ++i) {
     if ((*i)->fd == fd) {
       it = i;
       break;
@@ -101,7 +98,7 @@ void USBGSource::on_usb_pollfd_removed(int fd) {
   m_pollfds.erase(it);
 }
 
-gboolean USBGSource::on_source_prepare(GSource* source, gint* timeout) {
+gboolean USBGSource::on_source_prepare(GSource *source, gint *timeout) {
   struct timeval tv;
   int ret = libusb_get_next_timeout(NULL, &tv);
 
@@ -120,11 +117,12 @@ gboolean USBGSource::on_source_prepare(GSource* source, gint* timeout) {
   return FALSE;
 }
 
-gboolean USBGSource::on_source_check(GSource* source) {
-  USBGSource* usb_source = reinterpret_cast<GUSBSource*>(source)->usb_source;
+gboolean USBGSource::on_source_check(GSource *source) {
+  USBGSource *usb_source = reinterpret_cast<GUSBSource *>(source)->usb_source;
   // log_debug("Number of PollFD: " << usb_source->m_pollfds.size());
-  for (std::list<GPollFD*>::iterator i = usb_source->m_pollfds.begin();
-       i != usb_source->m_pollfds.end(); ++i) {
+  for (std::list<GPollFD *>::iterator i = usb_source->m_pollfds.begin();
+       i != usb_source->m_pollfds.end();
+       ++i) {
     if (false) {
       log_debug("GSource GPollFD: " << (*i)->fd);
       log_debug("REvents: G_IO_OUT: " << ((*i)->revents & G_IO_OUT));
@@ -142,8 +140,8 @@ gboolean USBGSource::on_source_check(GSource* source) {
   return FALSE;
 }
 
-gboolean USBGSource::on_source_dispatch(GSource* source, GSourceFunc callback,
-                                        gpointer userdata) {
+gboolean
+USBGSource::on_source_dispatch(GSource *source, GSourceFunc callback, gpointer userdata) {
   return callback(userdata);
 }
 

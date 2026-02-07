@@ -1,1 +1,27 @@
 BasedOnStyle: Google
+AlignAfterOpenBracket: BlockIndent
+AlignArrayOfStructures: None
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortFunctionsOnASingleLine: Empty
+BinPackArguments: false
+BinPackParameters: false
+ColumnLimit: 96
+CommentPragmas: '^SPDX'
+Cpp11BracedListStyle: false
+DerivePointerAlignment: false
+IncludeBlocks: Preserve
+IncludeCategories:
+  - Regex: '^".*"'
+    Priority: 1
+  - Regex: '^<.*>$'
+    Priority: 2
+IndentPPDirectives: None
+IndentWidth: 2
+InsertBraces: true
+InsertNewlineAtEOF: true
+PointerAlignment: Right
+QualifierAlignment: Left
+ReferenceAlignment: Pointer
+SortIncludes: true
+SpaceBeforeParens: ControlStatements
+SpacesInAngles: false

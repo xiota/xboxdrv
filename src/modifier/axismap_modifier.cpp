@@ -25,8 +25,7 @@
 #include "axisfilter/invert_axis_filter.hpp"
 #include "helper.hpp"
 
-AxisMapping AxisMapping::from_string(const std::string& lhs_,
-                                     const std::string& rhs) {
+AxisMapping AxisMapping::from_string(const std::string &lhs_, const std::string &rhs) {
   std::string lhs = lhs_;
   AxisMapping mapping;
 
@@ -41,7 +40,7 @@ AxisMapping AxisMapping::from_string(const std::string& lhs_,
 
   std::vector<std::string> tokens = string_split(lhs, "^");
   int idx = 0;
-  for (auto& t : tokens) {
+  for (auto &t : tokens) {
     switch (idx) {
       case 0:
         mapping.lhs = string2axis(t);
@@ -60,8 +59,9 @@ AxisMapping AxisMapping::from_string(const std::string& lhs_,
   }
 
   if (mapping.lhs == XBOX_AXIS_UNKNOWN || mapping.rhs == XBOX_AXIS_UNKNOWN) {
-    throw std::runtime_error("Couldn't convert string \"" + lhs + "=" + rhs +
-                             "\" to axis mapping");
+    throw std::runtime_error(
+        "Couldn't convert string \"" + lhs + "=" + rhs + "\" to axis mapping"
+    );
   }
 
   return mapping;
@@ -69,26 +69,23 @@ AxisMapping AxisMapping::from_string(const std::string& lhs_,
 
 AxismapModifier::AxismapModifier() : m_axismap() {}
 
-void AxismapModifier::update(int msec_delta, XboxGenericMsg& msg) {
+void AxismapModifier::update(int msec_delta, XboxGenericMsg &msg) {
   XboxGenericMsg newmsg = msg;
 
   // update all filters in all mappings
-  for (std::vector<AxisMapping>::iterator i = m_axismap.begin();
-       i != m_axismap.end(); ++i) {
-    for (std::vector<AxisFilterPtr>::iterator j = i->filters.begin();
-         j != i->filters.end(); ++j) {
+  for (std::vector<AxisMapping>::iterator i = m_axismap.begin(); i != m_axismap.end(); ++i) {
+    for (std::vector<AxisFilterPtr>::iterator j = i->filters.begin(); j != i->filters.end();
+         ++j) {
       (*j)->update(msec_delta);
     }
   }
 
   // clear all lhs values in the newmsg, keep rhs
-  for (std::vector<AxisMapping>::iterator i = m_axismap.begin();
-       i != m_axismap.end(); ++i) {
+  for (std::vector<AxisMapping>::iterator i = m_axismap.begin(); i != m_axismap.end(); ++i) {
     set_axis_float(newmsg, i->lhs, 0);
   }
 
-  for (std::vector<AxisMapping>::iterator i = m_axismap.begin();
-       i != m_axismap.end(); ++i) {
+  for (std::vector<AxisMapping>::iterator i = m_axismap.begin(); i != m_axismap.end(); ++i) {
     int min = get_axis_min(i->lhs);
     int max = get_axis_max(i->lhs);
     int value = get_axis(msg, i->lhs);
@@ -98,8 +95,8 @@ void AxismapModifier::update(int msec_delta, XboxGenericMsg& msg) {
       value = inv.filter(value, min, max);
     }
 
-    for (std::vector<AxisFilterPtr>::iterator j = i->filters.begin();
-         j != i->filters.end(); ++j) {
+    for (std::vector<AxisFilterPtr>::iterator j = i->filters.begin(); j != i->filters.end();
+         ++j) {
       value = (*j)->filter(value, min, max);
     }
 
@@ -118,13 +115,12 @@ void AxismapModifier::update(int msec_delta, XboxGenericMsg& msg) {
   msg = newmsg;
 }
 
-void AxismapModifier::add(const AxisMapping& mapping) {
+void AxismapModifier::add(const AxisMapping &mapping) {
   m_axismap.push_back(mapping);
 }
 
 void AxismapModifier::add_filter(XboxAxis axis, AxisFilterPtr filter) {
-  for (std::vector<AxisMapping>::iterator i = m_axismap.begin();
-       i != m_axismap.end(); ++i) {
+  for (std::vector<AxisMapping>::iterator i = m_axismap.begin(); i != m_axismap.end(); ++i) {
     if (i->lhs == axis) {
       i->filters.push_back(filter);
       break;
@@ -142,12 +138,12 @@ void AxismapModifier::add_filter(XboxAxis axis, AxisFilterPtr filter) {
 std::string AxismapModifier::str() const {
   std::ostringstream out;
   out << "axismap:\n";
-  for (std::vector<AxisMapping>::const_iterator i = m_axismap.begin();
-       i != m_axismap.end(); ++i) {
-    out << "  " << axis2string(i->lhs) << "=" << axis2string(i->rhs)
-        << std::endl;
+  for (std::vector<AxisMapping>::const_iterator i = m_axismap.begin(); i != m_axismap.end();
+       ++i) {
+    out << "  " << axis2string(i->lhs) << "=" << axis2string(i->rhs) << std::endl;
     for (std::vector<AxisFilterPtr>::const_iterator filter = i->filters.begin();
-         filter != i->filters.end(); ++filter) {
+         filter != i->filters.end();
+         ++filter) {
       out << "    " << (*filter)->str() << std::endl;
     }
   }

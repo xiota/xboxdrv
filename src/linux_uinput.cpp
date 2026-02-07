@@ -32,8 +32,11 @@
 #include "force_feedback_handler.hpp"
 #include "raise_exception.hpp"
 
-LinuxUinput::LinuxUinput(DeviceType device_type, const std::string& name_,
-                         const struct input_id& usbid_)
+LinuxUinput::LinuxUinput(
+    DeviceType device_type,
+    const std::string &name_,
+    const struct input_id &usbid_
+)
     : m_device_type(device_type),
       name(name_),
       usbid(usbid_),
@@ -60,10 +63,8 @@ LinuxUinput::LinuxUinput(DeviceType device_type, const std::string& name_,
   memset(&user_dev, 0, sizeof(uinput_user_dev));
 
   // Open the input device
-  const char* uinput_filename[] = {"/dev/input/uinput", "/dev/uinput",
-                                   "/dev/misc/uinput"};
-  const int uinput_filename_count =
-      (sizeof(uinput_filename) / sizeof(const char*));
+  const char *uinput_filename[] = { "/dev/input/uinput", "/dev/uinput", "/dev/misc/uinput" };
+  const int uinput_filename_count = (sizeof(uinput_filename) / sizeof(const char *));
 
   std::ostringstream str;
   for (int i = 0; i < uinput_filename_count; ++i) {
@@ -83,8 +84,7 @@ LinuxUinput::LinuxUinput(DeviceType device_type, const std::string& name_,
     out << "Troubleshooting:" << std::endl;
     out << "  * make sure uinput kernel module is loaded " << std::endl;
     out << "  * make sure joydev kernel module is loaded " << std::endl;
-    out << "  * make sure you have permissions to access the uinput device"
-        << std::endl;
+    out << "  * make sure you have permissions to access the uinput device" << std::endl;
     out << "  * start the driver with ./xboxdrv -v --no-uinput to see if the "
            "driver itself works"
         << std::endl;
@@ -102,8 +102,7 @@ LinuxUinput::~LinuxUinput() {
 }
 
 void LinuxUinput::add_abs(uint16_t code, int min, int max, int fuzz, int flat) {
-  log_debug("add_abs: " << abs2str(code) << " (" << min << ", " << max << ") "
-                        << name);
+  log_debug("add_abs: " << abs2str(code) << " (" << min << ", " << max << ") " << name);
 
   if (!abs_lst[code]) {
     abs_lst[code] = true;
@@ -159,7 +158,7 @@ void LinuxUinput::add_ff(uint16_t code) {
   }
 }
 
-void LinuxUinput::set_controller(Controller* controller) {
+void LinuxUinput::set_controller(Controller *controller) {
   m_controller = controller;
 }
 
@@ -229,8 +228,7 @@ void LinuxUinput::finish() {
   user_dev.id.vendor = usbid.vendor;
   user_dev.id.product = usbid.product;
 
-  log_debug("'" << user_dev.name << "' " << user_dev.id.vendor << ":"
-                << user_dev.id.product);
+  log_debug("'" << user_dev.name << "' " << user_dev.id.vendor << ":" << user_dev.id.product);
 
   if (m_force_feedback_enabled) {
     user_dev.ff_effects_max = m_controller->get_num_ff_effects();
@@ -239,8 +237,7 @@ void LinuxUinput::finish() {
   {
     int write_ret = write(m_fd, &user_dev, sizeof(user_dev));
     if (write_ret < 0) {
-      throw std::runtime_error("uinput:finish: " + name + ": " +
-                               strerror(errno));
+      throw std::runtime_error("uinput:finish: " + name + ": " + strerror(errno));
     } else {
       log_debug("write return value: " << write_ret);
     }
@@ -251,9 +248,10 @@ void LinuxUinput::finish() {
 
   log_debug("finish");
   if (ioctl(m_fd, UI_DEV_CREATE)) {
-    raise_exception(std::runtime_error, "unable to create uinput device: '"
-                                            << name
-                                            << "': " << strerror(errno));
+    raise_exception(
+        std::runtime_error,
+        "unable to create uinput device: '" << name << "': " << strerror(errno)
+    );
   }
 
   m_finished = true;
@@ -263,9 +261,8 @@ void LinuxUinput::finish() {
     m_io_channel = g_io_channel_unix_new(m_fd);
 
     // set encoding to binary
-    GError* error = NULL;
-    if (g_io_channel_set_encoding(m_io_channel, NULL, &error) !=
-        G_IO_STATUS_NORMAL) {
+    GError *error = NULL;
+    if (g_io_channel_set_encoding(m_io_channel, NULL, &error) != G_IO_STATUS_NORMAL) {
       log_error(error->message);
       g_error_free(error);
     }
@@ -273,8 +270,11 @@ void LinuxUinput::finish() {
     g_io_channel_set_buffered(m_io_channel, false);
 
     m_source_id = g_io_add_watch(
-        m_io_channel, static_cast<GIOCondition>(G_IO_IN | G_IO_ERR | G_IO_HUP),
-        &LinuxUinput::on_read_data_wrap, this);
+        m_io_channel,
+        static_cast<GIOCondition>(G_IO_IN | G_IO_ERR | G_IO_HUP),
+        &LinuxUinput::on_read_data_wrap,
+        this
+    );
   }
 }
 
@@ -287,14 +287,15 @@ void LinuxUinput::send(uint16_t type, uint16_t code, int32_t value) {
   gettimeofday(&ev.time, NULL);
   ev.type = type;
   ev.code = code;
-  if (ev.type == EV_KEY)
+  if (ev.type == EV_KEY) {
     ev.value = (value > 0) ? 1 : 0;
-  else
+  } else {
     ev.value = value;
+  }
 
-  if (write(m_fd, &ev, sizeof(ev)) < 0)
-    throw std::runtime_error(std::string("uinput:send_button: ") +
-                             strerror(errno));
+  if (write(m_fd, &ev, sizeof(ev)) < 0) {
+    throw std::runtime_error(std::string("uinput:send_button: ") + strerror(errno));
+  }
 }
 
 void LinuxUinput::sync() {
@@ -323,7 +324,7 @@ void LinuxUinput::update(int msec_delta) {
 #endif
 }
 
-gboolean LinuxUinput::on_read_data(GIOChannel* source, GIOCondition condition) {
+gboolean LinuxUinput::on_read_data(GIOChannel *source, GIOCondition condition) {
   struct input_event ev;
   int ret;
 
@@ -343,10 +344,11 @@ gboolean LinuxUinput::on_read_data(GIOChannel* source, GIOCondition condition) {
             break;
 
           default:
-            if (ev.value)
+            if (ev.value) {
               m_ff_handler->play(ev.code);
-            else
+            } else {
               m_ff_handler->stop(ev.code);
+            }
         }
         break;
 
@@ -400,8 +402,7 @@ gboolean LinuxUinput::on_read_data(GIOChannel* source, GIOCondition condition) {
     // ok, no more data
   } else if (ret < 0) {
     if (errno != EAGAIN) {
-      log_error("failed to read from file description: " << ret << ": "
-                                                         << strerror(errno));
+      log_error("failed to read from file description: " << ret << ": " << strerror(errno));
     }
   } else {
     log_error("short read: " << ret);

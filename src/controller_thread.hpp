@@ -47,28 +47,34 @@ class ControllerThread  // FIXME: find a better name,ControllerLoop?!
   int m_timeout;
   bool m_print_messages;
   guint m_timeout_id;
-  GTimer* m_timer;
+  GTimer *m_timer;
 
  public:
-  ControllerThread(ControllerPtr controller,
-                   std::shared_ptr<MessageProcessor> processor,
-                   const Options& opts);
+  ControllerThread(
+      ControllerPtr controller,
+      std::shared_ptr<MessageProcessor> processor,
+      const Options &opts
+  );
   ~ControllerThread();
 
-  MessageProcessor* get_message_proc() const { return m_processor.get(); }
-  ControllerPtr get_controller() const { return m_controller; }
-
- private:
-  void on_message(const XboxGenericMsg& msg);
-
-  bool on_timeout();
-  static gboolean on_timeout_wrap(gpointer data) {
-    return static_cast<ControllerThread*>(data)->on_timeout();
+  MessageProcessor *get_message_proc() const {
+    return m_processor.get();
+  }
+  ControllerPtr get_controller() const {
+    return m_controller;
   }
 
  private:
-  ControllerThread(const ControllerThread&);
-  ControllerThread& operator=(const ControllerThread&);
+  void on_message(const XboxGenericMsg &msg);
+
+  bool on_timeout();
+  static gboolean on_timeout_wrap(gpointer data) {
+    return static_cast<ControllerThread *>(data)->on_timeout();
+  }
+
+ private:
+  ControllerThread(const ControllerThread &);
+  ControllerThread &operator=(const ControllerThread &);
 };
 
 #endif

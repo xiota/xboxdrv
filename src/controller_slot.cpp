@@ -24,10 +24,14 @@
 #include "dummy_message_processor.hpp"
 #include "uinput_message_processor.hpp"
 
-ControllerSlot::ControllerSlot(int id_, ControllerSlotConfigPtr config_,
-                               std::vector<ControllerMatchRulePtr> rules_,
-                               int led_status_, const Options& opts,
-                               UInput* uinput)
+ControllerSlot::ControllerSlot(
+    int id_,
+    ControllerSlotConfigPtr config_,
+    std::vector<ControllerMatchRulePtr> rules_,
+    int led_status_,
+    const Options &opts,
+    UInput *uinput
+)
     : m_id(id_),
       m_config(config_),
       m_rules(rules_),

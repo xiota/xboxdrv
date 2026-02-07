@@ -22,22 +22,20 @@
 #include <stdexcept>
 #include <string>
 
-FourWayRestrictorModifier* FourWayRestrictorModifier::from_string(
-    const std::vector<std::string>& args) {
+FourWayRestrictorModifier *FourWayRestrictorModifier::from_string(
+    const std::vector<std::string> &args
+) {
   if (args.size() != 2) {
-    throw std::runtime_error(
-        "FourWayRestrictorModifier requires two arguments");
+    throw std::runtime_error("FourWayRestrictorModifier requires two arguments");
   } else {
-    return new FourWayRestrictorModifier(string2axis(args[0]),
-                                         string2axis(args[1]));
+    return new FourWayRestrictorModifier(string2axis(args[0]), string2axis(args[1]));
   }
 }
 
-FourWayRestrictorModifier::FourWayRestrictorModifier(XboxAxis xaxis,
-                                                     XboxAxis yaxis)
+FourWayRestrictorModifier::FourWayRestrictorModifier(XboxAxis xaxis, XboxAxis yaxis)
     : m_xaxis(xaxis), m_yaxis(yaxis) {}
 
-void FourWayRestrictorModifier::update(int msec_delta, XboxGenericMsg& msg) {
+void FourWayRestrictorModifier::update(int msec_delta, XboxGenericMsg &msg) {
   if (abs(get_axis(msg, m_xaxis)) > abs(get_axis(msg, m_yaxis))) {
     set_axis(msg, m_yaxis, 0);
   } else if (abs(get_axis(msg, m_yaxis)) > abs(get_axis(msg, m_xaxis))) {

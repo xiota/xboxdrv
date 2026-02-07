@@ -32,33 +32,46 @@ class ControllerSlot {
   int m_led_status;
   ControllerThreadPtr m_thread;
 
-  const Options& m_opts;
-  UInput* m_uinput;
+  const Options &m_opts;
+  UInput *m_uinput;
 
  public:
-  ControllerSlot(int id_, ControllerSlotConfigPtr config_,
-                 std::vector<ControllerMatchRulePtr> rules_, int led_status_,
-                 const Options& opts, UInput* uinput);
+  ControllerSlot(
+      int id_,
+      ControllerSlotConfigPtr config_,
+      std::vector<ControllerMatchRulePtr> rules_,
+      int led_status_,
+      const Options &opts,
+      UInput *uinput
+  );
 
   bool is_connected() const;
   void connect(ControllerPtr controller);
   ControllerPtr disconnect();
 
-  const std::vector<ControllerMatchRulePtr>& get_rules() const {
+  const std::vector<ControllerMatchRulePtr> &get_rules() const {
     return m_rules;
   }
-  int get_led_status() const { return m_led_status; }
-  int get_id() const { return m_id; }
-  ControllerSlotConfigPtr get_config() const { return m_config; }
+  int get_led_status() const {
+    return m_led_status;
+  }
+  int get_id() const {
+    return m_id;
+  }
+  ControllerSlotConfigPtr get_config() const {
+    return m_config;
+  }
 
-  ControllerThreadPtr get_thread() const { return m_thread; }
+  ControllerThreadPtr get_thread() const {
+    return m_thread;
+  }
   ControllerPtr get_controller() const {
     return m_thread ? m_thread->get_controller() : ControllerPtr();
   }
 
  private:
-  ControllerSlot(const ControllerSlot&);
-  ControllerSlot& operator=(const ControllerSlot&);
+  ControllerSlot(const ControllerSlot &);
+  ControllerSlot &operator=(const ControllerSlot &);
 };
 
 #endif

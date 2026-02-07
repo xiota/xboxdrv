@@ -32,8 +32,7 @@ class ArgParser {
     std::string argument;
     bool visible;
 
-    Option()
-        : key(), short_option(), long_option(), help(), argument(), visible() {}
+    Option() : key(), short_option(), long_option(), help(), argument(), visible() {}
   };
 
  public:
@@ -44,8 +43,7 @@ class ArgParser {
 
     ParsedOption() : key(-1), option(), argument() {}
 
-    ParsedOption(int key_, const std::string& option_,
-                 const std::string& argument_)
+    ParsedOption(int key_, const std::string &option_, const std::string &argument_)
         : key(key_), option(option_), argument(argument_) {}
   };
 
@@ -62,31 +60,35 @@ class ArgParser {
 
   ArgParser();
 
-  ArgParser& add_usage(const std::string& usage);
-  ArgParser& add_text(const std::string& doc);
-  ArgParser& add_pseudo(const std::string& left, const std::string& doc);
-  ArgParser& add_newline();
+  ArgParser &add_usage(const std::string &usage);
+  ArgParser &add_text(const std::string &doc);
+  ArgParser &add_pseudo(const std::string &left, const std::string &doc);
+  ArgParser &add_newline();
 
-  ArgParser& add_option(int key, char short_option,
-                        const std::string& long_option,
-                        const std::string& argument, const std::string& help,
-                        bool visible = true);
+  ArgParser &add_option(
+      int key,
+      char short_option,
+      const std::string &long_option,
+      const std::string &argument,
+      const std::string &help,
+      bool visible = true
+  );
 
-  ParsedOptions parse_args(int argc, char** argv);
-  void print_help(std::ostream& out) const;
+  ParsedOptions parse_args(int argc, char **argv);
+  void print_help(std::ostream &out) const;
 
   bool next();
   int get_key();
   std::string get_argument();
 
  private:
-  void read_option(int id, const std::string& argument);
+  void read_option(int id, const std::string &argument);
 
   /** Find the Option structure that matches \a short_option */
-  Option* lookup_short_option(char short_option);
+  Option *lookup_short_option(char short_option);
 
   /** Find the Option structure that matches \a long_option */
-  Option* lookup_long_option(const std::string& long_option);
+  Option *lookup_long_option(const std::string &long_option);
 };
 
 #endif

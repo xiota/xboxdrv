@@ -30,12 +30,14 @@
 #include "buttonfilter/log_button_filter.hpp"
 #include "buttonfilter/toggle_button_filter.hpp"
 
-ButtonFilterPtr ButtonFilter::from_string(const std::string& str) {
+ButtonFilterPtr ButtonFilter::from_string(const std::string &str) {
   std::string::size_type p = str.find(":");
   std::string filtername = str.substr(0, p);
   std::string rest;
 
-  if (p != std::string::npos) rest = str.substr(p + 1);
+  if (p != std::string::npos) {
+    rest = str.substr(p + 1);
+  }
 
   if (filtername == "toggle" || filtername == "tog") {
     return ButtonFilterPtr(new ToggleButtonFilter);

@@ -20,9 +20,10 @@
 
 #include "ui_rel_event_collector.hpp"
 
-UIRelEventEmitter::UIRelEventEmitter(UIRelEventCollector& collector)
-    : m_collector(collector) {}
+UIRelEventEmitter::UIRelEventEmitter(UIRelEventCollector &collector) : m_collector(collector) {}
 
-void UIRelEventEmitter::send(int value) { m_collector.send(value); }
+void UIRelEventEmitter::send(int value) {
+  m_collector.send(value);
+}
 
 /* EOF */

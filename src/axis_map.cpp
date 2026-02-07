@@ -18,7 +18,9 @@
 
 #include "axis_map.hpp"
 
-AxisMap::AxisMap() : m_axis_map() { clear(); }
+AxisMap::AxisMap() : m_axis_map() {
+  clear();
+}
 
 void AxisMap::bind(XboxAxis code, AxisEventPtr event) {
   m_axis_map[XBOX_BTN_UNKNOWN][code] = event;
@@ -44,7 +46,7 @@ void AxisMap::clear() {
   }
 }
 
-void AxisMap::init(UInput& uinput, int slot, bool extra_devices) const {
+void AxisMap::init(UInput &uinput, int slot, bool extra_devices) const {
   for (int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code) {
     for (int code = 0; code < XBOX_AXIS_MAX; ++code) {
       if (m_axis_map[shift_code][code]) {
@@ -54,7 +56,7 @@ void AxisMap::init(UInput& uinput, int slot, bool extra_devices) const {
   }
 }
 
-void AxisMap::update(UInput& uinput, int msec_delta) {
+void AxisMap::update(UInput &uinput, int msec_delta) {
   for (int shift_code = 0; shift_code < XBOX_BTN_MAX; ++shift_code) {
     for (int code = 0; code < XBOX_AXIS_MAX; ++code) {
       if (m_axis_map[shift_code][code]) {

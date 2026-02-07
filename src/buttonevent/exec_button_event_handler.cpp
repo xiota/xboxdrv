@@ -26,22 +26,19 @@
 #include "helper.hpp"
 #include "log.hpp"
 
-ExecButtonEventHandler* ExecButtonEventHandler::from_string(
-    const std::string& str) {
+ExecButtonEventHandler *ExecButtonEventHandler::from_string(const std::string &str) {
   std::vector<std::string> args = string_split(str, ":");
   return new ExecButtonEventHandler(args);
 }
 
-ExecButtonEventHandler::ExecButtonEventHandler(
-    const std::vector<std::string>& args)
+ExecButtonEventHandler::ExecButtonEventHandler(const std::vector<std::string> &args)
     : m_args(args) {}
 
-void ExecButtonEventHandler::init(UInput& uinput, int slot,
-                                  bool extra_devices) {
+void ExecButtonEventHandler::init(UInput &uinput, int slot, bool extra_devices) {
   // nothing to do
 }
 
-void ExecButtonEventHandler::send(UInput& uinput, bool value) {
+void ExecButtonEventHandler::send(UInput &uinput, bool value) {
   if (!value) {
     return;
   }
@@ -52,8 +49,7 @@ void ExecButtonEventHandler::send(UInput& uinput, bool value) {
     pid_t pid = fork();
 
     if (pid == 0) {
-      char** argv =
-          static_cast<char**>(malloc(sizeof(char*) * (m_args.size() + 1)));
+      char **argv = static_cast<char **>(malloc(sizeof(char *) * (m_args.size() + 1)));
       for (size_t i = 0; i < m_args.size(); ++i) {
         argv[i] = strdup(m_args[i].c_str());
       }
@@ -71,6 +67,8 @@ void ExecButtonEventHandler::send(UInput& uinput, bool value) {
   waitpid(tmp_pid, NULL, 0);
 }
 
-std::string ExecButtonEventHandler::str() const { return "exec"; }
+std::string ExecButtonEventHandler::str() const {
+  return "exec";
+}
 
 /* EOF */

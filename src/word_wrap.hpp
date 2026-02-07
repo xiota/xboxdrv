@@ -28,14 +28,14 @@ class WordWrap {
  public:
   WordWrap(int terminal_width);
 
-  void para(const std::string_view& str) const;
-  void para(const std::string_view& prefix, const std::string_view& str) const;
-  void println(const std::string_view& str);
+  void para(const std::string_view &str) const;
+  void para(const std::string_view &prefix, const std::string_view &str) const;
+  void println(const std::string_view &str);
   void newline();
 
  private:
-  WordWrap(const WordWrap&);
-  WordWrap& operator=(const WordWrap&);
+  WordWrap(const WordWrap &);
+  WordWrap &operator=(const WordWrap &);
 };
 
 #endif

@@ -26,7 +26,7 @@
 
 class DelayButtonFilter : public ButtonFilter {
  public:
-  static DelayButtonFilter* from_string(const std::string& str);
+  static DelayButtonFilter *from_string(const std::string &str);
 
  public:
   DelayButtonFilter(int delay);

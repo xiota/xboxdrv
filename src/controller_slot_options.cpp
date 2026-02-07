@@ -31,11 +31,11 @@ ControllerSlotOptions::ControllerSlotOptions()
       m_ff_device(DEVICEID_JOYSTICK),
       m_rumble_gain(255) {}
 
-ControllerOptions& ControllerSlotOptions::get_options(int num) {
+ControllerOptions &ControllerSlotOptions::get_options(int num) {
   return m_options[num];
 }
 
-const ControllerOptions& ControllerSlotOptions::get_options(int num) const {
+const ControllerOptions &ControllerSlotOptions::get_options(int num) const {
   std::map<int, ControllerOptions>::const_iterator it = m_options.find(num);
   if (it == m_options.end()) {
     raise_exception(std::runtime_error, "illegal option: " << num);
@@ -48,24 +48,28 @@ void ControllerSlotOptions::add_match_rule(ControllerMatchRulePtr rule) {
   m_match_rules.push_back(rule);
 }
 
-const std::vector<ControllerMatchRulePtr>&
-ControllerSlotOptions::get_match_rules() const {
+const std::vector<ControllerMatchRulePtr> &ControllerSlotOptions::get_match_rules() const {
   return m_match_rules;
 }
 
-const std::map<int, ControllerOptions>& ControllerSlotOptions::get_options()
-    const {
+const std::map<int, ControllerOptions> &ControllerSlotOptions::get_options() const {
   return m_options;
 }
 
-int ControllerSlotOptions::get_ff_device() const { return m_ff_device; }
+int ControllerSlotOptions::get_ff_device() const {
+  return m_ff_device;
+}
 
-void ControllerSlotOptions::set_ff_device(const std::string& device) {
+void ControllerSlotOptions::set_ff_device(const std::string &device) {
   m_ff_device = str2deviceid(device);
 }
 
-int ControllerSlotOptions::get_rumble_gain() const { return m_rumble_gain; }
+int ControllerSlotOptions::get_rumble_gain() const {
+  return m_rumble_gain;
+}
 
-void ControllerSlotOptions::set_rumble_gain(int gain) { m_rumble_gain = gain; }
+void ControllerSlotOptions::set_rumble_gain(int gain) {
+  m_rumble_gain = gain;
+}
 
 /* EOF */

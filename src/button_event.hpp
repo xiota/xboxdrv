@@ -35,25 +35,24 @@ typedef std::shared_ptr<ButtonEvent> ButtonEventPtr;
 class ButtonEvent {
  public:
   static ButtonEventPtr invalid();
-  static ButtonEventPtr create(ButtonEventHandler* handler);
+  static ButtonEventPtr create(ButtonEventHandler *handler);
   static ButtonEventPtr create_key(int code);
   static ButtonEventPtr create_key(int device_id, int code);
   static ButtonEventPtr create_key();
   static ButtonEventPtr create_abs(int code);
   static ButtonEventPtr create_rel(int code);
-  static ButtonEventPtr from_string(const std::string& str,
-                                    const std::string& directory);
+  static ButtonEventPtr from_string(const std::string &str, const std::string &directory);
 
  protected:
-  ButtonEvent(ButtonEventHandler* handler);
+  ButtonEvent(ButtonEventHandler *handler);
 
  public:
-  void init(UInput& uinput, int slot, bool extra_devices);
-  void send(UInput& uinput, bool value);
-  void update(UInput& uinput, int msec_delta);
+  void init(UInput &uinput, int slot, bool extra_devices);
+  void send(UInput &uinput, bool value);
+  void update(UInput &uinput, int msec_delta);
   std::string str() const;
 
-  void add_filters(const std::vector<ButtonFilterPtr>& filters);
+  void add_filters(const std::vector<ButtonFilterPtr> &filters);
   void add_filter(ButtonFilterPtr filter);
 
  private:
@@ -67,9 +66,9 @@ class ButtonEventHandler {
  public:
   virtual ~ButtonEventHandler() {}
 
-  virtual void init(UInput& uinput, int slot, bool extra_devices) = 0;
-  virtual void send(UInput& uinput, bool value) = 0;
-  virtual void update(UInput& uinput, int msec_delta) = 0;
+  virtual void init(UInput &uinput, int slot, bool extra_devices) = 0;
+  virtual void send(UInput &uinput, bool value) = 0;
+  virtual void update(UInput &uinput, int msec_delta) = 0;
   virtual std::string str() const = 0;
 };
 

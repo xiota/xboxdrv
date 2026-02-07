@@ -28,13 +28,12 @@ class PrettyPrinter {
  public:
   PrettyPrinter(int terminal_width);
 
-  void print(const std::string& str);
-  void print(const std::string& indent_str, const std::string& left,
-             const std::string& str);
+  void print(const std::string &str);
+  void print(const std::string &indent_str, const std::string &left, const std::string &str);
 
  private:
-  PrettyPrinter(const PrettyPrinter&);
-  PrettyPrinter& operator=(const PrettyPrinter&);
+  PrettyPrinter(const PrettyPrinter &);
+  PrettyPrinter &operator=(const PrettyPrinter &);
 };
 
 #endif

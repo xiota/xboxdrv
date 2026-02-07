@@ -31,12 +31,14 @@
 #include "axisfilter/response_curve_axis_filter.hpp"
 #include "axisfilter/sensitivity_axis_filter.hpp"
 
-AxisFilterPtr AxisFilter::from_string(const std::string& str) {
+AxisFilterPtr AxisFilter::from_string(const std::string &str) {
   std::string::size_type p = str.find(':');
-  const std::string& filtername = str.substr(0, p);
+  const std::string &filtername = str.substr(0, p);
   std::string rest;
 
-  if (p != std::string::npos) rest = str.substr(p + 1);
+  if (p != std::string::npos) {
+    rest = str.substr(p + 1);
+  }
 
   if (filtername == "invert" || filtername == "inv") {
     return AxisFilterPtr(new InvertAxisFilter);

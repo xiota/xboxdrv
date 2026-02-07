@@ -215,11 +215,11 @@ struct XboxGenericMsg {
   };
 };
 
-std::ostream& operator<<(std::ostream& out, const GamepadType& type);
-std::ostream& operator<<(std::ostream& out, const Xbox360Msg& msg);
-std::ostream& operator<<(std::ostream& out, const XboxMsg& msg);
-std::ostream& operator<<(std::ostream& out, const Playstation3USBMsg& msg);
-std::ostream& operator<<(std::ostream& out, const XboxGenericMsg& msg);
+std::ostream &operator<<(std::ostream &out, const GamepadType &type);
+std::ostream &operator<<(std::ostream &out, const Xbox360Msg &msg);
+std::ostream &operator<<(std::ostream &out, const XboxMsg &msg);
+std::ostream &operator<<(std::ostream &out, const Playstation3USBMsg &msg);
+std::ostream &operator<<(std::ostream &out, const XboxGenericMsg &msg);
 
 enum XboxButton {
   XBOX_BTN_UNKNOWN,
@@ -277,23 +277,23 @@ enum XboxAxis {
   XBOX_AXIS_MAX
 };
 
-int get_button(XboxGenericMsg& msg, XboxButton button);
-void set_button(XboxGenericMsg& msg, XboxButton button, bool v);
-int get_axis(XboxGenericMsg& msg, XboxAxis axis);
-void set_axis(XboxGenericMsg& msg, XboxAxis axis, int v);
-float get_axis_float(XboxGenericMsg& msg, XboxAxis axis);
-void set_axis_float(XboxGenericMsg& msg, XboxAxis axis, float v);
+int get_button(XboxGenericMsg &msg, XboxButton button);
+void set_button(XboxGenericMsg &msg, XboxButton button, bool v);
+int get_axis(XboxGenericMsg &msg, XboxAxis axis);
+void set_axis(XboxGenericMsg &msg, XboxAxis axis, int v);
+float get_axis_float(XboxGenericMsg &msg, XboxAxis axis);
+void set_axis_float(XboxGenericMsg &msg, XboxAxis axis, float v);
 
-XboxButton string2btn(const std::string& str_);
-XboxAxis string2axis(const std::string& str_);
+XboxButton string2btn(const std::string &str_);
+XboxAxis string2axis(const std::string &str_);
 std::string btn2string(XboxButton btn);
 std::string axis2string(XboxAxis axis);
 
 int get_axis_min(XboxAxis axis);
 int get_axis_max(XboxAxis axis);
 
-std::string gamepadtype_to_string(const GamepadType& type);
-std::string gamepadtype_to_macro_string(const GamepadType& type);
+std::string gamepadtype_to_string(const GamepadType &type);
+std::string gamepadtype_to_macro_string(const GamepadType &type);
 
 #endif
 

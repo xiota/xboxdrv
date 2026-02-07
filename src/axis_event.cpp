@@ -33,30 +33,33 @@
 #include "raise_exception.hpp"
 #include "uinput.hpp"
 
-AxisEventPtr AxisEvent::invalid() { return AxisEventPtr(); }
+AxisEventPtr AxisEvent::invalid() {
+  return AxisEventPtr();
+}
 
-AxisEventPtr AxisEvent::create_abs(int device_id, int code, int min, int max,
-                                   int fuzz, int flat) {
+AxisEventPtr
+AxisEvent::create_abs(int device_id, int code, int min, int max, int fuzz, int flat) {
   return AxisEventPtr(new AxisEvent(
-      new AbsAxisEventHandler(UIEvent::create(device_id, EV_ABS, code), min,
-                              max, fuzz, flat),
-      min, max));
+      new AbsAxisEventHandler(UIEvent::create(device_id, EV_ABS, code), min, max, fuzz, flat),
+      min,
+      max
+  ));
 }
 
-AxisEventPtr AxisEvent::create_rel(int device_id, int code, int repeat,
-                                   float value) {
-  return AxisEventPtr(
-      new AxisEvent(new RelAxisEventHandler(device_id, code, repeat, value)));
+AxisEventPtr AxisEvent::create_rel(int device_id, int code, int repeat, float value) {
+  return AxisEventPtr(new AxisEvent(new RelAxisEventHandler(device_id, code, repeat, value)));
 }
 
-AxisEventPtr AxisEvent::from_string(const std::string& str) {
+AxisEventPtr AxisEvent::from_string(const std::string &str) {
   AxisEventPtr ev;
 
   std::string::size_type p = str.find(':');
-  const std::string& token = str.substr(0, p);
+  const std::string &token = str.substr(0, p);
   std::string rest;
 
-  if (p != std::string::npos) rest = str.substr(p + 1);
+  if (p != std::string::npos) {
+    rest = str.substr(p + 1);
+  }
 
   if (token == "abs") {
     ev.reset(new AxisEvent(AbsAxisEventHandler::from_string(rest)));
@@ -92,7 +95,7 @@ AxisEventPtr AxisEvent::from_string(const std::string& str) {
   return ev;
 }
 
-AxisEvent::AxisEvent(AxisEventHandler* handler, int min, int max)
+AxisEvent::AxisEvent(AxisEventHandler *handler, int min, int max)
     : m_last_raw_value(0),
       m_last_send_value(0),
       m_min(min),
@@ -104,15 +107,15 @@ void AxisEvent::add_filter(AxisFilterPtr filter) {
   m_filters.push_back(filter);
 }
 
-void AxisEvent::init(UInput& uinput, int slot, bool extra_devices) {
+void AxisEvent::init(UInput &uinput, int slot, bool extra_devices) {
   m_handler->init(uinput, slot, extra_devices);
 }
 
-void AxisEvent::send(UInput& uinput, int value) {
+void AxisEvent::send(UInput &uinput, int value) {
   m_last_raw_value = value;
 
-  for (std::vector<AxisFilterPtr>::const_iterator i = m_filters.begin();
-       i != m_filters.end(); ++i) {
+  for (std::vector<AxisFilterPtr>::const_iterator i = m_filters.begin(); i != m_filters.end();
+       ++i) {
     value = (*i)->filter(value, m_min, m_max);
   }
 
@@ -122,9 +125,9 @@ void AxisEvent::send(UInput& uinput, int value) {
   }
 }
 
-void AxisEvent::update(UInput& uinput, int msec_delta) {
-  for (std::vector<AxisFilterPtr>::const_iterator i = m_filters.begin();
-       i != m_filters.end(); ++i) {
+void AxisEvent::update(UInput &uinput, int msec_delta) {
+  for (std::vector<AxisFilterPtr>::const_iterator i = m_filters.begin(); i != m_filters.end();
+       ++i) {
     (*i)->update(msec_delta);
   }
 
@@ -139,7 +142,9 @@ void AxisEvent::set_axis_range(int min, int max) {
   m_handler->set_axis_range(min, max);
 }
 
-std::string AxisEvent::str() const { return m_handler->str(); }
+std::string AxisEvent::str() const {
+  return m_handler->str();
+}
 
 AxisEventHandler::AxisEventHandler() : m_min(-1), m_max(+1) {}
 

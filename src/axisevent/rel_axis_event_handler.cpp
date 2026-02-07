@@ -26,13 +26,13 @@
 #include "helper.hpp"
 #include "uinput.hpp"
 
-RelAxisEventHandler* RelAxisEventHandler::from_string(const std::string& str) {
+RelAxisEventHandler *RelAxisEventHandler::from_string(const std::string &str) {
   std::vector<std::string> tokens = string_split(str, ":");
 
   std::unique_ptr<RelAxisEventHandler> ev(new RelAxisEventHandler);
 
   int idx = 0;
-  for (auto& i : tokens) {
+  for (auto &i : tokens) {
     switch (idx) {
       case 0:
         ev->m_code = str2rel_event(i);
@@ -47,8 +47,7 @@ RelAxisEventHandler* RelAxisEventHandler::from_string(const std::string& str) {
         break;
 
       default:
-        throw std::runtime_error(
-            "AxisEvent::rel_from_string(): to many arguments: " + str);
+        throw std::runtime_error("AxisEvent::rel_from_string(): to many arguments: " + str);
         break;
     }
     ++idx;
@@ -56,7 +55,8 @@ RelAxisEventHandler* RelAxisEventHandler::from_string(const std::string& str) {
 
   if (idx == 0) {
     throw std::runtime_error(
-        "AxisEvent::rel_from_string(): at least one argument required: " + str);
+        "AxisEvent::rel_from_string(): at least one argument required: " + str
+    );
   }
 
   return ev.release();
@@ -70,8 +70,7 @@ RelAxisEventHandler::RelAxisEventHandler()
       m_rest_value(0.0f),
       m_rel_emitter() {}
 
-RelAxisEventHandler::RelAxisEventHandler(int device_id, int code, int repeat,
-                                         float value)
+RelAxisEventHandler::RelAxisEventHandler(int device_id, int code, int repeat, float value)
     : m_code(UIEvent::create(device_id, EV_REL, code)),
       m_value(value),
       m_repeat(repeat),
@@ -79,34 +78,35 @@ RelAxisEventHandler::RelAxisEventHandler(int device_id, int code, int repeat,
       m_rest_value(0.0f),
       m_rel_emitter() {}
 
-void RelAxisEventHandler::init(UInput& uinput, int slot, bool extra_devices) {
+void RelAxisEventHandler::init(UInput &uinput, int slot, bool extra_devices) {
   m_code.resolve_device_id(slot, extra_devices);
   m_rel_emitter = uinput.add_rel(m_code.get_device_id(), m_code.code);
 }
 
-void RelAxisEventHandler::send(UInput& uinput, int value) {
-  if (value < 0)
+void RelAxisEventHandler::send(UInput &uinput, int value) {
+  if (value < 0) {
     m_stick_value = value / static_cast<float>(-m_min);
-  else
+  } else {
     m_stick_value = value / static_cast<float>(m_max);
+  }
 
   if (m_repeat != -1) {
     // regular old style sending of REL events
     float v = m_value * m_stick_value;
 
-    if (v == 0)
+    if (v == 0) {
       uinput.send_rel_repetitive(m_code, v, -1);
-    else
+    } else {
       uinput.send_rel_repetitive(m_code, v, m_repeat);
+    }
   }
 }
 
-void RelAxisEventHandler::update(UInput& uinput, int msec_delta) {
+void RelAxisEventHandler::update(UInput &uinput, int msec_delta) {
   if (m_repeat == -1 && m_stick_value != 0.0f) {
     // new and improved REL style event sending
 
-    float rel_value =
-        m_stick_value * m_value * static_cast<float>(msec_delta) / 1000.0f;
+    float rel_value = m_stick_value * m_value * static_cast<float>(msec_delta) / 1000.0f;
 
     // keep track of the rest that we lose when converting to integer
     rel_value += m_rest_value;
@@ -118,8 +118,7 @@ void RelAxisEventHandler::update(UInput& uinput, int msec_delta) {
 
 std::string RelAxisEventHandler::str() const {
   std::ostringstream out;
-  out << m_code.get_device_id() << "-" << m_code.code << ":" << m_value << ":"
-      << m_repeat;
+  out << m_code.get_device_id() << "-" << m_code.code << ":" << m_value << ":" << m_repeat;
   return out.str();
 }
 

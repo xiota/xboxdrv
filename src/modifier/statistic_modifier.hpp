@@ -26,13 +26,13 @@
 
 class StatisticModifier : public Modifier {
  public:
-  static StatisticModifier* from_string(const std::vector<std::string>& args);
+  static StatisticModifier *from_string(const std::vector<std::string> &args);
 
  public:
   StatisticModifier();
   ~StatisticModifier();
 
-  void update(int msec_delta, XboxGenericMsg& msg);
+  void update(int msec_delta, XboxGenericMsg &msg);
   void print_stats();
   std::string str() const;
 
@@ -41,8 +41,8 @@ class StatisticModifier : public Modifier {
   std::vector<int> m_press_count;
 
  private:
-  StatisticModifier(const StatisticModifier&);
-  StatisticModifier& operator=(const StatisticModifier&);
+  StatisticModifier(const StatisticModifier &);
+  StatisticModifier &operator=(const StatisticModifier &);
 };
 
 #endif

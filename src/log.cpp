@@ -23,7 +23,7 @@
 
 Logger g_logger;
 
-std::string log_pretty_print(const std::string& str) {
+std::string log_pretty_print(const std::string &str) {
   // FIXME: very basic, might not work with complex return types
   std::string::size_type function_start = 0;
   for (std::string::size_type i = 0; i < str.size(); ++i) {
@@ -45,11 +45,15 @@ void Logger::incr_log_level(LogLevel level) {
   }
 }
 
-void Logger::set_log_level(LogLevel level) { m_log_level = level; }
+void Logger::set_log_level(LogLevel level) {
+  m_log_level = level;
+}
 
-Logger::LogLevel Logger::get_log_level() const { return m_log_level; }
+Logger::LogLevel Logger::get_log_level() const {
+  return m_log_level;
+}
 
-void Logger::append_unchecked(LogLevel level, const std::string& str) {
+void Logger::append_unchecked(LogLevel level, const std::string &str) {
   switch (level) {
     case kError:
       std::cout << "[ERROR] ";
@@ -71,7 +75,7 @@ void Logger::append_unchecked(LogLevel level, const std::string& str) {
   std::cout << str << std::endl;
 }
 
-void Logger::append(LogLevel level, const std::string& str) {
+void Logger::append(LogLevel level, const std::string &str) {
   if (m_log_level >= level) {
     append_unchecked(level, str);
   }

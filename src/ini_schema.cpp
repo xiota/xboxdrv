@@ -28,11 +28,13 @@ class INIPairSchemaBoolCallback : public INIPairSchema {
   std::function<void()> m_false_callback;
 
  public:
-  INIPairSchemaBoolCallback(std::function<void()> true_callback,
-                            std::function<void()> false_callback)
+  INIPairSchemaBoolCallback(
+      std::function<void()> true_callback,
+      std::function<void()> false_callback
+  )
       : m_true_callback(true_callback), m_false_callback(false_callback) {}
 
-  void call(const std::string& value) {
+  void call(const std::string &value) {
     bool v = false;
     if (value == "yes" || value == "true" || value == "1") {
       v = true;
@@ -61,11 +63,11 @@ class INIPairSchemaBoolCallback : public INIPairSchema {
 
 class INIPairSchemaBool : public INIPairSchema {
  private:
-  bool* m_data;
+  bool *m_data;
 
  public:
-  INIPairSchemaBool(bool* data) : m_data(data) {}
-  void call(const std::string& value) {
+  INIPairSchemaBool(bool *data) : m_data(data) {}
+  void call(const std::string &value) {
     if (value == "yes" || value == "true" || value == "1") {
       *m_data = true;
     } else if (value == "no" || value == "false" || value == "0") {
@@ -84,17 +86,19 @@ class INIPairSchemaBool : public INIPairSchema {
   }
 
  private:
-  INIPairSchemaBool(const INIPairSchemaBool&);
-  INIPairSchemaBool& operator=(const INIPairSchemaBool&);
+  INIPairSchemaBool(const INIPairSchemaBool &);
+  INIPairSchemaBool &operator=(const INIPairSchemaBool &);
 };
 
 class INIPairSchemaInt : public INIPairSchema {
  private:
-  int* m_data;
+  int *m_data;
 
  public:
-  INIPairSchemaInt(int* data) : m_data(data) {}
-  void call(const std::string& value) { *m_data = atoi(value.c_str()); }
+  INIPairSchemaInt(int *data) : m_data(data) {}
+  void call(const std::string &value) {
+    *m_data = atoi(value.c_str());
+  }
 
   std::string str() const {
     std::ostringstream out;
@@ -103,17 +107,19 @@ class INIPairSchemaInt : public INIPairSchema {
   }
 
  private:
-  INIPairSchemaInt(const INIPairSchemaInt&);
-  INIPairSchemaInt& operator=(const INIPairSchemaInt&);
+  INIPairSchemaInt(const INIPairSchemaInt &);
+  INIPairSchemaInt &operator=(const INIPairSchemaInt &);
 };
 
 class INIPairSchemaFloat : public INIPairSchema {
  private:
-  float* m_data;
+  float *m_data;
 
  public:
-  INIPairSchemaFloat(float* data) : m_data(data) {}
-  void call(const std::string& value) { *m_data = atoi(value.c_str()); }
+  INIPairSchemaFloat(float *data) : m_data(data) {}
+  void call(const std::string &value) {
+    *m_data = atoi(value.c_str());
+  }
 
   std::string str() const {
     std::ostringstream out;
@@ -122,17 +128,19 @@ class INIPairSchemaFloat : public INIPairSchema {
   }
 
  private:
-  INIPairSchemaFloat(const INIPairSchemaFloat&);
-  INIPairSchemaFloat& operator=(const INIPairSchemaFloat&);
+  INIPairSchemaFloat(const INIPairSchemaFloat &);
+  INIPairSchemaFloat &operator=(const INIPairSchemaFloat &);
 };
 
 class INIPairSchemaString : public INIPairSchema {
  private:
-  std::string* m_data;
+  std::string *m_data;
 
  public:
-  INIPairSchemaString(std::string* data) : m_data(data) {}
-  void call(const std::string& value) { *m_data = value; }
+  INIPairSchemaString(std::string *data) : m_data(data) {}
+  void call(const std::string &value) {
+    *m_data = value;
+  }
 
   std::string str() const {
     // FIXME: implement proper escaping
@@ -140,19 +148,19 @@ class INIPairSchemaString : public INIPairSchema {
   }
 
  private:
-  INIPairSchemaString(const INIPairSchemaString&);
-  INIPairSchemaString& operator=(const INIPairSchemaString&);
+  INIPairSchemaString(const INIPairSchemaString &);
+  INIPairSchemaString &operator=(const INIPairSchemaString &);
 };
 
 class INIPairSchemaCallback : public INIPairSchema {
  private:
-  std::function<void(const std::string&)> m_callback;
+  std::function<void(const std::string &)> m_callback;
 
  public:
-  INIPairSchemaCallback(std::function<void(const std::string&)> callback)
+  INIPairSchemaCallback(std::function<void(const std::string &)> callback)
       : m_callback(callback) {}
 
-  void call(const std::string& value) {
+  void call(const std::string &value) {
     if (m_callback) {
       m_callback(value);
     }
@@ -165,7 +173,8 @@ class INIPairSchemaCallback : public INIPairSchema {
 };
 
 INISchemaSection::INISchemaSection(
-    std::function<void(const std::string&, const std::string&)> callback)
+    std::function<void(const std::string &, const std::string &)> callback
+)
     : m_schema(), m_callback(callback) {}
 
 INISchemaSection::~INISchemaSection() {
@@ -174,57 +183,56 @@ INISchemaSection::~INISchemaSection() {
   }
 }
 
-INISchemaSection& INISchemaSection::add(const std::string& name,
-                                        INIPairSchema* schema) {
+INISchemaSection &INISchemaSection::add(const std::string &name, INIPairSchema *schema) {
   Schema::iterator i = m_schema.find(name);
 
   if (i != m_schema.end()) {
     delete i->second;
   }
 
-  m_schema.insert(std::pair<std::string, INIPairSchema*>(name, schema));
+  m_schema.insert(std::pair<std::string, INIPairSchema *>(name, schema));
 
   return *this;
 }
 
-INISchemaSection& INISchemaSection::operator()(const std::string& name,
-                                               bool* value) {
+INISchemaSection &INISchemaSection::operator()(const std::string &name, bool *value) {
   add(name, new INIPairSchemaBool(value));
   return *this;
 }
 
-INISchemaSection& INISchemaSection::operator()(const std::string& name,
-                                               int* value) {
+INISchemaSection &INISchemaSection::operator()(const std::string &name, int *value) {
   add(name, new INIPairSchemaInt(value));
   return *this;
 }
 
-INISchemaSection& INISchemaSection::operator()(const std::string& name,
-                                               float* value) {
+INISchemaSection &INISchemaSection::operator()(const std::string &name, float *value) {
   add(name, new INIPairSchemaFloat(value));
   return *this;
 }
 
-INISchemaSection& INISchemaSection::operator()(const std::string& name,
-                                               std::string* value) {
+INISchemaSection &INISchemaSection::operator()(const std::string &name, std::string *value) {
   add(name, new INIPairSchemaString(value));
   return *this;
 }
 
-INISchemaSection& INISchemaSection::operator()(
-    const std::string& name, std::function<void()> true_callback,
-    std::function<void()> false_callback) {
+INISchemaSection &INISchemaSection::operator()(
+    const std::string &name,
+    std::function<void()> true_callback,
+    std::function<void()> false_callback
+) {
   add(name, new INIPairSchemaBoolCallback(true_callback, false_callback));
   return *this;
 }
 
-INISchemaSection& INISchemaSection::operator()(
-    const std::string& name, std::function<void(const std::string&)> callback) {
+INISchemaSection &INISchemaSection::operator()(
+    const std::string &name,
+    std::function<void(const std::string &)> callback
+) {
   add(name, new INIPairSchemaCallback(callback));
   return *this;
 }
 
-INIPairSchema* INISchemaSection::get(const std::string& name) const {
+INIPairSchema *INISchemaSection::get(const std::string &name) const {
   Schema::const_iterator i = m_schema.find(name);
   if (i == m_schema.end()) {
     return 0;
@@ -233,7 +241,7 @@ INIPairSchema* INISchemaSection::get(const std::string& name) const {
   }
 }
 
-void INISchemaSection::save(std::ostream& out) {
+void INISchemaSection::save(std::ostream &out) {
   for (Schema::iterator i = m_schema.begin(); i != m_schema.end(); ++i) {
     out << i->first << " = " << i->second->str() << std::endl;
   }
@@ -241,7 +249,9 @@ void INISchemaSection::save(std::ostream& out) {
 
 INISchema::INISchema() : m_sections() {}
 
-INISchema::~INISchema() { clear(); }
+INISchema::~INISchema() {
+  clear();
+}
 
 void INISchema::clear() {
   for (Sections::iterator i = m_sections.begin(); i != m_sections.end(); ++i) {
@@ -250,20 +260,21 @@ void INISchema::clear() {
   m_sections.clear();
 }
 
-INISchemaSection& INISchema::section(
-    const std::string& name,
-    std::function<void(const std::string&, const std::string&)> callback) {
+INISchemaSection &INISchema::section(
+    const std::string &name,
+    std::function<void(const std::string &, const std::string &)> callback
+) {
   Sections::iterator i = m_sections.find(name);
   if (i != m_sections.end()) {
     delete i->second;
   }
 
-  INISchemaSection* sec = new INISchemaSection(callback);
-  m_sections.insert(std::pair<std::string, INISchemaSection*>(name, sec));
+  INISchemaSection *sec = new INISchemaSection(callback);
+  m_sections.insert(std::pair<std::string, INISchemaSection *>(name, sec));
   return *sec;
 }
 
-INISchemaSection* INISchema::get_section(const std::string& name) const {
+INISchemaSection *INISchema::get_section(const std::string &name) const {
   Sections::const_iterator i = m_sections.find(name);
   if (i != m_sections.end()) {
     return i->second;
@@ -272,7 +283,7 @@ INISchemaSection* INISchema::get_section(const std::string& name) const {
   }
 }
 
-void INISchema::save(std::ostream& out) {
+void INISchema::save(std::ostream &out) {
   for (Sections::iterator i = m_sections.begin(); i != m_sections.end(); ++i) {
     out << "[" << i->first << "]" << std::endl;
     i->second->save(out);

@@ -33,7 +33,9 @@ class CycleKeySequence {
  public:
   static CycleKeySequencePtr from_range(
       std::vector<std::string>::const_iterator beg,
-      std::vector<std::string>::const_iterator end, bool wrap_around);
+      std::vector<std::string>::const_iterator end,
+      bool wrap_around
+  );
 
  private:
   typedef std::vector<UIEventSequence> Keys;
@@ -51,19 +53,21 @@ class CycleKeySequence {
   int m_last_key;
 
  public:
-  CycleKeySequence(const Keys& keys, bool wrap_around);
+  CycleKeySequence(const Keys &keys, bool wrap_around);
 
-  bool has_current_key() const { return m_current_key != -1; }
+  bool has_current_key() const {
+    return m_current_key != -1;
+  }
 
   void next_key();
   void prev_key();
 
-  void init(UInput& uinput, int slot, bool extra_devices);
-  void send(UInput& uinput, bool value);
+  void init(UInput &uinput, int slot, bool extra_devices);
+  void send(UInput &uinput, bool value);
 
  private:
-  CycleKeySequence(const CycleKeySequence&);
-  CycleKeySequence& operator=(const CycleKeySequence&);
+  CycleKeySequence(const CycleKeySequence &);
+  CycleKeySequence &operator=(const CycleKeySequence &);
 };
 
 #endif

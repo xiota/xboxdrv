@@ -26,12 +26,12 @@
 
 class SquareAxisModifier : public Modifier {
  public:
-  static SquareAxisModifier* from_string(const std::vector<std::string>& args);
+  static SquareAxisModifier *from_string(const std::vector<std::string> &args);
 
  public:
   SquareAxisModifier(XboxAxis x_axis, XboxAxis y_axis);
 
-  void update(int msec_delta, XboxGenericMsg& msg);
+  void update(int msec_delta, XboxGenericMsg &msg);
 
   std::string str() const;
 

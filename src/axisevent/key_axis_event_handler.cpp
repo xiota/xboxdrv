@@ -25,12 +25,12 @@
 #include "helper.hpp"
 #include "uinput.hpp"
 
-KeyAxisEventHandler* KeyAxisEventHandler::from_string(const std::string& str) {
+KeyAxisEventHandler *KeyAxisEventHandler::from_string(const std::string &str) {
   std::unique_ptr<KeyAxisEventHandler> ev(new KeyAxisEventHandler);
 
   std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
-  for (auto& i : tokens) {
+  for (auto &i : tokens) {
     switch (idx) {
       case 0: {
         ev->m_up_codes = UIEventSequence::from_string(i);
@@ -53,8 +53,7 @@ KeyAxisEventHandler* KeyAxisEventHandler::from_string(const std::string& str) {
         break;
 
       default:
-        throw std::runtime_error(
-            "AxisEvent::key_from_string(): to many arguments: " + str);
+        throw std::runtime_error("AxisEvent::key_from_string(): to many arguments: " + str);
         break;
     }
     ++idx;
@@ -62,7 +61,8 @@ KeyAxisEventHandler* KeyAxisEventHandler::from_string(const std::string& str) {
 
   if (idx == 0) {
     throw std::runtime_error(
-        "AxisEvent::key_from_string(): at least one argument required: " + str);
+        "AxisEvent::key_from_string(): at least one argument required: " + str
+    );
   }
 
   return ev.release();
@@ -75,16 +75,16 @@ KeyAxisEventHandler::KeyAxisEventHandler()
       m_threshold(8000)  // FIXME: this doesn't work for triggers
 {}
 
-void KeyAxisEventHandler::init(UInput& uinput, int slot, bool extra_devices) {
+void KeyAxisEventHandler::init(UInput &uinput, int slot, bool extra_devices) {
   m_up_codes.init(uinput, slot, extra_devices);
   m_down_codes.init(uinput, slot, extra_devices);
 }
 
-void KeyAxisEventHandler::send_up(UInput& uinput, int value) {
+void KeyAxisEventHandler::send_up(UInput &uinput, int value) {
   m_up_codes.send(uinput, value);
 }
 
-void KeyAxisEventHandler::send_down(UInput& uinput, int value) {
+void KeyAxisEventHandler::send_down(UInput &uinput, int value) {
   m_down_codes.send(uinput, value);
 }
 
@@ -98,7 +98,7 @@ int KeyAxisEventHandler::get_zone(int value) const {
   }
 }
 
-void KeyAxisEventHandler::send(UInput& uinput, int value) {
+void KeyAxisEventHandler::send(UInput &uinput, int value) {
   int old_zone = get_zone(m_old_value);
   int zone = get_zone(value);
 
@@ -121,7 +121,7 @@ void KeyAxisEventHandler::send(UInput& uinput, int value) {
   m_old_value = value;
 }
 
-void KeyAxisEventHandler::update(UInput& uinput, int msec_delta) {}
+void KeyAxisEventHandler::update(UInput &uinput, int msec_delta) {}
 
 std::string KeyAxisEventHandler::str() const {
   std::ostringstream out;

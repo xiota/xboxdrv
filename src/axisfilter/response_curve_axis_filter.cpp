@@ -22,19 +22,17 @@
 
 #include "helper.hpp"
 
-ResponseCurveAxisFilter* ResponseCurveAxisFilter::from_string(
-    const std::string& str) {
+ResponseCurveAxisFilter *ResponseCurveAxisFilter::from_string(const std::string &str) {
   std::vector<int> samples;
 
-  for (auto& i : string_split(str, ":")) {
+  for (auto &i : string_split(str, ":")) {
     samples.push_back(std::stoi(i));
   }
 
   return new ResponseCurveAxisFilter(samples);
 }
 
-ResponseCurveAxisFilter::ResponseCurveAxisFilter(
-    const std::vector<int>& samples)
+ResponseCurveAxisFilter::ResponseCurveAxisFilter(const std::vector<int> &samples)
     : m_samples(samples) {}
 
 int ResponseCurveAxisFilter::filter(int value, int min, int max) {
@@ -50,20 +48,16 @@ int ResponseCurveAxisFilter::filter(int value, int min, int max) {
 
     int bucket_index = int((value - min) / bucket_size);
 
-    float t =
-        ((value - min) - (static_cast<float>(bucket_index) * bucket_size)) /
-        bucket_size;
+    float t = ((value - min) - (static_cast<float>(bucket_index) * bucket_size)) / bucket_size;
 
-    return ((1.0f - t) * m_samples[bucket_index]) +
-           (t * m_samples[bucket_index + 1]);
+    return ((1.0f - t) * m_samples[bucket_index]) + (t * m_samples[bucket_index + 1]);
   }
 }
 
 std::string ResponseCurveAxisFilter::str() const {
   std::ostringstream out;
   out << "responsecurve";
-  for (std::vector<int>::const_iterator i = m_samples.begin();
-       i != m_samples.end(); ++i) {
+  for (std::vector<int>::const_iterator i = m_samples.begin(); i != m_samples.end(); ++i) {
     out << ":" << *i;
   }
   return out.str();

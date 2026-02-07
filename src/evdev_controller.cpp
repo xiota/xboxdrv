@@ -37,29 +37,35 @@
 #define STRINGIFY_(x) #x
 #define STRINGIFY(x) STRINGIFY_(x)
 
-#define ioctl_x(fd, request, ...)                                  \
-  errno_check(ioctl(fd, request, __VA_ARGS__), __FILE__, __LINE__, \
-              STRINGIFY(ioctl(fd, request, __VA_ARGS__)));
+#define ioctl_x(fd, request, ...)                \
+  errno_check(                                   \
+      ioctl(fd, request, __VA_ARGS__),           \
+      __FILE__,                                  \
+      __LINE__,                                  \
+      STRINGIFY(ioctl(fd, request, __VA_ARGS__)) \
+  );
 
 #define BITS_PER_LONG (sizeof(long) * 8)
-#define DIV_ROUND_UP(n, d) (((n) + (d)-1) / (d))
+#define DIV_ROUND_UP(n, d) (((n) + (d) - 1) / (d))
 #define BITS_TO_LONGS(nr) DIV_ROUND_UP(nr, BITS_PER_LONG)
 #define OFF(x) ((x) % BITS_PER_LONG)
 #define BIT(x) (1UL << OFF(x))
 #define LONG(x) ((x) / BITS_PER_LONG)
 #define test_bit(bit, array) ((array[LONG(bit)] >> OFF(bit)) & 1)
 
-static void errno_check(int status, char const* file, int line,
-                        char const* expr) {
+static void errno_check(int status, const char *file, int line, const char *expr) {
   if (status < 0) {
     warn("%s:%d: %s", file, line, expr);
   }
 }
 
-EvdevController::EvdevController(const std::string& filename,
-                                 const EvdevAbsMap& absmap,
-                                 const std::map<int, XboxButton>& keymap,
-                                 bool grab, bool debug)
+EvdevController::EvdevController(
+    const std::string &filename,
+    const EvdevAbsMap &absmap,
+    const std::map<int, XboxButton> &keymap,
+    bool grab,
+    bool debug
+)
     : m_fd(-1),
       m_io_channel(),
       m_name(),
@@ -96,10 +102,10 @@ EvdevController::EvdevController(const std::string& filename,
   }
 
   {  // Read in how many btn/abs/rel/ff the device has
-    unsigned long abs_bit[BITS_TO_LONGS(ABS_CNT)] = {0};
-    unsigned long rel_bit[BITS_TO_LONGS(REL_CNT)] = {0};
-    unsigned long key_bit[BITS_TO_LONGS(KEY_CNT)] = {0};
-    unsigned long ff_bit[BITS_TO_LONGS(FF_CNT)] = {0};
+    unsigned long abs_bit[BITS_TO_LONGS(ABS_CNT)] = { 0 };
+    unsigned long rel_bit[BITS_TO_LONGS(REL_CNT)] = { 0 };
+    unsigned long key_bit[BITS_TO_LONGS(KEY_CNT)] = { 0 };
+    unsigned long ff_bit[BITS_TO_LONGS(FF_CNT)] = { 0 };
 
     ioctl_x(m_fd, EVIOCGBIT(EV_ABS, sizeof(abs_bit)), abs_bit);
     ioctl_x(m_fd, EVIOCGBIT(EV_REL, sizeof(rel_bit)), rel_bit);
@@ -111,8 +117,14 @@ EvdevController::EvdevController(const std::string& filename,
         struct input_absinfo absinfo;
         ioctl_x(m_fd, EVIOCGABS(i), &absinfo);
 
-        log_debug(std::format("abs: {:20s} min: {:6d} max: {:6d}", abs2str(i),
-                              absinfo.minimum, absinfo.maximum));
+        log_debug(
+            std::format(
+                "abs: {:20s} min: {:6d} max: {:6d}",
+                abs2str(i),
+                absinfo.minimum,
+                absinfo.maximum
+            )
+        );
         m_absinfo[i] = absinfo;
       }
     }
@@ -147,18 +159,20 @@ EvdevController::EvdevController(const std::string& filename,
     m_io_channel = g_io_channel_unix_new(m_fd);
 
     // set encoding to binary
-    GError* error = NULL;
-    if (g_io_channel_set_encoding(m_io_channel, NULL, &error) !=
-        G_IO_STATUS_NORMAL) {
+    GError *error = NULL;
+    if (g_io_channel_set_encoding(m_io_channel, NULL, &error) != G_IO_STATUS_NORMAL) {
       log_error(error->message);
       g_error_free(error);
     }
 
     g_io_channel_set_buffered(m_io_channel, false);
 
-    g_io_add_watch(m_io_channel,
-                   static_cast<GIOCondition>(G_IO_IN | G_IO_ERR | G_IO_HUP),
-                   &EvdevController::on_read_data_wrap, this);
+    g_io_add_watch(
+        m_io_channel,
+        static_cast<GIOCondition>(G_IO_IN | G_IO_ERR | G_IO_HUP),
+        &EvdevController::on_read_data_wrap,
+        this
+    );
   }
 }
 
@@ -175,7 +189,7 @@ void EvdevController::set_led_real(uint8_t status) {
   // not implemented
 }
 
-void EvdevController::upload(const struct ff_effect& effect) {
+void EvdevController::upload(const struct ff_effect &effect) {
   struct ff_effect cpy = effect;
   if (m_effect_ids.find(effect.id) == m_effect_ids.end()) {
     cpy.id = -1;
@@ -202,45 +216,43 @@ static void write_event(int fd, int code, int value) {
   event.code = code;
   event.value = value;
 
-  if (write(fd, (const void*)&event, sizeof(event)) < 0) {
+  if (write(fd, (const void *)&event, sizeof(event)) < 0) {
     perror("force-feedback: sending event");
   }
 }
 
-void EvdevController::play(int id) { write_event(m_fd, id, 1); }
+void EvdevController::play(int id) {
+  write_event(m_fd, id, 1);
+}
 
-void EvdevController::stop(int id) { write_event(m_fd, id, 0); }
+void EvdevController::stop(int id) {
+  write_event(m_fd, id, 0);
+}
 
 void EvdevController::set_gain(int gain) {
-  if (std::find(m_ff_features.begin(), m_ff_features.end(), FF_GAIN) !=
-      m_ff_features.end()) {
+  if (std::find(m_ff_features.begin(), m_ff_features.end(), FF_GAIN) != m_ff_features.end()) {
     log_debug("FF_GAIN is supported");
     write_event(m_fd, FF_GAIN, gain);
   }
 }
 
-bool EvdevController::parse(const struct input_event& ev,
-                            XboxGenericMsg& msg_inout) const {
+bool EvdevController::parse(const struct input_event &ev, XboxGenericMsg &msg_inout) const {
   if (m_debug) {
     switch (ev.type) {
       case EV_KEY:
-        std::cout << "EV_KEY " << key2str(ev.code) << " " << ev.value
-                  << std::endl;
+        std::cout << "EV_KEY " << key2str(ev.code) << " " << ev.value << std::endl;
         break;
 
       case EV_REL:
-        std::cout << "EV_REL " << rel2str(ev.code) << " " << ev.value
-                  << std::endl;
+        std::cout << "EV_REL " << rel2str(ev.code) << " " << ev.value << std::endl;
         break;
 
       case EV_ABS:
-        std::cout << "EV_ABS " << abs2str(ev.code) << " " << ev.value
-                  << std::endl;
+        std::cout << "EV_ABS " << abs2str(ev.code) << " " << ev.value << std::endl;
         break;
 
       case EV_SYN:
-        std::cout << "------------------- sync -------------------"
-                  << std::endl;
+        std::cout << "------------------- sync -------------------" << std::endl;
         break;
 
       case EV_MSC:
@@ -266,12 +278,16 @@ bool EvdevController::parse(const struct input_event& ev,
     } break;
 
     case EV_ABS: {
-      const struct input_absinfo& absinfo = m_absinfo[ev.code];
-      m_absmap.process(msg_inout, ev.code,
-                       // some buggy USB devices report values
-                       // outside the given range, so we clamp it
-                       std::clamp(ev.value, absinfo.minimum, absinfo.maximum),
-                       absinfo.minimum, absinfo.maximum);
+      const struct input_absinfo &absinfo = m_absinfo[ev.code];
+      m_absmap.process(
+          msg_inout,
+          ev.code,
+          // some buggy USB devices report values
+          // outside the given range, so we clamp it
+          std::clamp(ev.value, absinfo.minimum, absinfo.maximum),
+          absinfo.minimum,
+          absinfo.maximum
+      );
       return true;  // FIXME: wrong
       break;
     }
@@ -283,8 +299,7 @@ bool EvdevController::parse(const struct input_event& ev,
   }
 }
 
-gboolean EvdevController::on_read_data(GIOChannel* source,
-                                       GIOCondition condition) {
+gboolean EvdevController::on_read_data(GIOChannel *source, GIOCondition condition) {
   // read data
   struct input_event ev[128];
   int rd = 0;

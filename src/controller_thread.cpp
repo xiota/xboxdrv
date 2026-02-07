@@ -35,9 +35,11 @@ using std::placeholders::_2;
 
 extern bool global_exit_xboxdrv;
 
-ControllerThread::ControllerThread(ControllerPtr controller,
-                                   std::shared_ptr<MessageProcessor> processor,
-                                   const Options& opts)
+ControllerThread::ControllerThread(
+    ControllerPtr controller,
+    std::shared_ptr<MessageProcessor> processor,
+    const Options &opts
+)
     : m_controller(controller),
       m_processor(processor),
       m_oldrealmsg(),
@@ -46,10 +48,8 @@ ControllerThread::ControllerThread(ControllerPtr controller,
       m_timeout_id(),
       m_timer(g_timer_new()) {
   memset(&m_oldrealmsg, 0, sizeof(m_oldrealmsg));
-  m_timeout_id =
-      g_timeout_add(m_timeout, &ControllerThread::on_timeout_wrap, this);
-  m_controller->set_message_cb(
-      std::bind(&ControllerThread::on_message, this, _1));
+  m_timeout_id = g_timeout_add(m_timeout, &ControllerThread::on_timeout_wrap, this);
+  m_controller->set_message_cb(std::bind(&ControllerThread::on_message, this, _1));
   m_processor->set_controller(m_controller.get());
 }
 
@@ -69,7 +69,7 @@ bool ControllerThread::on_timeout() {
   return true;  // do not remove the callback
 }
 
-void ControllerThread::on_message(const XboxGenericMsg& msg) {
+void ControllerThread::on_message(const XboxGenericMsg &msg) {
   if (m_print_messages) {
     std::cout << msg << std::endl;
   }

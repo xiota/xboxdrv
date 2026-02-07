@@ -38,8 +38,8 @@ class Select {
   int wait();
 
  private:
-  Select(const Select&);
-  Select& operator=(const Select&);
+  Select(const Select &);
+  Select &operator=(const Select &);
 };
 
 #endif

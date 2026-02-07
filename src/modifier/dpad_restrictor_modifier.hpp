@@ -29,13 +29,12 @@ class DpadRestrictorModifier : public Modifier {
   enum Mode { kRestrictFourWay, kRestrictXAxis, kRestrictYAxis };
 
  public:
-  static DpadRestrictorModifier* from_string(
-      const std::vector<std::string>& args);
+  static DpadRestrictorModifier *from_string(const std::vector<std::string> &args);
 
  public:
   DpadRestrictorModifier(Mode mode);
 
-  void update(int msec_delta, XboxGenericMsg& msg);
+  void update(int msec_delta, XboxGenericMsg &msg);
   std::string str() const;
 
  private:
@@ -43,8 +42,8 @@ class DpadRestrictorModifier : public Modifier {
   XboxAxis m_last_unpressed_axis;
 
  private:
-  DpadRestrictorModifier(const DpadRestrictorModifier&);
-  DpadRestrictorModifier& operator=(const DpadRestrictorModifier&);
+  DpadRestrictorModifier(const DpadRestrictorModifier &);
+  DpadRestrictorModifier &operator=(const DpadRestrictorModifier &);
 };
 
 #endif

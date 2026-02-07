@@ -25,7 +25,7 @@
 
 class ConstAxisFilter : public AxisFilter {
  public:
-  static ConstAxisFilter* from_string(const std::string& rest);
+  static ConstAxisFilter *from_string(const std::string &rest);
 
  public:
   ConstAxisFilter(int value);
@@ -37,8 +37,8 @@ class ConstAxisFilter : public AxisFilter {
   int m_value;
 
  private:
-  ConstAxisFilter(const ConstAxisFilter&);
-  ConstAxisFilter& operator=(const ConstAxisFilter&);
+  ConstAxisFilter(const ConstAxisFilter &);
+  ConstAxisFilter &operator=(const ConstAxisFilter &);
 };
 
 #endif

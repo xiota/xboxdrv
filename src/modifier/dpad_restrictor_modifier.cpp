@@ -24,8 +24,9 @@
 
 #include "raise_exception.hpp"
 
-DpadRestrictorModifier* DpadRestrictorModifier::from_string(
-    const std::vector<std::string>& args) {
+DpadRestrictorModifier *DpadRestrictorModifier::from_string(
+    const std::vector<std::string> &args
+) {
   if (args.size() != 1) {
     raise_exception(std::runtime_error, "one argument required");
   } else {
@@ -38,8 +39,7 @@ DpadRestrictorModifier* DpadRestrictorModifier::from_string(
                args[0] == "vert" || args[0] == "vertical") {
       return new DpadRestrictorModifier(kRestrictYAxis);
     } else {
-      raise_exception(std::runtime_error,
-                      "unknown restrictor mode: " << args[0]);
+      raise_exception(std::runtime_error, "unknown restrictor mode: " << args[0]);
     }
   }
 }
@@ -47,7 +47,7 @@ DpadRestrictorModifier* DpadRestrictorModifier::from_string(
 DpadRestrictorModifier::DpadRestrictorModifier(Mode mode)
     : m_mode(mode), m_last_unpressed_axis(XBOX_AXIS_DPAD_X) {}
 
-void DpadRestrictorModifier::update(int msec_delta, XboxGenericMsg& msg) {
+void DpadRestrictorModifier::update(int msec_delta, XboxGenericMsg &msg) {
   switch (m_mode) {
     case kRestrictFourWay:
       if (get_axis(msg, XBOX_AXIS_DPAD_X) && get_axis(msg, XBOX_AXIS_DPAD_Y)) {

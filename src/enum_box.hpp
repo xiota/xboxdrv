@@ -33,12 +33,11 @@ class EnumBox {
   std::map<std::string, Enum> m_string2enum;
 
  protected:
-  EnumBox(const std::string& name)
-      : m_name(name), m_enum2string(), m_string2enum() {}
+  EnumBox(const std::string &name) : m_name(name), m_enum2string(), m_string2enum() {}
 
   virtual ~EnumBox() {}
 
-  void add(Enum i, const std::string& name) {
+  void add(Enum i, const std::string &name) {
     m_enum2string[i] = name;
     m_string2enum[name] = i;
   }
@@ -47,19 +46,26 @@ class EnumBox {
   typedef typename std::map<Enum, std::string>::iterator iterator;
   typedef typename std::map<Enum, std::string>::const_iterator const_iterator;
 
-  const_iterator begin() const { return m_enum2string.begin(); }
-  const_iterator end() const { return m_enum2string.end(); }
+  const_iterator begin() const {
+    return m_enum2string.begin();
+  }
+  const_iterator end() const {
+    return m_enum2string.end();
+  }
 
-  iterator begin() { return m_enum2string.begin(); }
-  iterator end() { return m_enum2string.end(); }
+  iterator begin() {
+    return m_enum2string.begin();
+  }
+  iterator end() {
+    return m_enum2string.end();
+  }
 
-  Enum operator[](const std::string& str) const {
-    typename std::map<std::string, Enum>::const_iterator i =
-        m_string2enum.find(str);
+  Enum operator[](const std::string &str) const {
+    typename std::map<std::string, Enum>::const_iterator i = m_string2enum.find(str);
     if (i == m_string2enum.end()) {
       std::ostringstream out;
-      out << "couldn't convert '" << str << "' to enum, not a member of "
-          << m_name << std::endl;
+      out << "couldn't convert '" << str << "' to enum, not a member of " << m_name
+          << std::endl;
       throw std::runtime_error(out.str());
     } else {
       return i->second;
@@ -67,12 +73,11 @@ class EnumBox {
   }
 
   std::string operator[](Enum v) const {
-    typename std::map<Enum, std::string>::const_iterator i =
-        m_enum2string.find(v);
+    typename std::map<Enum, std::string>::const_iterator i = m_enum2string.find(v);
     if (i == m_enum2string.end()) {
       std::ostringstream out;
-      out << "couldn't convert '" << v << "' to string, not a member of "
-          << m_name << std::endl;
+      out << "couldn't convert '" << v << "' to string, not a member of " << m_name
+          << std::endl;
       throw std::runtime_error(out.str());
     } else {
       return i->second;

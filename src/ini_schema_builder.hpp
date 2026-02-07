@@ -27,18 +27,18 @@ class INISchema;
 
 class INISchemaBuilder : public INIBuilder {
  private:
-  const INISchema& m_schema;
+  const INISchema &m_schema;
   std::string m_current_section;
 
  public:
-  INISchemaBuilder(const INISchema& schema);
+  INISchemaBuilder(const INISchema &schema);
 
-  void send_section(const std::string& section);
-  void send_pair(const std::string& name, const std::string& value);
+  void send_section(const std::string &section);
+  void send_pair(const std::string &name, const std::string &value);
 
  private:
-  INISchemaBuilder(const INISchemaBuilder&);
-  INISchemaBuilder& operator=(const INISchemaBuilder&);
+  INISchemaBuilder(const INISchemaBuilder &);
+  INISchemaBuilder &operator=(const INISchemaBuilder &);
 };
 
 #endif

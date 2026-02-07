@@ -27,17 +27,17 @@ class UIAbsEventCollector;
 
 class UIAbsEventEmitter : public UIEventEmitter {
  private:
-  UIAbsEventCollector& m_collector;
+  UIAbsEventCollector &m_collector;
   int m_value;
 
  public:
-  UIAbsEventEmitter(UIAbsEventCollector& collector);
+  UIAbsEventEmitter(UIAbsEventCollector &collector);
 
   void send(int value);
 
  private:
-  UIAbsEventEmitter(const UIAbsEventEmitter&);
-  UIAbsEventEmitter& operator=(const UIAbsEventEmitter&);
+  UIAbsEventEmitter(const UIAbsEventEmitter &);
+  UIAbsEventEmitter &operator=(const UIAbsEventEmitter &);
 };
 
 typedef std::shared_ptr<UIAbsEventEmitter> UIAbsEventEmitterPtr;

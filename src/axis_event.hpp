@@ -35,24 +35,22 @@ class AxisEvent {
  public:
   static AxisEventPtr invalid();
 
-  static AxisEventPtr create_abs(int device_id, int code, int min, int max,
-                                 int fuzz, int flat);
-  static AxisEventPtr create_rel(int device_id, int code, int repeat = 10,
-                                 float value = 5);
+  static AxisEventPtr create_abs(int device_id, int code, int min, int max, int fuzz, int flat);
+  static AxisEventPtr create_rel(int device_id, int code, int repeat = 10, float value = 5);
 
   /** If an AxisEvent gets created the user has to set min/max with
    * set_axis_range() */
-  static AxisEventPtr from_string(const std::string& str);
+  static AxisEventPtr from_string(const std::string &str);
 
  public:
-  AxisEvent(AxisEventHandler* handler, int min = 0, int max = 0);
+  AxisEvent(AxisEventHandler *handler, int min = 0, int max = 0);
   ~AxisEvent() {}
 
   void add_filter(AxisFilterPtr filter);
 
-  void init(UInput& uinput, int slot, bool extra_devices);
-  void send(UInput& uinput, int value);
-  void update(UInput& uinput, int msec_delta);
+  void init(UInput &uinput, int slot, bool extra_devices);
+  void send(UInput &uinput, int value);
+  void update(UInput &uinput, int msec_delta);
 
   void set_axis_range(int min, int max);
 
@@ -76,9 +74,9 @@ class AxisEventHandler {
   AxisEventHandler();
   virtual ~AxisEventHandler() {}
 
-  virtual void init(UInput& uinput, int slot, bool extra_devices) = 0;
-  virtual void send(UInput& uinput, int value) = 0;
-  virtual void update(UInput& uinput, int msec_delta) = 0;
+  virtual void init(UInput &uinput, int slot, bool extra_devices) = 0;
+  virtual void send(UInput &uinput, int value) = 0;
+  virtual void update(UInput &uinput, int msec_delta) = 0;
 
   virtual void set_axis_range(int min, int max);
 

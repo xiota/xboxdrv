@@ -27,16 +27,16 @@ class UIRelEventCollector;
 
 class UIRelEventEmitter : public UIEventEmitter {
  private:
-  UIRelEventCollector& m_collector;
+  UIRelEventCollector &m_collector;
 
  public:
-  UIRelEventEmitter(UIRelEventCollector& collector);
+  UIRelEventEmitter(UIRelEventCollector &collector);
 
   void send(int value);
 
  private:
-  UIRelEventEmitter(const UIRelEventEmitter&);
-  UIRelEventEmitter& operator=(const UIRelEventEmitter&);
+  UIRelEventEmitter(const UIRelEventEmitter &);
+  UIRelEventEmitter &operator=(const UIRelEventEmitter &);
 };
 
 typedef std::shared_ptr<UIRelEventEmitter> UIRelEventEmitterPtr;

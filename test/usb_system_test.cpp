@@ -30,12 +30,12 @@
 #include "xbox360_controller.hpp"
 #include "xboxmsg.hpp"
 
-libusb_device* get_controller_dev() {
-  libusb_device** list;
+libusb_device *get_controller_dev() {
+  libusb_device **list;
   ssize_t num_devices = libusb_get_device_list(NULL, &list);
 
   for (ssize_t dev_it = 0; dev_it < num_devices; ++dev_it) {
-    libusb_device* dev = list[dev_it];
+    libusb_device *dev = list[dev_it];
     libusb_device_descriptor desc;
 
     int ret = libusb_get_device_descriptor(dev, &desc);
@@ -55,7 +55,9 @@ libusb_device* get_controller_dev() {
   return 0;
 }
 
-void process_msg(const XboxGenericMsg& msg) { log_debug(msg); }
+void process_msg(const XboxGenericMsg &msg) {
+  log_debug(msg);
+}
 
 int main() {
   g_logger.set_log_level(Logger::kDebug);
@@ -64,19 +66,18 @@ int main() {
 
   int ret = libusb_init(NULL);
   if (ret != LIBUSB_SUCCESS) {
-    raise_exception(std::runtime_error,
-                    "libusb_init() failed: " << usb_strerror(ret));
+    raise_exception(std::runtime_error, "libusb_init() failed: " << usb_strerror(ret));
   }
 
-  GMainLoop* m_gmain = g_main_loop_new(NULL, FALSE);
+  GMainLoop *m_gmain = g_main_loop_new(NULL, FALSE);
 
   USBGSource usb_gsource;
   usb_gsource.attach(NULL);
 
-  libusb_device* dev = get_controller_dev();
+  libusb_device *dev = get_controller_dev();
   assert(dev);
-  Xbox360Controller* controller = new Xbox360Controller(
-      dev, false, false, false, false, false, "", "", false);
+  Xbox360Controller *controller =
+      new Xbox360Controller(dev, false, false, false, false, false, "", "", false);
   controller->set_led(2);
   g_main_loop_run(m_gmain);
 

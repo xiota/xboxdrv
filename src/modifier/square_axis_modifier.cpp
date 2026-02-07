@@ -28,7 +28,7 @@
 
 namespace {
 
-void squarify_axis(int& x_inout, int& y_inout) {
+void squarify_axis(int &x_inout, int &y_inout) {
   if (x_inout != 0 || y_inout != 0) {
     // Convert values to float
     float x = (x_inout < 0) ? static_cast<float>(x_inout) / 32768.0f
@@ -43,17 +43,18 @@ void squarify_axis(int& x_inout, int& y_inout) {
     y *= v;
 
     // Convert values to int
-    x_inout = static_cast<int>(std::clamp(
-        static_cast<int>((x < 0) ? x * 32768 : x * 32767), -32768, 32767));
-    y_inout = static_cast<int>(std::clamp(
-        static_cast<int>((y < 0) ? y * 32768 : y * 32767), -32768, 32767));
+    x_inout = static_cast<int>(
+        std::clamp(static_cast<int>((x < 0) ? x * 32768 : x * 32767), -32768, 32767)
+    );
+    y_inout = static_cast<int>(
+        std::clamp(static_cast<int>((y < 0) ? y * 32768 : y * 32767), -32768, 32767)
+    );
   }
 }
 
 }  // namespace
 
-SquareAxisModifier* SquareAxisModifier::from_string(
-    const std::vector<std::string>& args) {
+SquareAxisModifier *SquareAxisModifier::from_string(const std::vector<std::string> &args) {
   if (args.size() != 2) {
     throw std::runtime_error("SquareAxisModifier requires two arguments");
   } else {
@@ -64,7 +65,7 @@ SquareAxisModifier* SquareAxisModifier::from_string(
 SquareAxisModifier::SquareAxisModifier(XboxAxis xaxis, XboxAxis yaxis)
     : m_xaxis(xaxis), m_yaxis(yaxis) {}
 
-void SquareAxisModifier::update(int msec_delta, XboxGenericMsg& msg) {
+void SquareAxisModifier::update(int msec_delta, XboxGenericMsg &msg) {
   int x = get_axis(msg, m_xaxis);
   int y = get_axis(msg, m_yaxis);
 

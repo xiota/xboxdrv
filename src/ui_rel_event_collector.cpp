@@ -20,8 +20,7 @@
 
 #include "uinput.hpp"
 
-UIRelEventCollector::UIRelEventCollector(UInput& uinput, uint32_t device_id,
-                                         int type, int code)
+UIRelEventCollector::UIRelEventCollector(UInput &uinput, uint32_t device_id, int type, int code)
     : UIEventCollector(uinput, device_id, type, code), m_emitters() {}
 
 UIEventEmitterPtr UIRelEventCollector::create_emitter() {

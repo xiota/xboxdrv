@@ -37,8 +37,8 @@ class AxisMap {
 
   void clear();
 
-  void init(UInput& uinput, int slot, bool extra_devices) const;
-  void update(UInput& uinput, int msec_delta);
+  void init(UInput &uinput, int slot, bool extra_devices) const;
+  void update(UInput &uinput, int msec_delta);
 };
 
 #endif

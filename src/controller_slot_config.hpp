@@ -36,19 +36,22 @@ class ControllerSlotConfig {
  public:
   /** Creates a ControllerSlotConfig from the Options object and connects it to
    * UInput */
-  static ControllerSlotConfigPtr create(UInput& uinput, int slot,
-                                        bool extra_devices,
-                                        const ControllerSlotOptions& opts,
-                                        Controller* controller);
+  static ControllerSlotConfigPtr create(
+      UInput &uinput,
+      int slot,
+      bool extra_devices,
+      const ControllerSlotOptions &opts,
+      Controller *controller
+  );
 
  private:
-  static void create_modifier(const ControllerOptions& options,
-                              std::vector<ModifierPtr>* modifier);
+  static void
+  create_modifier(const ControllerOptions &options, std::vector<ModifierPtr> *modifier);
 
  private:
   std::vector<ControllerConfigPtr> m_config;
   int m_current_config;
-  Controller* m_controller;
+  Controller *m_controller;
 
  public:
   ControllerSlotConfig();
@@ -59,16 +62,20 @@ class ControllerSlotConfig {
   void prev_config();
   int config_count() const;
   void set_current_config(int num);
-  int get_current_config() const { return m_current_config; }
+  int get_current_config() const {
+    return m_current_config;
+  }
 
   ControllerConfigPtr get_config(int i) const;
   ControllerConfigPtr get_config() const;
 
-  bool empty() const { return m_config.empty(); }
+  bool empty() const {
+    return m_config.empty();
+  }
 
  private:
-  ControllerSlotConfig(const ControllerSlotConfig&);
-  ControllerSlotConfig& operator=(const ControllerSlotConfig&);
+  ControllerSlotConfig(const ControllerSlotConfig &);
+  ControllerSlotConfig &operator=(const ControllerSlotConfig &);
 };
 
 #endif

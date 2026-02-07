@@ -26,19 +26,16 @@
 class ControllerSlot;
 
 #define XBOXDRV_TYPE_G_CONTROLLER (xboxdrv_g_controller_get_type())
-#define XBOXDRV_G_CONTROLLER(obj)                               \
-  (G_TYPE_CHECK_INSTANCE_CAST((obj), XBOXDRV_TYPE_G_CONTROLLER, \
-                              XboxdrvGController))
+#define XBOXDRV_G_CONTROLLER(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), XBOXDRV_TYPE_G_CONTROLLER, XboxdrvGController))
 #define XBOXDRV_IS_G_CONTROLLER(obj) \
   (G_TYPE_CHECK_INSTANCE_TYPE((obj), XBOXDRV_TYPE_G_CONTROLLER))
-#define XBOXDRV_G_CONTROLLER_CLASS(klass)                      \
-  (G_TYPE_CHECK_CLASS_CAST((klass), XBOXDRV_TYPE_G_CONTROLLER, \
-                           XboxdrvGControllerClass))
+#define XBOXDRV_G_CONTROLLER_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), XBOXDRV_TYPE_G_CONTROLLER, XboxdrvGControllerClass))
 #define XBOXDRV_IS_G_CONTROLLER_CLASS(klass) \
   (G_TYPE_CHECK_CLASS_TYPE((klass), XBOXDRV_TYPE_G_CONTROLLER))
-#define XBOXDRV_G_CONTROLLER_GET_CLASS(obj)                    \
-  (G_TYPE_INSTANCE_GET_CLASS((obj), XBOXDRV_TYPE_G_CONTROLLER, \
-                             XboxdrvGControllerClass))
+#define XBOXDRV_G_CONTROLLER_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), XBOXDRV_TYPE_G_CONTROLLER, XboxdrvGControllerClass))
 
 typedef struct _XboxdrvGController XboxdrvGController;
 typedef struct _XboxdrvGControllerClass XboxdrvGControllerClass;
@@ -46,7 +43,7 @@ typedef struct _XboxdrvGControllerClass XboxdrvGControllerClass;
 struct _XboxdrvGController {
   GObject parent_instance;
 
-  ControllerSlot* controller;
+  ControllerSlot *controller;
 };
 
 struct _XboxdrvGControllerClass {
@@ -54,14 +51,13 @@ struct _XboxdrvGControllerClass {
 };
 
 GType xboxdrv_g_controller_get_type();
-XboxdrvGController* xboxdrv_g_controller_new(ControllerSlot* controller);
+XboxdrvGController *xboxdrv_g_controller_new(ControllerSlot *controller);
 
-gboolean xboxdrv_g_controller_set_config(XboxdrvGController* self,
-                                         int config_num, GError** error);
-gboolean xboxdrv_g_controller_set_led(XboxdrvGController* self, int status,
-                                      GError** error);
-gboolean xboxdrv_g_controller_set_rumble(XboxdrvGController* self, int strong,
-                                         int weak, GError** error);
+gboolean
+xboxdrv_g_controller_set_config(XboxdrvGController *self, int config_num, GError **error);
+gboolean xboxdrv_g_controller_set_led(XboxdrvGController *self, int status, GError **error);
+gboolean
+xboxdrv_g_controller_set_rumble(XboxdrvGController *self, int strong, int weak, GError **error);
 
 #endif
 

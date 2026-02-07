@@ -31,12 +31,7 @@ class Controller;
 
 class LinuxUinput {
  public:
-  enum DeviceType {
-    kGenericDevice,
-    kKeyboardDevice,
-    kMouseDevice,
-    kJoystickDevice
-  };
+  enum DeviceType { kGenericDevice, kKeyboardDevice, kMouseDevice, kJoystickDevice };
 
  private:
   DeviceType m_device_type;
@@ -46,7 +41,7 @@ class LinuxUinput {
   bool m_finished;
 
   int m_fd;
-  GIOChannel* m_io_channel;
+  GIOChannel *m_io_channel;
   guint m_source_id;
 
   uinput_user_dev user_dev;
@@ -60,15 +55,14 @@ class LinuxUinput {
   bool key_lst[KEY_CNT];
   bool ff_lst[FF_CNT];
 
-  ForceFeedbackHandler* m_ff_handler;
-  Controller* m_controller;
+  ForceFeedbackHandler *m_ff_handler;
+  Controller *m_controller;
 
   bool needs_sync;
   bool m_force_feedback_enabled;
 
  public:
-  LinuxUinput(DeviceType device_type, const std::string& name,
-              const struct input_id& usbid_);
+  LinuxUinput(DeviceType device_type, const std::string &name, const struct input_id &usbid_);
   ~LinuxUinput();
 
   /*@{*/
@@ -83,7 +77,7 @@ class LinuxUinput {
 
   void add_ff(uint16_t code);
 
-  void set_controller(Controller* controller);
+  void set_controller(Controller *controller);
   void enable_force_feedback();
   void set_ff_gain(int gain);
 
@@ -99,15 +93,15 @@ class LinuxUinput {
   void update(int msec_delta);
 
  private:
-  gboolean on_read_data(GIOChannel* source, GIOCondition condition);
-  static gboolean on_read_data_wrap(GIOChannel* source, GIOCondition condition,
-                                    gpointer userdata) {
-    return static_cast<LinuxUinput*>(userdata)->on_read_data(source, condition);
+  gboolean on_read_data(GIOChannel *source, GIOCondition condition);
+  static gboolean
+  on_read_data_wrap(GIOChannel *source, GIOCondition condition, gpointer userdata) {
+    return static_cast<LinuxUinput *>(userdata)->on_read_data(source, condition);
   }
 
  private:
-  LinuxUinput(const LinuxUinput&);
-  LinuxUinput& operator=(const LinuxUinput&);
+  LinuxUinput(const LinuxUinput &);
+  LinuxUinput &operator=(const LinuxUinput &);
 };
 
 #endif

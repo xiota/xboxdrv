@@ -31,12 +31,11 @@ typedef std::shared_ptr<Modifier> ModifierPtr;
 
 class Modifier {
  public:
-  static Modifier* from_string(const std::string& name,
-                               const std::string& value);
+  static Modifier *from_string(const std::string &name, const std::string &value);
 
  public:
   virtual ~Modifier() {}
-  virtual void update(int msec_delta, XboxGenericMsg& msg) = 0;
+  virtual void update(int msec_delta, XboxGenericMsg &msg) = 0;
 
   virtual std::string str() const = 0;
 };

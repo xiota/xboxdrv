@@ -32,24 +32,22 @@
 using std::placeholders::_1;
 using std::placeholders::_2;
 
-Options* g_options;
+Options *g_options;
 
-Options::GenericUSBSpec Options::GenericUSBSpec::from_string(
-    const std::string& str) {
+Options::GenericUSBSpec Options::GenericUSBSpec::from_string(const std::string &str) {
   GenericUSBSpec spec;
   process_name_value_string(
-      str, std::bind(&GenericUSBSpec::apply_pair, std::ref(spec), _1, _2));
+      str, std::bind(&GenericUSBSpec::apply_pair, std::ref(spec), _1, _2)
+  );
   return spec;
 }
 
-void Options::GenericUSBSpec::apply_pair(const std::string& name,
-                                         const std::string& value) {
+void Options::GenericUSBSpec::apply_pair(const std::string &name, const std::string &value) {
   if (name == "if" || name == "interface") {
     m_interface = std::stoi(value);
   } else if (name == "ep" || name == "endpoint") {
     m_endpoint = std::stoi(value);
-  } else if (name == "vid" || name == "vendor_id" || name == "vendorid" ||
-             name == "vendor") {
+  } else if (name == "vid" || name == "vendor_id" || name == "vendorid" || name == "vendor") {
     m_vendor_id = hexstr2int(value);
   } else if (name == "pid" || name == "product_id" || name == "productid" ||
              name == "product") {
@@ -113,11 +111,11 @@ Options::Options()
   controller_slots[controller_slot].get_options(config_slot);
 }
 
-ControllerSlotOptions& Options::get_controller_slot() {
+ControllerSlotOptions &Options::get_controller_slot() {
   return controller_slots[controller_slot];
 }
 
-const ControllerSlotOptions& Options::get_controller_slot() const {
+const ControllerSlotOptions &Options::get_controller_slot() const {
   ControllerSlots::const_iterator it = controller_slots.find(controller_slot);
   if (it == controller_slots.end()) {
     assert(!"shouldn't happen");
@@ -126,11 +124,11 @@ const ControllerSlotOptions& Options::get_controller_slot() const {
   }
 }
 
-ControllerOptions& Options::get_controller_options() {
+ControllerOptions &Options::get_controller_options() {
   return controller_slots[controller_slot].get_options(config_slot);
 }
 
-const ControllerOptions& Options::get_controller_options() const {
+const ControllerOptions &Options::get_controller_options() const {
   ControllerSlots::const_iterator it = controller_slots.find(controller_slot);
   if (it == controller_slots.end()) {
     assert(!"shouldn't happen");
@@ -145,14 +143,13 @@ const ControllerOptions& Options::get_controller_options() const {
   }
 }
 
-void Options::set_priority(const std::string& value) {
+void Options::set_priority(const std::string &value) {
   if (value == "realtime") {
     priority = kPriorityRealtime;
   } else if (value == "normal") {
     priority = kPriorityNormal;
   } else {
-    raise_exception(std::runtime_error,
-                    "unknown priority value: '" << value << "'");
+    raise_exception(std::runtime_error, "unknown priority value: '" << value << "'");
   }
 }
 
@@ -176,13 +173,19 @@ void Options::next_config() {
   controller_slots[controller_slot].get_options(config_slot);
 }
 
-void Options::set_verbose() { g_logger.incr_log_level(Logger::kInfo); }
+void Options::set_verbose() {
+  g_logger.incr_log_level(Logger::kInfo);
+}
 
-void Options::set_debug() { g_logger.incr_log_level(Logger::kDebug); }
+void Options::set_debug() {
+  g_logger.incr_log_level(Logger::kDebug);
+}
 
-void Options::set_usb_debug() { usb_debug = true; }
+void Options::set_usb_debug() {
+  usb_debug = true;
+}
 
-void Options::set_dbus_mode(const std::string& value) {
+void Options::set_dbus_mode(const std::string &value) {
   if (value == "system") {
     dbus = kDBusSystem;
   } else if (value == "session") {
@@ -199,7 +202,7 @@ void Options::set_dbus_mode(const std::string& value) {
       } else {
         dbus = kDBusDisabled;
       }
-    } catch (const std::exception& err) {
+    } catch (const std::exception &err) {
       // fallback failed, so assume that the user used the new way and
       // did a typing error
       raise_exception(std::runtime_error, "unknown dbus mode: " << value);
@@ -207,21 +210,21 @@ void Options::set_dbus_mode(const std::string& value) {
   }
 }
 
-void Options::set_led(const std::string& value) {
+void Options::set_led(const std::string &value) {
   get_controller_slot().set_led_status(std::stoi(value));
 }
 
-void Options::set_device_name(const std::string& name) {
+void Options::set_device_name(const std::string &name) {
   uint32_t device_id = UInput::create_device_id(controller_slot, DEVICEID_AUTO);
   uinput_device_names[device_id] = name;
 }
 
-void Options::set_device_usbid(const std::string& name) {
+void Options::set_device_usbid(const std::string &name) {
   uint32_t device_id = UInput::create_device_id(controller_slot, DEVICEID_AUTO);
   uinput_device_usbids[device_id] = UInput::parse_input_id(name);
 }
 
-void Options::set_toggle_button(const std::string& str) {
+void Options::set_toggle_button(const std::string &str) {
   if (str == "void") {
     config_toggle_button = XBOX_BTN_UNKNOWN;
     config_toggle_button_is_set = true;
@@ -231,7 +234,9 @@ void Options::set_toggle_button(const std::string& str) {
   }
 }
 
-void Options::set_guitar() { get_controller_options().uinput.guitar(); }
+void Options::set_guitar() {
+  get_controller_options().uinput.guitar();
+}
 
 void Options::set_trigger_as_button() {
   get_controller_options().uinput.trigger_as_button();
@@ -245,17 +250,19 @@ void Options::set_dpad_as_button() {
   get_controller_options().uinput.dpad_as_button();
 }
 
-void Options::set_dpad_only() { get_controller_options().uinput.dpad_only(); }
+void Options::set_dpad_only() {
+  get_controller_options().uinput.dpad_only();
+}
 
-void Options::set_force_feedback(const std::string& value) {
+void Options::set_force_feedback(const std::string &value) {
   get_controller_slot().set_force_feedback(str2bool(value));
 }
 
-void Options::set_ff_device(const std::string& value) {
+void Options::set_ff_device(const std::string &value) {
   get_controller_slot().set_ff_device(value);
 }
 
-void Options::set_rumble_gain(const std::string& value) {
+void Options::set_rumble_gain(const std::string &value) {
   get_controller_slot().set_rumble_gain(to_number(255, value));
 }
 
@@ -299,30 +306,28 @@ void Options::set_quiet() {
   silent = true;
 }
 
-void Options::add_match(const std::string& lhs, const std::string& rhs) {
-  get_controller_slot().add_match_rule(
-      ControllerMatchRule::from_string(lhs, rhs));
+void Options::add_match(const std::string &lhs, const std::string &rhs) {
+  get_controller_slot().add_match_rule(ControllerMatchRule::from_string(lhs, rhs));
 }
 
-void Options::set_match(const std::string& str) {
+void Options::set_match(const std::string &str) {
   process_name_value_string(str, std::bind(&Options::add_match, this, _1, _2));
 }
 
-void Options::set_match_group(const std::string& str) {
+void Options::set_match_group(const std::string &str) {
   std::shared_ptr<ControllerMatchRuleGroup> group(new ControllerMatchRuleGroup);
 
   process_name_value_string(
-      str, std::bind(&ControllerMatchRuleGroup::add_rule_from_string, group, _1,
-                     _2));
+      str, std::bind(&ControllerMatchRuleGroup::add_rule_from_string, group, _1, _2)
+  );
 
   get_controller_slot().add_match_rule(group);
 }
 
-Options::GenericUSBSpec Options::find_generic_usb_spec(int vendor_id_,
-                                                       int product_id_) const {
-  for (std::vector<GenericUSBSpec>::const_iterator i =
-           m_generic_usb_specs.begin();
-       i != m_generic_usb_specs.end(); ++i) {
+Options::GenericUSBSpec Options::find_generic_usb_spec(int vendor_id_, int product_id_) const {
+  for (std::vector<GenericUSBSpec>::const_iterator i = m_generic_usb_specs.begin();
+       i != m_generic_usb_specs.end();
+       ++i) {
     // log_tmp(i->m_vendor_id  << " - " << vendor_id_ << " "
     //         << i->m_product_id << " - " << product_id_);
 
@@ -333,8 +338,12 @@ Options::GenericUSBSpec Options::find_generic_usb_spec(int vendor_id_,
 
   raise_exception(
       std::runtime_error,
-      std::format("no matching GenericUSBSpec found for {:#04x}:{:#04x}",
-                  static_cast<int>(vendor_id_), static_cast<int>(product_id_)));
+      std::format(
+          "no matching GenericUSBSpec found for {:#04x}:{:#04x}",
+          static_cast<int>(vendor_id_),
+          static_cast<int>(product_id_)
+      )
+  );
 }
 
 void Options::finish() {

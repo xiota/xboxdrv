@@ -26,16 +26,15 @@
 
 class RelAxisEventHandler : public AxisEventHandler {
  public:
-  static RelAxisEventHandler* from_string(const std::string& str);
+  static RelAxisEventHandler *from_string(const std::string &str);
 
  public:
   RelAxisEventHandler();
-  RelAxisEventHandler(int device_id, int code, int repeat = 10,
-                      float value = 5);
+  RelAxisEventHandler(int device_id, int code, int repeat = 10, float value = 5);
 
-  void init(UInput& uinput, int slot, bool extra_devices);
-  void send(UInput& uinput, int value);
-  void update(UInput& uinput, int msec_delta);
+  void init(UInput &uinput, int slot, bool extra_devices);
+  void send(UInput &uinput, int value);
+  void update(UInput &uinput, int msec_delta);
 
   std::string str() const;
 

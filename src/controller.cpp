@@ -34,9 +34,11 @@ Controller::Controller()
       m_ff_features(),
       m_num_ff_effects(0) {}
 
-Controller::~Controller() { udev_device_unref(m_udev_device); }
+Controller::~Controller() {
+  udev_device_unref(m_udev_device);
+}
 
-void Controller::submit_msg(const XboxGenericMsg& msg) {
+void Controller::submit_msg(const XboxGenericMsg &msg) {
   if (m_msg_cb) {
     m_msg_cb(msg);
   }
@@ -59,7 +61,7 @@ void Controller::set_led(uint8_t status) {
   }
 }
 
-void Controller::upload(const struct ff_effect& effect) {
+void Controller::upload(const struct ff_effect &effect) {
   // not implemented for non-evdev controllers
 }
 
@@ -79,22 +81,22 @@ void Controller::set_gain(int g) {
   // not implemented for non-evdev controllers
 }
 
-void Controller::set_udev_device(udev_device* udev_dev) {
+void Controller::set_udev_device(udev_device *udev_dev) {
   m_udev_device = udev_dev;
   udev_device_ref(m_udev_device);
 }
 
-void Controller::set_message_cb(
-    const std::function<void(const XboxGenericMsg&)>& msg_cb) {
+void Controller::set_message_cb(const std::function<void(const XboxGenericMsg &)> &msg_cb) {
   m_msg_cb = msg_cb;
 }
 
-udev_device* Controller::get_udev_device() const { return m_udev_device; }
+udev_device *Controller::get_udev_device() const {
+  return m_udev_device;
+}
 
 void Controller::set_active(bool v) {
   if (m_is_active != v) {
-    log_debug("activation status: " << v << " "
-                                    << m_activation_cb.target<void*>());
+    log_debug("activation status: " << v << " " << m_activation_cb.target<void *>());
     m_is_active = v;
     if (m_activation_cb) {
       m_activation_cb();
@@ -102,13 +104,15 @@ void Controller::set_active(bool v) {
   }
 }
 
-void Controller::set_activation_cb(const std::function<void()>& callback) {
+void Controller::set_activation_cb(const std::function<void()> &callback) {
   m_activation_cb = callback;
 }
 
-bool Controller::is_disconnected() const { return m_is_disconnected; }
+bool Controller::is_disconnected() const {
+  return m_is_disconnected;
+}
 
-void Controller::set_disconnect_cb(const std::function<void()>& callback) {
+void Controller::set_disconnect_cb(const std::function<void()> &callback) {
   m_disconnect_cb = callback;
 }
 

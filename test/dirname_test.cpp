@@ -20,7 +20,7 @@
 
 #include "path.hpp"
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   for (int i = 1; i < argc; ++i) {
     std::cout << '"' << argv[i] << '"' << std::endl;
     std::cout << '"' << path::dirname(argv[i]) << '"' << std::endl;

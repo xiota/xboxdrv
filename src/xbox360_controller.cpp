@@ -29,12 +29,17 @@
 #include "unpack.hpp"
 #include "usb_helper.hpp"
 
-Xbox360Controller::Xbox360Controller(libusb_device* dev, bool chatpad,
-                                     bool chatpad_no_init, bool chatpad_debug,
-                                     bool headset, bool headset_debug,
-                                     const std::string& headset_dump,
-                                     const std::string& headset_play,
-                                     bool try_detach)
+Xbox360Controller::Xbox360Controller(
+    libusb_device *dev,
+    bool chatpad,
+    bool chatpad_no_init,
+    bool chatpad_debug,
+    bool headset,
+    bool headset_debug,
+    const std::string &headset_dump,
+    const std::string &headset_play,
+    bool try_detach
+)
     : USBController(dev),
       dev_type(),
       endpoint_in(1),
@@ -44,10 +49,8 @@ Xbox360Controller::Xbox360Controller(libusb_device* dev, bool chatpad,
       m_rumble_left(0),
       m_rumble_right(0) {
   // find endpoints
-  endpoint_in =
-      usb_find_ep(LIBUSB_ENDPOINT_IN, LIBUSB_CLASS_VENDOR_SPEC, 93, 1);
-  endpoint_out =
-      usb_find_ep(LIBUSB_ENDPOINT_OUT, LIBUSB_CLASS_VENDOR_SPEC, 93, 1);
+  endpoint_in = usb_find_ep(LIBUSB_ENDPOINT_IN, LIBUSB_CLASS_VENDOR_SPEC, 93, 1);
+  endpoint_out = usb_find_ep(LIBUSB_ENDPOINT_OUT, LIBUSB_CLASS_VENDOR_SPEC, 93, 1);
 
   log_debug("EP(IN):  " << endpoint_in);
   log_debug("EP(OUT): " << endpoint_out);
@@ -62,11 +65,10 @@ Xbox360Controller::Xbox360Controller(libusb_device* dev, bool chatpad,
     int ret = libusb_get_device_descriptor(dev, &desc);
     if (ret != LIBUSB_SUCCESS) {
       raise_exception(
-          std::runtime_error,
-          "libusb_get_config_descriptor() failed: " << usb_strerror(ret));
+          std::runtime_error, "libusb_get_config_descriptor() failed: " << usb_strerror(ret)
+      );
     } else {
-      m_chatpad.reset(new Chatpad(m_handle, desc.bcdDevice, chatpad_no_init,
-                                  chatpad_debug));
+      m_chatpad.reset(new Chatpad(m_handle, desc.bcdDevice, chatpad_no_init, chatpad_debug));
     }
   }
 
@@ -86,16 +88,16 @@ Xbox360Controller::Xbox360Controller(libusb_device* dev, bool chatpad,
 Xbox360Controller::~Xbox360Controller() {}
 
 void Xbox360Controller::set_rumble_real(uint8_t left, uint8_t right) {
-  uint8_t rumblecmd[] = {0x00, 0x08, 0x00, left, right, 0x00, 0x00, 0x00};
+  uint8_t rumblecmd[] = { 0x00, 0x08, 0x00, left, right, 0x00, 0x00, 0x00 };
   usb_write(endpoint_out, rumblecmd, sizeof(rumblecmd));
 }
 
 void Xbox360Controller::set_led_real(uint8_t status) {
-  uint8_t ledcmd[] = {0x01, 0x03, status};
+  uint8_t ledcmd[] = { 0x01, 0x03, status };
   usb_write(endpoint_out, ledcmd, sizeof(ledcmd));
 }
 
-bool Xbox360Controller::parse(uint8_t* data, int len, XboxGenericMsg* msg_out) {
+bool Xbox360Controller::parse(uint8_t *data, int len, XboxGenericMsg *msg_out) {
   if (len == 0) {
     // happens with the Xbox360 controller every now and then, just
     // ignore, seems harmless, so just ignore
@@ -124,7 +126,7 @@ bool Xbox360Controller::parse(uint8_t* data, int len, XboxGenericMsg* msg_out) {
     }
   } else if (len == 20 && data[0] == 0x00 && data[1] == 0x14) {
     msg_out->type = XBOX_MSG_XBOX360;
-    Xbox360Msg& msg = msg_out->xbox360;
+    Xbox360Msg &msg = msg_out->xbox360;
 
     msg.type = data[0];
     msg.length = data[1];

@@ -32,15 +32,15 @@ class UIKeyEventCollector : public UIEventCollector {
   int m_value;
 
  public:
-  UIKeyEventCollector(UInput& uinput, uint32_t device_id, int type, int code);
+  UIKeyEventCollector(UInput &uinput, uint32_t device_id, int type, int code);
 
   UIEventEmitterPtr create_emitter();
   void send(int value);
   void sync();
 
  private:
-  UIKeyEventCollector(const UIKeyEventCollector&);
-  UIKeyEventCollector& operator=(const UIKeyEventCollector&);
+  UIKeyEventCollector(const UIKeyEventCollector &);
+  UIKeyEventCollector &operator=(const UIKeyEventCollector &);
 };
 
 #endif

@@ -22,11 +22,11 @@
 #include <sstream>
 #include <string>
 
-LogAxisFilter* LogAxisFilter::from_string(const std::string& str) {
+LogAxisFilter *LogAxisFilter::from_string(const std::string &str) {
   return new LogAxisFilter(str);
 }
 
-LogAxisFilter::LogAxisFilter(const std::string& name) : m_name(name) {}
+LogAxisFilter::LogAxisFilter(const std::string &name) : m_name(name) {}
 
 int LogAxisFilter::filter(int value, int min, int max) {
   if (m_name.empty()) {

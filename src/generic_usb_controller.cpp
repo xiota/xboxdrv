@@ -24,10 +24,14 @@
 #include "helper.hpp"
 #include "raise_exception.hpp"
 
-GenericUSBController::GenericUSBController(libusb_device* dev, int interface,
-                                           int endpoint, bool try_detach)
+GenericUSBController::GenericUSBController(
+    libusb_device *dev,
+    int interface,
+    int endpoint,
+    bool try_detach
+)
     : USBController(dev), m_interface(interface), m_endpoint(endpoint) {
-  struct libusb_config_descriptor* config;
+  struct libusb_config_descriptor *config;
   if (libusb_get_active_config_descriptor(dev, &config) != LIBUSB_SUCCESS) {
     raise_exception(std::runtime_error, "failed to get config descriptor");
   } else {
@@ -55,19 +59,16 @@ GenericUSBController::GenericUSBController(libusb_device* dev, int interface,
 GenericUSBController::~GenericUSBController() {}
 
 void GenericUSBController::set_rumble_real(uint8_t left, uint8_t right) {
-  std::cout << "GenericUSBController::set_rumble(" << static_cast<int>(left)
-            << ", " << static_cast<int>(right) << ")" << std::endl;
+  std::cout << "GenericUSBController::set_rumble(" << static_cast<int>(left) << ", "
+            << static_cast<int>(right) << ")" << std::endl;
 }
 
 void GenericUSBController::set_led_real(uint8_t status) {
-  std::cout << "GenericUSBController::set_led(" << static_cast<int>(status)
-            << ")" << std::endl;
+  std::cout << "GenericUSBController::set_led(" << static_cast<int>(status) << ")" << std::endl;
 }
 
-bool GenericUSBController::parse(uint8_t* data, int len,
-                                 XboxGenericMsg* msg_out) {
-  std::cout << "GenericUSBController:parse(): " << raw2str(data, len)
-            << std::endl;
+bool GenericUSBController::parse(uint8_t *data, int len, XboxGenericMsg *msg_out) {
+  std::cout << "GenericUSBController:parse(): " << raw2str(data, len) << std::endl;
   return false;
 }
 

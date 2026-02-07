@@ -34,15 +34,14 @@ class ControllerConfig {
   UInputConfig m_uinput;
 
  public:
-  ControllerConfig(UInput& uinput, int slot, bool extra_devices,
-                   const ControllerOptions& opts);
+  ControllerConfig(UInput &uinput, int slot, bool extra_devices, const ControllerOptions &opts);
 
-  std::vector<ModifierPtr>& get_modifier();
-  UInputConfig& get_uinput();
+  std::vector<ModifierPtr> &get_modifier();
+  UInputConfig &get_uinput();
 
  private:
-  ControllerConfig(const ControllerConfig&);
-  ControllerConfig& operator=(const ControllerConfig&);
+  ControllerConfig(const ControllerConfig &);
+  ControllerConfig &operator=(const ControllerConfig &);
 };
 
 #endif

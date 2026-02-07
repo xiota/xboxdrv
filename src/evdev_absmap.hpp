@@ -29,8 +29,7 @@ class EvdevAbsMap {
  public:
   EvdevAbsMap();
 
-  void process(XboxGenericMsg& msg, int code, int value, int min,
-               int max) const;
+  void process(XboxGenericMsg &msg, int code, int value, int min, int max) const;
 
   void bind_plus(int code, XboxAxis axis);
   void bind_minus(int code, XboxAxis axis);

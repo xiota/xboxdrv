@@ -28,31 +28,30 @@ extern "C" {
 
 class UdevSubsystem {
  private:
-  struct udev* m_udev;
-  struct udev_monitor* m_monitor;
+  struct udev *m_udev;
+  struct udev_monitor *m_monitor;
 
-  std::function<void(udev_device*)> m_process_match_cb;
+  std::function<void(udev_device *)> m_process_match_cb;
 
  public:
   UdevSubsystem();
   ~UdevSubsystem();
 
-  void set_device_callback(
-      const std::function<void(udev_device*)>& process_match_cb);
+  void set_device_callback(const std::function<void(udev_device *)> &process_match_cb);
   void enumerate_udev_devices();
-  void print_info(udev_device* device);
+  void print_info(udev_device *device);
 
  private:
-  bool on_udev_data(GIOChannel* channel, GIOCondition condition);
+  bool on_udev_data(GIOChannel *channel, GIOCondition condition);
 
-  static gboolean on_udev_data_wrap(GIOChannel* channel, GIOCondition condition,
-                                    gpointer data) {
-    return static_cast<UdevSubsystem*>(data)->on_udev_data(channel, condition);
+  static gboolean
+  on_udev_data_wrap(GIOChannel *channel, GIOCondition condition, gpointer data) {
+    return static_cast<UdevSubsystem *>(data)->on_udev_data(channel, condition);
   }
 
  private:
-  UdevSubsystem(const UdevSubsystem&);
-  UdevSubsystem& operator=(const UdevSubsystem&);
+  UdevSubsystem(const UdevSubsystem &);
+  UdevSubsystem &operator=(const UdevSubsystem &);
 };
 
 #endif

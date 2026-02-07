@@ -33,6 +33,8 @@ int InvertAxisFilter::filter(int value, int min, int max) {
   }
 }
 
-std::string InvertAxisFilter::str() const { return "invert"; }
+std::string InvertAxisFilter::str() const {
+  return "invert";
+}
 
 /* EOF */

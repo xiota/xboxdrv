@@ -65,8 +65,7 @@ struct SaitekP3600Msg {
 
 } __attribute__((__packed__));
 
-SaitekP3600Controller::SaitekP3600Controller(libusb_device* dev,
-                                             bool try_detach)
+SaitekP3600Controller::SaitekP3600Controller(libusb_device *dev, bool try_detach)
     : USBController(dev), left_rumble(-1), right_rumble(-1) {
   usb_claim_interface(0, try_detach);
   usb_submit_read(1, sizeof(SaitekP3600Msg));
@@ -108,8 +107,7 @@ int get_trigger_val(bool digital, int analog) {
   return 0;
 }
 
-bool SaitekP3600Controller::parse(uint8_t* data, int len,
-                                  XboxGenericMsg* msg_out) {
+bool SaitekP3600Controller::parse(uint8_t *data, int len, XboxGenericMsg *msg_out) {
   if (len == sizeof(SaitekP3600Msg)) {
     SaitekP3600Msg msg_in;
     memcpy(&msg_in, data, sizeof(SaitekP3600Msg));

@@ -27,17 +27,17 @@ class UIKeyEventCollector;
 
 class UIKeyEventEmitter : public UIEventEmitter {
  private:
-  UIKeyEventCollector& m_collector;
+  UIKeyEventCollector &m_collector;
   bool m_value;
 
  public:
-  UIKeyEventEmitter(UIKeyEventCollector& collector);
+  UIKeyEventEmitter(UIKeyEventCollector &collector);
 
   void send(int value);
 
  private:
-  UIKeyEventEmitter(const UIKeyEventEmitter&);
-  UIKeyEventEmitter& operator=(const UIKeyEventEmitter&);
+  UIKeyEventEmitter(const UIKeyEventEmitter &);
+  UIKeyEventEmitter &operator=(const UIKeyEventEmitter &);
 };
 
 typedef std::shared_ptr<UIKeyEventEmitter> UIKeyEventEmitterPtr;

@@ -36,8 +36,8 @@ struct Xbox360GuitarMsg;
 
 class UInput {
  public:
-  static struct input_id parse_input_id(const std::string& str);
-  static uint32_t parse_device_id(const std::string& str);
+  static struct input_id parse_input_id(const std::string &str);
+  static uint32_t parse_device_id(const std::string &str);
 
   static inline uint32_t create_device_id(uint16_t slot_id, uint16_t type_id) {
     return (slot_id << 16) | type_id;
@@ -77,7 +77,7 @@ class UInput {
   bool m_extra_events;
 
   guint m_timeout_id;
-  GTimer* m_timer;
+  GTimer *m_timer;
 
  public:
   UInput(bool extra_events);
@@ -89,18 +89,17 @@ class UInput {
   /** guess the number of the next unused /dev/input/eventX device */
   static int find_evdev_number();
 
-  void set_device_names(const std::map<uint32_t, std::string>& device_names);
-  void set_device_usbids(
-      const std::map<uint32_t, struct input_id>& device_usbids);
-  void set_controller(int device_id, Controller* controller);
+  void set_device_names(const std::map<uint32_t, std::string> &device_names);
+  void set_device_usbids(const std::map<uint32_t, struct input_id> &device_usbids);
+  void set_controller(int device_id, Controller *controller);
   void enable_force_feedback(int device_id);
   void set_ff_gain(int device_id, int gain);
 
   /** Device construction functions
       @{*/
   UIEventEmitterPtr add_rel(uint32_t device_id, int ev_code);
-  UIEventEmitterPtr add_abs(uint32_t device_id, int ev_code, int min, int max,
-                            int fuzz, int flat);
+  UIEventEmitterPtr
+  add_abs(uint32_t device_id, int ev_code, int min, int max, int fuzz, int flat);
   UIEventEmitterPtr add_key(uint32_t device_id, int ev_code);
   void add_ff(uint32_t device_id, uint16_t code);
 
@@ -112,8 +111,7 @@ class UInput {
   /** Send events to the kernel
       @{*/
   void send(uint32_t device_id, int ev_type, int ev_code, int value);
-  void send_rel_repetitive(const UIEvent& code, float value,
-                           int repeat_interval);
+  void send_rel_repetitive(const UIEvent &code, float value, int repeat_interval);
 
   /** should be called to signal that all events of the current frame
       have been send */
@@ -125,24 +123,24 @@ class UInput {
 
   /** create a LinuxUinput with the given device_id, if some already
       exist return a pointer to it */
-  LinuxUinput* create_uinput_device(uint32_t device_id);
+  LinuxUinput *create_uinput_device(uint32_t device_id);
 
   /** must only be called with a valid device_id */
-  LinuxUinput* get_uinput(uint32_t device_id) const;
+  LinuxUinput *get_uinput(uint32_t device_id) const;
 
   std::string get_device_name(uint32_t device_id) const;
   struct input_id get_device_usbid(uint32_t device_id) const;
 
   bool on_timeout();
   static gboolean on_timeout_wrap(gpointer data) {
-    return static_cast<UInput*>(data)->on_timeout();
+    return static_cast<UInput *>(data)->on_timeout();
   }
 
   UIEventEmitterPtr create_emitter(int device_id, int type, int code);
 
  private:
-  UInput(const UInput&);
-  UInput& operator=(const UInput&);
+  UInput(const UInput &);
+  UInput &operator=(const UInput &);
 };
 
 #endif

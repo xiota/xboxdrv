@@ -47,11 +47,11 @@ class UInputOptions {
 
   /** \addtogroup access Access Functions
    ** @{*/
-  ButtonMap& get_btn_map();
-  AxisMap& get_axis_map();
+  ButtonMap &get_btn_map();
+  AxisMap &get_axis_map();
 
-  const ButtonMap& get_btn_map() const;
-  const AxisMap& get_axis_map() const;
+  const ButtonMap &get_btn_map() const;
+  const AxisMap &get_axis_map() const;
   /** @}*/
 };
 

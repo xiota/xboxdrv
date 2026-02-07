@@ -36,7 +36,7 @@ int16_t u8_to_s16(uint8_t value) {
   }
 }
 
-std::string gamepadtype_to_string(const GamepadType& type) {
+std::string gamepadtype_to_string(const GamepadType &type) {
   switch (type) {
     case GAMEPAD_XBOX360:
       return "xbox360";
@@ -82,7 +82,7 @@ std::string gamepadtype_to_string(const GamepadType& type) {
   }
 }
 
-std::string gamepadtype_to_macro_string(const GamepadType& type) {
+std::string gamepadtype_to_macro_string(const GamepadType &type) {
   switch (type) {
     case GAMEPAD_XBOX360:
       return "GAMEPAD_XBOX360";
@@ -115,7 +115,7 @@ std::string gamepadtype_to_macro_string(const GamepadType& type) {
   }
 }
 
-std::ostream& operator<<(std::ostream& out, const GamepadType& type) {
+std::ostream &operator<<(std::ostream &out, const GamepadType &type) {
   switch (type) {
     case GAMEPAD_XBOX360:
       return out << "Xbox360";
@@ -161,7 +161,7 @@ std::ostream& operator<<(std::ostream& out, const GamepadType& type) {
   }
 }
 
-std::ostream& operator<<(std::ostream& out, const XboxGenericMsg& msg) {
+std::ostream &operator<<(std::ostream &out, const XboxGenericMsg &msg) {
   switch (msg.type) {
     case XBOX_MSG_XBOX:
       return out << msg.xbox;
@@ -177,41 +177,52 @@ std::ostream& operator<<(std::ostream& out, const XboxGenericMsg& msg) {
   }
 }
 
-std::ostream& operator<<(std::ostream& out, const Playstation3USBMsg& msg) {
+std::ostream &operator<<(std::ostream &out, const Playstation3USBMsg &msg) {
   out << std::format("X1:{:3d} Y1:{:3d}", int(msg.x1), int(msg.y1));
 
   out << std::format("  X2:{:3d} Y2:{:3d}", int(msg.x2), int(msg.y2));
 
-  out << std::format("  du:{:3d} dd:{:3d} dl:{:3d} dr:{:3d}",
-                     int(msg.a_dpad_up), int(msg.a_dpad_down),
-                     int(msg.a_dpad_left), int(msg.a_dpad_right));
+  out << std::format(
+      "  du:{:3d} dd:{:3d} dl:{:3d} dr:{:3d}",
+      int(msg.a_dpad_up),
+      int(msg.a_dpad_down),
+      int(msg.a_dpad_left),
+      int(msg.a_dpad_right)
+  );
 
   out << "  select:" << msg.select;
   out << " ps:" << msg.playstation;
   out << " start:" << msg.start;
 
-  out << std::format("  L3:{:d} R3:{:d}", static_cast<int>(msg.l3),
-                     static_cast<int>(msg.r3));
+  out << std::format("  L3:{:d} R3:{:d}", static_cast<int>(msg.l3), static_cast<int>(msg.r3));
 
   out << std::format(
       "  /\\:{:3d} O:{:3d} X:{:3d} []:{:3d}  L1:{:3d} R1:{:3d}",
-      static_cast<int>(msg.a_triangle), static_cast<int>(msg.a_circle),
-      static_cast<int>(msg.a_cross), static_cast<int>(msg.a_square),
-      static_cast<int>(msg.a_l1), static_cast<int>(msg.a_r1));
+      static_cast<int>(msg.a_triangle),
+      static_cast<int>(msg.a_circle),
+      static_cast<int>(msg.a_cross),
+      static_cast<int>(msg.a_square),
+      static_cast<int>(msg.a_l1),
+      static_cast<int>(msg.a_r1)
+  );
 
   out << std::format("  L2:{:3d} R2:{:3d}", int(msg.a_l2), int(msg.a_r2));
 
   return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const Xbox360Msg& msg) {
+std::ostream &operator<<(std::ostream &out, const Xbox360Msg &msg) {
   out << std::format("X1:{:6d} Y1:{:6d}", int(msg.x1), int(msg.y1));
 
   out << std::format("  X2:{:6d} Y2:{:6d}", int(msg.x2), int(msg.y2));
 
-  out << std::format("  du:{:d} dd:{:d} dl:{:d} dr:{:d}", int(msg.dpad_up),
-                     int(msg.dpad_down), int(msg.dpad_left),
-                     int(msg.dpad_right));
+  out << std::format(
+      "  du:{:d} dd:{:d} dl:{:d} dr:{:d}",
+      int(msg.dpad_up),
+      int(msg.dpad_down),
+      int(msg.dpad_left),
+      int(msg.dpad_right)
+  );
 
   out << "  back:" << msg.back;
   out << " guide:" << msg.guide;
@@ -235,7 +246,7 @@ std::ostream& operator<<(std::ostream& out, const Xbox360Msg& msg) {
   return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const XboxMsg& msg) {
+std::ostream &operator<<(std::ostream &out, const XboxMsg &msg) {
   out << std::format(
       " X1:{:6d} Y1:{:6d}  X2:{:6d} Y2:{:6d} "
       " du:{:d} dd:{:d} dl:{:d} dr:{:d} "
@@ -244,18 +255,34 @@ std::ostream& operator<<(std::ostream& out, const XboxMsg& msg) {
       " A:{:3d} B:{:3d} X:{:3d} Y:{:3d} "
       " black:{:3d} white:{:3d} "
       " LT:{:3d} RT:{:3d} ",
-      int(msg.x1), int(msg.y1), int(msg.x2), int(msg.y2), int(msg.dpad_up),
-      int(msg.dpad_down), int(msg.dpad_left), int(msg.dpad_right),
-      int(msg.start), int(msg.back), int(msg.thumb_l), int(msg.thumb_r),
-      int(msg.a), int(msg.b), int(msg.x), int(msg.y), int(msg.black),
-      int(msg.white), int(msg.lt), int(msg.rt));
+      int(msg.x1),
+      int(msg.y1),
+      int(msg.x2),
+      int(msg.y2),
+      int(msg.dpad_up),
+      int(msg.dpad_down),
+      int(msg.dpad_left),
+      int(msg.dpad_right),
+      int(msg.start),
+      int(msg.back),
+      int(msg.thumb_l),
+      int(msg.thumb_r),
+      int(msg.a),
+      int(msg.b),
+      int(msg.x),
+      int(msg.y),
+      int(msg.black),
+      int(msg.white),
+      int(msg.lt),
+      int(msg.rt)
+  );
 
   // out << " Dummy: " << msg.dummy;
 
   return out;
 }
 
-int get_button(XboxGenericMsg& msg, XboxButton button) {
+int get_button(XboxGenericMsg &msg, XboxButton button) {
   switch (msg.type) {
     case XBOX_MSG_XBOX360:
       switch (button) {
@@ -404,7 +431,7 @@ int get_button(XboxGenericMsg& msg, XboxButton button) {
   return 0;
 }
 
-void set_button(XboxGenericMsg& msg, XboxButton button, bool v) {
+void set_button(XboxGenericMsg &msg, XboxButton button, bool v) {
   switch (msg.type) {
     case XBOX_MSG_XBOX360:
       switch (button) {
@@ -602,7 +629,7 @@ void set_button(XboxGenericMsg& msg, XboxButton button, bool v) {
   }
 }
 
-int get_axis(XboxGenericMsg& msg, XboxAxis axis) {
+int get_axis(XboxGenericMsg &msg, XboxAxis axis) {
   switch (msg.type) {
     case XBOX_MSG_XBOX360:
       switch (axis) {
@@ -801,11 +828,10 @@ int16_t float_to_s16(float v) {
    output: [0, 255]
 */
 uint8_t float_to_u8(float v) {
-  return static_cast<uint8_t>(std::clamp((v + 1.0f) / 2.0f, 0.0f, 1.0f) *
-                              255.0f);
+  return static_cast<uint8_t>(std::clamp((v + 1.0f) / 2.0f, 0.0f, 1.0f) * 255.0f);
 }
 
-float get_axis_float(XboxGenericMsg& msg, XboxAxis axis) {
+float get_axis_float(XboxGenericMsg &msg, XboxAxis axis) {
   switch (msg.type) {
     case XBOX_MSG_XBOX360:
       switch (axis) {
@@ -974,7 +1000,7 @@ float get_axis_float(XboxGenericMsg& msg, XboxAxis axis) {
   return 0;
 }
 
-void set_axis_float(XboxGenericMsg& msg, XboxAxis axis, float v) {
+void set_axis_float(XboxGenericMsg &msg, XboxAxis axis, float v) {
   switch (msg.type) {
     case XBOX_MSG_XBOX360:
       switch (axis) {
@@ -1203,7 +1229,7 @@ void set_axis_float(XboxGenericMsg& msg, XboxAxis axis, float v) {
   }
 }
 
-void set_axis(XboxGenericMsg& msg, XboxAxis axis, int v) {
+void set_axis(XboxGenericMsg &msg, XboxAxis axis, int v) {
   switch (msg.type) {
     case XBOX_MSG_XBOX360:
       switch (axis) {
@@ -1432,7 +1458,7 @@ void set_axis(XboxGenericMsg& msg, XboxAxis axis, int v) {
   }
 }
 
-XboxButton string2btn(const std::string& str_) {
+XboxButton string2btn(const std::string &str_) {
   std::string str = to_lower(str_);
 
   if (str == "start") {
@@ -1451,8 +1477,7 @@ XboxButton string2btn(const std::string& str_) {
   } else if (str == "y" || str == "4" || str == "yellow" || str == "triangle") {
     return XBOX_BTN_Y;
 
-  } else if (str == "lb" || str == "5" || str == "orange" || str == "white" ||
-             str == "l1") {
+  } else if (str == "lb" || str == "5" || str == "orange" || str == "white" || str == "l1") {
     return XBOX_BTN_LB;
   } else if (str == "rb" || str == "6" || str == "black" || str == "r1") {
     return XBOX_BTN_RB;
@@ -1477,12 +1502,13 @@ XboxButton string2btn(const std::string& str_) {
     return XBOX_DPAD_RIGHT;
 
   } else {
-    raise_exception(std::runtime_error,
-                    "couldn't convert string \"" + str + "\" to XboxButton");
+    raise_exception(
+        std::runtime_error, "couldn't convert string \"" + str + "\" to XboxButton"
+    );
   }
 }
 
-XboxAxis string2axis(const std::string& str_) {
+XboxAxis string2axis(const std::string &str_) {
   std::string str = to_lower(str_);
   if (str == "x1") {
     return XBOX_AXIS_X1;
@@ -1526,8 +1552,7 @@ XboxAxis string2axis(const std::string& str_) {
     return XBOX_AXIS_BLACK;
 
   } else {
-    raise_exception(std::runtime_error,
-                    "couldn't convert string \"" + str + "\" to XboxAxis");
+    raise_exception(std::runtime_error, "couldn't convert string \"" + str + "\" to XboxAxis");
   }
 }
 

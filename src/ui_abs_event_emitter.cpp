@@ -20,7 +20,7 @@
 
 #include "ui_abs_event_collector.hpp"
 
-UIAbsEventEmitter::UIAbsEventEmitter(UIAbsEventCollector& collector)
+UIAbsEventEmitter::UIAbsEventEmitter(UIAbsEventCollector &collector)
     : m_collector(collector), m_value(0) {}
 
 void UIAbsEventEmitter::send(int value) {

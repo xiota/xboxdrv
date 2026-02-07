@@ -31,16 +31,16 @@ class XboxController : public USBController {
   int m_endpoint_out;
 
  public:
-  XboxController(libusb_device* dev, bool try_detach);
+  XboxController(libusb_device *dev, bool try_detach);
   virtual ~XboxController();
 
   void set_rumble_real(uint8_t left, uint8_t right);
   void set_led_real(uint8_t status);
-  bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
+  bool parse(uint8_t *data, int len, XboxGenericMsg *msg_out);
 
  private:
-  XboxController(const XboxController&);
-  XboxController& operator=(const XboxController&);
+  XboxController(const XboxController &);
+  XboxController &operator=(const XboxController &);
 };
 
 #endif

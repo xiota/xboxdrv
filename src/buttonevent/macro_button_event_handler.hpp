@@ -54,19 +54,19 @@ class MacroButtonEventHandler : public ButtonEventHandler {
   };
 
  public:
-  static MacroButtonEventHandler* from_string(const std::string& filename);
+  static MacroButtonEventHandler *from_string(const std::string &filename);
 
  public:
-  MacroButtonEventHandler(const std::vector<MacroEvent>& events);
+  MacroButtonEventHandler(const std::vector<MacroEvent> &events);
 
-  void init(UInput& uinput, int slot, bool extra_devices);
-  void send(UInput& uinput, bool value);
-  void update(UInput& uinput, int msec_delta);
+  void init(UInput &uinput, int slot, bool extra_devices);
+  void send(UInput &uinput, bool value);
+  void update(UInput &uinput, int msec_delta);
 
   std::string str() const;
 
  private:
-  static MacroEvent macro_event_from_string(const std::string& str);
+  static MacroEvent macro_event_from_string(const std::string &str);
 
  private:
   std::vector<MacroEvent> m_events;

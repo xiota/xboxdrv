@@ -149,7 +149,7 @@ class Chatpad {
   } __attribute__((__packed__));
 
  private:
-  libusb_device_handle* m_handle;
+  libusb_device_handle *m_handle;
   uint16_t m_bcdDevice;
   bool m_no_init;
   bool m_debug;
@@ -159,11 +159,10 @@ class Chatpad {
   int m_keymap[256];
   bool m_state[256];
   unsigned int m_led_state;
-  libusb_transfer* m_read_transfer;
+  libusb_transfer *m_read_transfer;
 
  public:
-  Chatpad(libusb_device_handle* handle, uint16_t bcdDevice, bool no_init,
-          bool debug);
+  Chatpad(libusb_device_handle *handle, uint16_t bcdDevice, bool no_init, bool debug);
   ~Chatpad();
 
   void send_init();
@@ -171,37 +170,44 @@ class Chatpad {
   void set_led(unsigned int led, bool state);
   bool get_led(unsigned int led);
 
-  void process(const ChatpadKeyMsg& msg);
+  void process(const ChatpadKeyMsg &msg);
   void init_uinput();
 
  private:
   void send_command();
   void send_timeout(int msec);
-  void send_ctrl(uint8_t request_type, uint8_t request, uint16_t value,
-                 uint16_t index, uint8_t* data_in = NULL, uint16_t length = 0,
-                 libusb_transfer_cb_fn callback = NULL, void* userdata = NULL);
+  void send_ctrl(
+      uint8_t request_type,
+      uint8_t request,
+      uint16_t value,
+      uint16_t index,
+      uint8_t *data_in = NULL,
+      uint16_t length = 0,
+      libusb_transfer_cb_fn callback = NULL,
+      void *userdata = NULL
+  );
 
   void usb_submit_read(int endpoint, int len);
 
  private:
   bool on_timeout();
   static gboolean on_timeout_wrap(gpointer data) {
-    return static_cast<Chatpad*>(data)->on_timeout();
+    return static_cast<Chatpad *>(data)->on_timeout();
   }
 
-  void on_control(libusb_transfer* transfer);
-  static void on_control_wrap(libusb_transfer* transfer) {
-    static_cast<Chatpad*>(transfer->user_data)->on_control(transfer);
+  void on_control(libusb_transfer *transfer);
+  static void on_control_wrap(libusb_transfer *transfer) {
+    static_cast<Chatpad *>(transfer->user_data)->on_control(transfer);
   }
 
-  void on_read_data(libusb_transfer* transfer);
-  static void on_read_data_wrap(libusb_transfer* transfer) {
-    static_cast<Chatpad*>(transfer->user_data)->on_read_data(transfer);
+  void on_read_data(libusb_transfer *transfer);
+  static void on_read_data_wrap(libusb_transfer *transfer) {
+    static_cast<Chatpad *>(transfer->user_data)->on_read_data(transfer);
   }
 
  private:
-  Chatpad(const Chatpad&);
-  Chatpad& operator=(const Chatpad&);
+  Chatpad(const Chatpad &);
+  Chatpad &operator=(const Chatpad &);
 };
 
 #endif

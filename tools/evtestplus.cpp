@@ -43,8 +43,8 @@ void process_device(int fd) {
     std::cout << "Uniq:    " << phys << std::endl;
   }
 
-  std::cout << "Version: " << (version >> 16) << "." << ((version >> 8) & 0xff)
-            << "." << (version & 0xff) << std::endl;
+  std::cout << "Version: " << (version >> 16) << "." << ((version >> 8) & 0xff) << "."
+            << (version & 0xff) << std::endl;
 
   /*  unsigned long bit[EV_MAX][NBITS(KEY_MAX)];
       ioctl(fd, EVIOCGID, id);
@@ -59,12 +59,12 @@ void process_device(int fd) {
     --test DEVICE   Test device
     --info DEVICE   List properties of device
  */
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc != 2) {
     std::cout << "Usage: " << argv[0] << " DEVICE" << std::endl;
     exit(EXIT_FAILURE);
   } else {
-    const char* filename = argv[1];
+    const char *filename = argv[1];
 
     int fd;
     if ((fd = open(filename, O_RDONLY)) < 0) {

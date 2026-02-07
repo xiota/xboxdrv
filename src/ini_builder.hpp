@@ -24,8 +24,8 @@
 class INIBuilder {
  public:
   virtual ~INIBuilder() {}
-  virtual void send_section(const std::string& section) = 0;
-  virtual void send_pair(const std::string& name, const std::string& value) = 0;
+  virtual void send_section(const std::string &section) = 0;
+  virtual void send_pair(const std::string &name, const std::string &value) = 0;
 };
 
 #endif

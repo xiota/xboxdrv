@@ -26,8 +26,7 @@
 #include "modifier.hpp"
 
 struct ButtonMapping {
-  static ButtonMapping from_string(const std::string& lhs,
-                                   const std::string& rhs);
+  static ButtonMapping from_string(const std::string &lhs, const std::string &rhs);
 
   XboxButton lhs;
   XboxButton rhs;
@@ -40,14 +39,16 @@ class ButtonmapModifier : public Modifier {
  public:
   ButtonmapModifier();
 
-  void update(int msec_delta, XboxGenericMsg& msg);
+  void update(int msec_delta, XboxGenericMsg &msg);
 
-  void add(const ButtonMapping& mapping);
+  void add(const ButtonMapping &mapping);
   void add_filter(XboxButton btn, ButtonFilterPtr filter);
 
   std::string str() const;
 
-  bool empty() const { return m_buttonmap.empty(); }
+  bool empty() const {
+    return m_buttonmap.empty();
+  }
 
  public:
   std::vector<ButtonMapping> m_buttonmap;

@@ -26,14 +26,14 @@
 
 class AbsButtonEventHandler : public ButtonEventHandler {
  public:
-  static AbsButtonEventHandler* from_string(const std::string& str);
+  static AbsButtonEventHandler *from_string(const std::string &str);
 
  public:
   AbsButtonEventHandler(int code);
 
-  void init(UInput& uinput, int slot, bool extra_devices);
-  void send(UInput& uinput, bool value);
-  void update(UInput& uinput, int msec_delta) {}
+  void init(UInput &uinput, int slot, bool extra_devices);
+  void send(UInput &uinput, bool value);
+  void update(UInput &uinput, int msec_delta) {}
 
   std::string str() const;
 

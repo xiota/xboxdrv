@@ -29,7 +29,7 @@ typedef std::shared_ptr<AxisFilter> AxisFilterPtr;
 
 class AxisFilter {
  public:
-  static AxisFilterPtr from_string(const std::string& str);
+  static AxisFilterPtr from_string(const std::string &str);
 
  public:
   AxisFilter() {}

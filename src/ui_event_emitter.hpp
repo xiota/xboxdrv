@@ -36,8 +36,8 @@ class UIEventEmitter {
   virtual void send(int value) = 0;
 
  private:
-  UIEventEmitter(const UIEventEmitter&);
-  UIEventEmitter& operator=(const UIEventEmitter&);
+  UIEventEmitter(const UIEventEmitter &);
+  UIEventEmitter &operator=(const UIEventEmitter &);
 };
 
 class UIRelEmitter {

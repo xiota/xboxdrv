@@ -34,14 +34,16 @@ class USBGSource;
 
 class XboxdrvMain {
  private:
-  static XboxdrvMain* s_current;
+  static XboxdrvMain *s_current;
 
  public:
-  static XboxdrvMain* current() { return s_current; }
+  static XboxdrvMain *current() {
+    return s_current;
+  }
 
  private:
-  const Options& m_opts;
-  GMainLoop* m_gmain;
+  const Options &m_opts;
+  GMainLoop *m_gmain;
   std::shared_ptr<USBGSource> m_usb_gsource;
 
   std::shared_ptr<UInput> m_uinput;
@@ -55,7 +57,7 @@ class XboxdrvMain {
   ControllerPtr m_controller;
 
  public:
-  XboxdrvMain(const Options& opts);
+  XboxdrvMain(const Options &opts);
   ~XboxdrvMain();
 
   void run();
@@ -64,10 +66,9 @@ class XboxdrvMain {
  private:
   ControllerPtr create_controller();
 
-  void init_controller(const ControllerPtr& controller);
+  void init_controller(const ControllerPtr &controller);
 
-  void print_info(libusb_device* dev, const XPadDevice& dev_type,
-                  const Options& opts) const;
+  void print_info(libusb_device *dev, const XPadDevice &dev_type, const Options &opts) const;
 
   static void on_sigint(int);
 
@@ -75,12 +76,12 @@ class XboxdrvMain {
 
   void on_child_watch(GPid pid, gint status);
   static void on_child_watch_wrap(GPid pid, gint status, gpointer data) {
-    static_cast<XboxdrvMain*>(data)->on_child_watch(pid, status);
+    static_cast<XboxdrvMain *>(data)->on_child_watch(pid, status);
   }
 
  private:
-  XboxdrvMain(const XboxdrvMain&);
-  XboxdrvMain& operator=(const XboxdrvMain&);
+  XboxdrvMain(const XboxdrvMain &);
+  XboxdrvMain &operator=(const XboxdrvMain &);
 };
 
 #endif

@@ -55,8 +55,7 @@ struct SaitekP2500Msg {
 
 } __attribute__((__packed__));
 
-SaitekP2500Controller::SaitekP2500Controller(libusb_device* dev,
-                                             bool try_detach)
+SaitekP2500Controller::SaitekP2500Controller(libusb_device *dev, bool try_detach)
     : USBController(dev), left_rumble(-1), right_rumble(-1) {
   usb_claim_interface(0, try_detach);
   usb_submit_read(1, sizeof(SaitekP2500Msg));
@@ -72,8 +71,7 @@ void SaitekP2500Controller::set_led_real(uint8_t status) {
   // not supported
 }
 
-bool SaitekP2500Controller::parse(uint8_t* data, int len,
-                                  XboxGenericMsg* msg_out) {
+bool SaitekP2500Controller::parse(uint8_t *data, int len, XboxGenericMsg *msg_out) {
   if (len == sizeof(SaitekP2500Msg)) {
     SaitekP2500Msg msg_in;
     memcpy(&msg_in, data, sizeof(SaitekP2500Msg));

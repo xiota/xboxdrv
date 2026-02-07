@@ -30,21 +30,21 @@ class XboxdrvDaemon;
 
 class DBusSubsystem {
  private:
-  DBusGConnection* m_connection;
+  DBusGConnection *m_connection;
 
  public:
-  DBusSubsystem(const std::string& name, DBusBusType bus_type);
+  DBusSubsystem(const std::string &name, DBusBusType bus_type);
   ~DBusSubsystem();
 
-  void register_xboxdrv_daemon(XboxdrvDaemon* c_daemon);
-  void register_controller_slots(const std::vector<ControllerSlotPtr>& slots);
+  void register_xboxdrv_daemon(XboxdrvDaemon *c_daemon);
+  void register_controller_slots(const std::vector<ControllerSlotPtr> &slots);
 
  private:
-  void request_name(const std::string& name);
+  void request_name(const std::string &name);
 
  private:
-  DBusSubsystem(const DBusSubsystem&);
-  DBusSubsystem& operator=(const DBusSubsystem&);
+  DBusSubsystem(const DBusSubsystem &);
+  DBusSubsystem &operator=(const DBusSubsystem &);
 };
 
 #endif

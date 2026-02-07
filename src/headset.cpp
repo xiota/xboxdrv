@@ -32,15 +32,14 @@
 using std::placeholders::_1;
 using std::placeholders::_2;
 
-Headset::Headset(libusb_device_handle* handle, bool debug)
-    : m_handle(handle),
-      m_interface(new USBInterface(m_handle, 1)),
-      m_fout(),
-      m_fin() {}
+Headset::Headset(libusb_device_handle *handle, bool debug)
+    : m_handle(handle), m_interface(new USBInterface(m_handle, 1)), m_fout(), m_fin() {}
 
-Headset::~Headset() { m_interface.reset(); }
+Headset::~Headset() {
+  m_interface.reset();
+}
 
-void Headset::play_file(const std::string& filename) {
+void Headset::play_file(const std::string &filename) {
   m_fin.reset(new std::ifstream(filename.c_str(), std::ios::binary));
 
   if (!*m_fin) {
@@ -53,28 +52,26 @@ void Headset::play_file(const std::string& filename) {
     if (len != 32) {
       log_error("short read");
     } else {
-      m_interface->submit_write(4, reinterpret_cast<uint8_t*>(data), len,
-                                std::bind(&Headset::send_data, this, _1));
+      m_interface->submit_write(
+          4, reinterpret_cast<uint8_t *>(data), len, std::bind(&Headset::send_data, this, _1)
+      );
     }
   }
 }
 
-void Headset::record_file(const std::string& filename) {
+void Headset::record_file(const std::string &filename) {
   m_fout.reset(new std::ofstream(filename.c_str(), std::ios::binary));
 
   if (!*m_fout) {
     raise_exception(std::runtime_error, filename << ": " << strerror(errno));
   } else {
-    m_interface->submit_read(3, 32,
-                             std::bind(&Headset::receive_data, this, _1, _2));
+    m_interface->submit_read(3, 32, std::bind(&Headset::receive_data, this, _1, _2));
   }
 }
 
-bool Headset::send_data(libusb_transfer* transfer) {
+bool Headset::send_data(libusb_transfer *transfer) {
   // fill the buffer with new data from the file
-  int len =
-      m_fin->read(reinterpret_cast<char*>(transfer->buffer), transfer->length)
-          .gcount();
+  int len = m_fin->read(reinterpret_cast<char *>(transfer->buffer), transfer->length).gcount();
 
   if (len != 32) {
     log_error("short read");
@@ -84,9 +81,9 @@ bool Headset::send_data(libusb_transfer* transfer) {
   }
 }
 
-bool Headset::receive_data(uint8_t* data, int len) {
+bool Headset::receive_data(uint8_t *data, int len) {
   if (m_fout.get()) {
-    m_fout->write(reinterpret_cast<char*>(data), len);
+    m_fout->write(reinterpret_cast<char *>(data), len);
   }
   log_debug(raw2str(data, len));
 

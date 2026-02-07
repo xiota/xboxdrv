@@ -25,7 +25,7 @@
 
 class ConstButtonFilter : public ButtonFilter {
  public:
-  static ConstButtonFilter* from_string(const std::string& str);
+  static ConstButtonFilter *from_string(const std::string &str);
 
  public:
   ConstButtonFilter(bool value);
@@ -38,8 +38,8 @@ class ConstButtonFilter : public ButtonFilter {
   bool m_value;
 
  private:
-  ConstButtonFilter(const ConstButtonFilter&);
-  ConstButtonFilter& operator=(const ConstButtonFilter&);
+  ConstButtonFilter(const ConstButtonFilter &);
+  ConstButtonFilter &operator=(const ConstButtonFilter &);
 };
 
 #endif

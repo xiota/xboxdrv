@@ -25,14 +25,14 @@
 
 class ExecButtonEventHandler : public ButtonEventHandler {
  public:
-  static ExecButtonEventHandler* from_string(const std::string& str);
+  static ExecButtonEventHandler *from_string(const std::string &str);
 
  public:
-  ExecButtonEventHandler(const std::vector<std::string>& args);
+  ExecButtonEventHandler(const std::vector<std::string> &args);
 
-  void init(UInput& uinput, int slot, bool extra_devices);
-  void send(UInput& uinput, bool value);
-  void update(UInput& uinput, int msec_delta) {}
+  void init(UInput &uinput, int slot, bool extra_devices);
+  void send(UInput &uinput, bool value);
+  void update(UInput &uinput, int msec_delta) {}
 
   std::string str() const;
 

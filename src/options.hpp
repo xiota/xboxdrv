@@ -136,7 +136,7 @@ class Options {
 
   struct GenericUSBSpec {
    private:
-    void apply_pair(const std::string& name, const std::string& value);
+    void apply_pair(const std::string &name, const std::string &value);
 
     GenericUSBSpec()
         : m_vendor_id(-1),
@@ -146,10 +146,15 @@ class Options {
           m_packetsize(-1) {}
 
    public:
-    static GenericUSBSpec from_string(const std::string& str);
+    static GenericUSBSpec from_string(const std::string &str);
 
-    GenericUSBSpec(int vendor_id_, int product_id_, int interface_,
-                   int endpoint_, int packetsize_)
+    GenericUSBSpec(
+        int vendor_id_,
+        int product_id_,
+        int interface_,
+        int endpoint_,
+        int packetsize_
+    )
         : m_vendor_id(vendor_id_),
           m_product_id(product_id_),
           m_interface(interface_),
@@ -168,14 +173,14 @@ class Options {
  public:
   Options();
 
-  ControllerSlotOptions& get_controller_slot();
-  const ControllerSlotOptions& get_controller_slot() const;
+  ControllerSlotOptions &get_controller_slot();
+  const ControllerSlotOptions &get_controller_slot() const;
 
   /** Returns the currently active configuration */
-  ControllerOptions& get_controller_options();
-  const ControllerOptions& get_controller_options() const;
+  ControllerOptions &get_controller_options();
+  const ControllerOptions &get_controller_options() const;
 
-  void set_priority(const std::string& value);
+  void set_priority(const std::string &value);
 
   void set_ui_clear();
 
@@ -187,35 +192,35 @@ class Options {
   void set_usb_debug();
   void set_quiet();
 
-  void set_dbus_mode(const std::string& value);
-  void set_led(const std::string& value);
-  void set_device_name(const std::string& name);
-  void set_device_usbid(const std::string& name);
-  void set_toggle_button(const std::string& toggle);
+  void set_dbus_mode(const std::string &value);
+  void set_led(const std::string &value);
+  void set_device_name(const std::string &name);
+  void set_device_usbid(const std::string &name);
+  void set_toggle_button(const std::string &toggle);
   void set_guitar();
   void set_trigger_as_button();
   void set_trigger_as_zaxis();
   void set_dpad_as_button();
   void set_dpad_only();
-  void set_force_feedback(const std::string& value);
-  void set_ff_device(const std::string& value);
-  void set_rumble_gain(const std::string& value);
+  void set_force_feedback(const std::string &value);
+  void set_ff_device(const std::string &value);
+  void set_rumble_gain(const std::string &value);
   void set_mimic_xpad();
   void set_mimic_xpad_wireless();
 
   void set_daemon();
   void set_daemon_detach(bool value);
 
-  void add_match(const std::string& lhs, const std::string& rhs);
-  void set_match(const std::string& str);
-  void set_match_group(const std::string& str);
+  void add_match(const std::string &lhs, const std::string &rhs);
+  void set_match(const std::string &str);
+  void set_match_group(const std::string &str);
 
   GenericUSBSpec find_generic_usb_spec(int vendor_id, int product_id) const;
 
   void finish();
 };
 
-extern Options* g_options;
+extern Options *g_options;
 
 #endif
 

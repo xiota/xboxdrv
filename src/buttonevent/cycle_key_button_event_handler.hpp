@@ -31,10 +31,9 @@ class CycleKeyButtonEventHandler : public ButtonEventHandler {
   static std::map<std::string, CycleKeySequencePtr> s_lookup_table;
 
  public:
-  static CycleKeyButtonEventHandler* from_string(const std::string& str,
-                                                 bool wrap_around);
-  static CycleKeyButtonEventHandler* from_string_named(const std::string& str,
-                                                       bool wrap_around);
+  static CycleKeyButtonEventHandler *from_string(const std::string &str, bool wrap_around);
+  static CycleKeyButtonEventHandler *
+  from_string_named(const std::string &str, bool wrap_around);
 
   /**
       Syntax: "{direction}:{press}"
@@ -45,9 +44,9 @@ class CycleKeyButtonEventHandler : public ButtonEventHandler {
       press: a bool, true if a keypress is send,
       false when only the current key should change
   */
-  static CycleKeyButtonEventHandler* from_string_ref(const std::string& value);
+  static CycleKeyButtonEventHandler *from_string_ref(const std::string &value);
 
-  static CycleKeySequencePtr lookup(const std::string& name);
+  static CycleKeySequencePtr lookup(const std::string &name);
 
  public:
   enum Direction { kForward, kBackward, kNone };
@@ -58,19 +57,22 @@ class CycleKeyButtonEventHandler : public ButtonEventHandler {
   bool m_send_press;
 
  private:
-  CycleKeyButtonEventHandler(CycleKeySequencePtr sequence, Direction direction,
-                             bool send_press);
+  CycleKeyButtonEventHandler(
+      CycleKeySequencePtr sequence,
+      Direction direction,
+      bool send_press
+  );
 
  public:
-  void init(UInput& uinput, int slot, bool extra_devices);
-  void send(UInput& uinput, bool value);
-  void update(UInput& uinput, int msec_delta);
+  void init(UInput &uinput, int slot, bool extra_devices);
+  void send(UInput &uinput, bool value);
+  void update(UInput &uinput, int msec_delta);
 
   std::string str() const;
 
  private:
-  CycleKeyButtonEventHandler(const CycleKeyButtonEventHandler&);
-  CycleKeyButtonEventHandler& operator=(const CycleKeyButtonEventHandler&);
+  CycleKeyButtonEventHandler(const CycleKeyButtonEventHandler &);
+  CycleKeyButtonEventHandler &operator=(const CycleKeyButtonEventHandler &);
 };
 
 #endif

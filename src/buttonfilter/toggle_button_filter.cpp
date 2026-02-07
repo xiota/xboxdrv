@@ -20,8 +20,7 @@
 
 #include <string>
 
-ToggleButtonFilter::ToggleButtonFilter()
-    : m_state(false), m_last_value(false) {}
+ToggleButtonFilter::ToggleButtonFilter() : m_state(false), m_last_value(false) {}
 
 bool ToggleButtonFilter::filter(bool value) {
   if (value != m_last_value) {
@@ -34,6 +33,8 @@ bool ToggleButtonFilter::filter(bool value) {
   return m_state;
 }
 
-std::string ToggleButtonFilter::str() const { return "toggle"; }
+std::string ToggleButtonFilter::str() const {
+  return "toggle";
+}
 
 /* EOF */

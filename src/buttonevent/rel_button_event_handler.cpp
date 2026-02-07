@@ -24,13 +24,12 @@
 #include "helper.hpp"
 #include "uinput.hpp"
 
-RelButtonEventHandler* RelButtonEventHandler::from_string(
-    const std::string& str) {
+RelButtonEventHandler *RelButtonEventHandler::from_string(const std::string &str) {
   std::unique_ptr<RelButtonEventHandler> ev;
 
   std::vector<std::string> tokens = string_split(str, ":");
   int idx = 0;
-  for (auto& i : tokens) {
+  for (auto &i : tokens) {
     switch (idx) {
       case 0:
         ev.reset(new RelButtonEventHandler(str2rel_event(i)));
@@ -50,15 +49,15 @@ RelButtonEventHandler* RelButtonEventHandler::from_string(
   return ev.release();
 }
 
-RelButtonEventHandler::RelButtonEventHandler(const UIEvent& code)
+RelButtonEventHandler::RelButtonEventHandler(const UIEvent &code)
     : m_code(code), m_value(3), m_repeat(100), m_rel_emitter() {}
 
-void RelButtonEventHandler::init(UInput& uinput, int slot, bool extra_devices) {
+void RelButtonEventHandler::init(UInput &uinput, int slot, bool extra_devices) {
   m_code.resolve_device_id(slot, extra_devices);
   m_rel_emitter = uinput.add_rel(m_code.get_device_id(), m_code.code);
 }
 
-void RelButtonEventHandler::send(UInput& uinput, bool value) {
+void RelButtonEventHandler::send(UInput &uinput, bool value) {
   if (m_repeat == -1) {
     if (value) {
       m_rel_emitter->send(m_value);
@@ -74,8 +73,8 @@ void RelButtonEventHandler::send(UInput& uinput, bool value) {
 
 std::string RelButtonEventHandler::str() const {
   std::ostringstream out;
-  out << "rel:" << m_code.get_device_id() << "-" << m_code.code << ":"
-      << m_value << ":" << m_repeat;
+  out << "rel:" << m_code.get_device_id() << "-" << m_code.code << ":" << m_value << ":"
+      << m_repeat;
   return out.str();
 }
 

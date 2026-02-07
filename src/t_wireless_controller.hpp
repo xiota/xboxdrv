@@ -26,21 +26,21 @@
 
 class TWirelessController : public USBController {
  public:
-  TWirelessController(libusb_device* dev, bool try_detach);
+  TWirelessController(libusb_device *dev, bool try_detach);
   ~TWirelessController();
 
   void set_rumble_real(uint8_t left, uint8_t right);
   void set_led_real(uint8_t status);
 
-  bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
+  bool parse(uint8_t *data, int len, XboxGenericMsg *msg_out);
 
  protected:
   static int16_t scale_x8to16(uint8_t x);
   static int16_t scale_y8to16(uint8_t y);
 
  private:
-  TWirelessController(const TWirelessController&);
-  TWirelessController& operator=(const TWirelessController&);
+  TWirelessController(const TWirelessController &);
+  TWirelessController &operator=(const TWirelessController &);
 };
 
 #endif

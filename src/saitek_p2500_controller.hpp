@@ -30,17 +30,17 @@ class SaitekP2500Controller : public USBController {
   int right_rumble;
 
  public:
-  SaitekP2500Controller(libusb_device* dev, bool try_detach);
+  SaitekP2500Controller(libusb_device *dev, bool try_detach);
   ~SaitekP2500Controller();
 
   void set_rumble_real(uint8_t left, uint8_t right);
   void set_led_real(uint8_t status);
 
-  bool parse(uint8_t* data, int len, XboxGenericMsg* msg_out);
+  bool parse(uint8_t *data, int len, XboxGenericMsg *msg_out);
 
  private:
-  SaitekP2500Controller(const SaitekP2500Controller&);
-  SaitekP2500Controller& operator=(const SaitekP2500Controller&);
+  SaitekP2500Controller(const SaitekP2500Controller &);
+  SaitekP2500Controller &operator=(const SaitekP2500Controller &);
 };
 
 #endif

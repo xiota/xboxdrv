@@ -23,11 +23,8 @@
 #include "log.hpp"
 #include "uinput.hpp"
 
-UIKeyEventCollector::UIKeyEventCollector(UInput& uinput, uint32_t device_id,
-                                         int type, int code)
-    : UIEventCollector(uinput, device_id, type, code),
-      m_emitters(),
-      m_value(0) {}
+UIKeyEventCollector::UIKeyEventCollector(UInput &uinput, uint32_t device_id, int type, int code)
+    : UIEventCollector(uinput, device_id, type, code), m_emitters(), m_value(0) {}
 
 UIEventEmitterPtr UIKeyEventCollector::create_emitter() {
   UIKeyEventEmitterPtr emitter(new UIKeyEventEmitter(*this));

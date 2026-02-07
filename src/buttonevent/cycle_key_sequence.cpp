@@ -26,7 +26,9 @@
 
 CycleKeySequencePtr CycleKeySequence::from_range(
     std::vector<std::string>::const_iterator beg,
-    std::vector<std::string>::const_iterator end, bool wrap_around) {
+    std::vector<std::string>::const_iterator end,
+    bool wrap_around
+) {
   Keys keys;
 
   for (std::vector<std::string>::const_iterator i = beg; i != end; ++i) {
@@ -40,7 +42,7 @@ CycleKeySequencePtr CycleKeySequence::from_range(
   }
 }
 
-CycleKeySequence::CycleKeySequence(const Keys& keys, bool wrap_around)
+CycleKeySequence::CycleKeySequence(const Keys &keys, bool wrap_around)
     : m_keys(keys),
       m_wrap_around(wrap_around),
       m_inited(false),
@@ -49,7 +51,7 @@ CycleKeySequence::CycleKeySequence(const Keys& keys, bool wrap_around)
   assert(!m_keys.empty());
 }
 
-void CycleKeySequence::init(UInput& uinput, int slot, bool extra_devices) {
+void CycleKeySequence::init(UInput &uinput, int slot, bool extra_devices) {
   if (!m_inited) {
     for (Keys::iterator i = m_keys.begin(); i != m_keys.end(); ++i) {
       i->init(uinput, slot, extra_devices);
@@ -58,7 +60,7 @@ void CycleKeySequence::init(UInput& uinput, int slot, bool extra_devices) {
   }
 }
 
-void CycleKeySequence::send(UInput& uinput, bool value) {
+void CycleKeySequence::send(UInput &uinput, bool value) {
   int send_key = has_current_key() ? m_current_key : m_last_key;
 
   m_keys[send_key].send(uinput, value);

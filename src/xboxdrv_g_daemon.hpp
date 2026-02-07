@@ -28,8 +28,7 @@ class XboxdrvDaemon;
 #define XBOXDRV_TYPE_G_DAEMON (xboxdrv_g_daemon_get_type())
 #define XBOXDRV_G_DAEMON(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), XBOXDRV_TYPE_G_DAEMON, XboxdrvGDaemon))
-#define XBOXDRV_IS_G_DAEMON(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE((obj), XBOXDRV_TYPE_G_DAEMON))
+#define XBOXDRV_IS_G_DAEMON(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), XBOXDRV_TYPE_G_DAEMON))
 #define XBOXDRV_G_DAEMON_CLASS(klass) \
   (G_TYPE_CHECK_CLASS_CAST((klass), XBOXDRV_TYPE_G_DAEMON, XboxdrvGDaemonClass))
 #define XBOXDRV_IS_G_DAEMON_CLASS(klass) \
@@ -43,7 +42,7 @@ typedef struct _XboxdrvGDaemonClass XboxdrvGDaemonClass;
 struct _XboxdrvGDaemon {
   GObject parent_instance;
 
-  XboxdrvDaemon* daemon;
+  XboxdrvDaemon *daemon;
 };
 
 struct _XboxdrvGDaemonClass {
@@ -51,11 +50,10 @@ struct _XboxdrvGDaemonClass {
 };
 
 GType xboxdrv_g_daemon_get_type();
-XboxdrvGDaemon* xboxdrv_g_daemon_new(XboxdrvDaemon* daemon);
+XboxdrvGDaemon *xboxdrv_g_daemon_new(XboxdrvDaemon *daemon);
 
-gboolean xboxdrv_g_daemon_status(XboxdrvGDaemon* self, gchar** ret,
-                                 GError** error);
-gboolean xboxdrv_g_daemon_shutdown(XboxdrvGDaemon* self, GError** error);
+gboolean xboxdrv_g_daemon_status(XboxdrvGDaemon *self, gchar **ret, GError **error);
+gboolean xboxdrv_g_daemon_shutdown(XboxdrvGDaemon *self, GError **error);
 
 #endif
 

@@ -20,8 +20,8 @@
 
 #include <iostream>
 
-int main(int argc, char** argv) {
-  uint8_t data[] = {0x04, 0x03, 0x02, 0x01};
+int main(int argc, char **argv) {
+  uint8_t data[] = { 0x04, 0x03, 0x02, 0x01 };
 
   std::cout << std::hex;
   std::cout << "uint16be: " << unpack::uint16be(data) << std::endl;

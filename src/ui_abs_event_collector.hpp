@@ -28,15 +28,15 @@ class UIAbsEventCollector : public UIEventCollector {
   Emitters m_emitters;
 
  public:
-  UIAbsEventCollector(UInput& uinput, uint32_t device_id, int type, int code);
+  UIAbsEventCollector(UInput &uinput, uint32_t device_id, int type, int code);
 
   UIEventEmitterPtr create_emitter();
   void send(int value);
   void sync();
 
  private:
-  UIAbsEventCollector(const UIAbsEventCollector&);
-  UIAbsEventCollector& operator=(const UIAbsEventCollector&);
+  UIAbsEventCollector(const UIAbsEventCollector &);
+  UIAbsEventCollector &operator=(const UIAbsEventCollector &);
 };
 
 #endif

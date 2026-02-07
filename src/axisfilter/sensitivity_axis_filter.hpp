@@ -25,7 +25,7 @@
 
 class SensitivityAxisFilter : public AxisFilter {
  public:
-  static SensitivityAxisFilter* from_string(const std::string& str);
+  static SensitivityAxisFilter *from_string(const std::string &str);
 
  public:
   SensitivityAxisFilter(float sensitivity);

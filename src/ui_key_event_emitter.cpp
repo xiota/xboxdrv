@@ -22,7 +22,7 @@
 
 #include "ui_key_event_collector.hpp"
 
-UIKeyEventEmitter::UIKeyEventEmitter(UIKeyEventCollector& collector)
+UIKeyEventEmitter::UIKeyEventEmitter(UIKeyEventCollector &collector)
     : m_collector(collector), m_value(0) {}
 
 void UIKeyEventEmitter::send(int value) {
