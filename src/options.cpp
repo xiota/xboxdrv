@@ -26,7 +26,7 @@
 #include <string>
 
 #include "helper.hpp"
-#include "raise_exception.hpp"
+#include "log.hpp"
 #include "uinput.hpp"
 
 using std::placeholders::_1;
@@ -53,7 +53,7 @@ void Options::GenericUSBSpec::apply_pair(const std::string &name, const std::str
              name == "product") {
     m_product_id = hexstr2int(value);
   } else {
-    raise_exception(std::runtime_error, "unknown name " << name);
+    throw std::runtime_error(std::string("unknown name ") + name);
   }
 }
 
@@ -149,7 +149,7 @@ void Options::set_priority(const std::string &value) {
   } else if (value == "normal") {
     priority = kPriorityNormal;
   } else {
-    raise_exception(std::runtime_error, "unknown priority value: '" << value << "'");
+    throw std::runtime_error(std::string("unknown priority value: '") + value + "'");
   }
 }
 
@@ -205,7 +205,7 @@ void Options::set_dbus_mode(const std::string &value) {
     } catch (const std::exception &err) {
       // fallback failed, so assume that the user used the new way and
       // did a typing error
-      raise_exception(std::runtime_error, "unknown dbus mode: " << value);
+      throw std::runtime_error(std::string("unknown dbus mode: ") + value);
     }
   }
 }
@@ -336,8 +336,7 @@ Options::GenericUSBSpec Options::find_generic_usb_spec(int vendor_id_, int produ
     }
   }
 
-  raise_exception(
-      std::runtime_error,
+  throw std::runtime_error(
       std::format(
           "no matching GenericUSBSpec found for {:#04x}:{:#04x}",
           static_cast<int>(vendor_id_),

@@ -27,7 +27,6 @@
 #include "evdev_helper.hpp"
 #include "helper.hpp"
 #include "log.hpp"
-#include "raise_exception.hpp"
 #include "uinput.hpp"
 
 MacroButtonEventHandler *MacroButtonEventHandler::from_string(const std::string &filename) {
@@ -35,7 +34,7 @@ MacroButtonEventHandler *MacroButtonEventHandler::from_string(const std::string 
 
   std::ifstream in(filename.c_str());
   if (!in) {
-    raise_exception(std::runtime_error, "couldn't open: " << filename);
+    throw std::runtime_error(std::string("couldn't open: ") + filename);
   } else {
     std::string line;
     while (std::getline(in, line)) {
@@ -62,8 +61,8 @@ MacroButtonEventHandler::MacroEvent MacroButtonEventHandler::macro_event_from_st
     } else if (args[0] == "init") {
       // FIXME: generalize this for EV_KEY and EV_REL
       if (args.size() < 4) {
-        raise_exception(
-            std::runtime_error, "'init' requires at least three arguments: " << str
+        throw std::runtime_error(
+            std::string("'init' requires at least three arguments: ") + str
         );
       } else {
         MacroEvent event;
@@ -84,7 +83,7 @@ MacroButtonEventHandler::MacroEvent MacroButtonEventHandler::macro_event_from_st
       }
     } else if (args[0] == "send") {
       if (args.size() != 3) {
-        raise_exception(std::runtime_error, "'send' requires two arguments: " << str);
+        throw std::runtime_error(std::string("'send' requires two arguments: ") + str);
       } else {
         MacroEvent event;
         event.type = MacroEvent::kSendOp;
@@ -94,7 +93,7 @@ MacroButtonEventHandler::MacroEvent MacroButtonEventHandler::macro_event_from_st
       }
     } else if (args[0] == "wait") {
       if (args.size() != 2) {
-        raise_exception(std::runtime_error, "'wait' requires one arguments: " << str);
+        throw std::runtime_error(std::string("'wait' requires one arguments: ") + str);
       } else {
         MacroEvent event;
         event.type = MacroEvent::kWaitOp;
@@ -102,7 +101,7 @@ MacroButtonEventHandler::MacroEvent MacroButtonEventHandler::macro_event_from_st
         return event;
       }
     } else {
-      raise_exception(std::runtime_error, "unknown macro command: " << str);
+      throw std::runtime_error(std::string("unknown macro command: ") + str);
     }
   } else {
     // no args, aka an empty line, just ignore it

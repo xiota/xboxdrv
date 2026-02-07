@@ -26,7 +26,7 @@
 #include <string>
 
 #include "helper.hpp"
-#include "raise_exception.hpp"
+#include "log.hpp"
 #include "usb_helper.hpp"
 
 using std::placeholders::_1;
@@ -63,7 +63,7 @@ void Headset::record_file(const std::string &filename) {
   m_fout.reset(new std::ofstream(filename.c_str(), std::ios::binary));
 
   if (!*m_fout) {
-    raise_exception(std::runtime_error, filename << ": " << strerror(errno));
+    throw std::runtime_error(std::string(filename) + ": " + strerror(errno));
   } else {
     m_interface->submit_read(3, 32, std::bind(&Headset::receive_data, this, _1, _2));
   }

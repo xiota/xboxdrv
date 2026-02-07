@@ -29,10 +29,10 @@
 #include <cstring>
 #include <format>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 
-#include "helper.hpp"
-#include "raise_exception.hpp"
+#include "log.hpp"
 
 int hexstr2int(const std::string &str) {
   unsigned int value = 0;
@@ -41,7 +41,7 @@ int hexstr2int(const std::string &str) {
   } else if (sscanf(str.c_str(), "0x%x", &value) == 1) {
     return value;
   } else {
-    raise_exception(std::runtime_error, "couldn't convert '" << str << "' to int");
+    throw std::runtime_error(std::string("couldn't convert '") + str + "' to int");
   }
 }
 

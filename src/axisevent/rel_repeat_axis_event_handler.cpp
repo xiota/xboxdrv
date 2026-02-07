@@ -25,7 +25,6 @@
 
 #include "evdev_helper.hpp"
 #include "helper.hpp"
-#include "raise_exception.hpp"
 #include "uinput.hpp"
 
 RelRepeatAxisEventHandler *RelRepeatAxisEventHandler::from_string(const std::string &str) {
@@ -37,7 +36,7 @@ RelRepeatAxisEventHandler *RelRepeatAxisEventHandler::from_string(const std::str
         str2rel_event(args[0]), std::stoi(args[1]), std::stof(args[2])
     );
   } else {
-    raise_exception(std::runtime_error, "must have three arguments");
+    throw std::runtime_error(std::string("must have three arguments"));
   }
 }
 

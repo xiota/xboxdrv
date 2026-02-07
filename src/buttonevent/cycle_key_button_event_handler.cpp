@@ -21,7 +21,6 @@
 #include <stdexcept>
 
 #include "helper.hpp"
-#include "raise_exception.hpp"
 #include "ui_event_sequence.hpp"
 
 std::map<std::string, CycleKeySequencePtr> CycleKeyButtonEventHandler::s_lookup_table;
@@ -36,7 +35,9 @@ CycleKeyButtonEventHandler::Direction direction_from_string(const std::string &v
   } else if (value == "none") {
     return CycleKeyButtonEventHandler::kNone;
   } else {
-    raise_exception(std::runtime_error, "allowed values are 'forward', 'backward' and 'none'");
+    throw std::runtime_error(
+        std::string("allowed values are 'forward', 'backward' and 'none'")
+    );
   }
 }
 
@@ -52,7 +53,7 @@ CycleKeyButtonEventHandler::from_string_named(const std::string &value, bool wra
   std::vector<std::string> args = string_split(value, ":");
 
   if (args.size() < 2) {
-    raise_exception(std::runtime_error, "need at least two arguments");
+    throw std::runtime_error(std::string("need at least two arguments"));
   } else {
     std::string name = args[0];
     CycleKeySequencePtr sequence =
@@ -61,7 +62,7 @@ CycleKeyButtonEventHandler::from_string_named(const std::string &value, bool wra
     // if name is empty, don't put it in the lookup table
     if (!name.empty()) {
       if (lookup(name) != 0) {
-        raise_exception(std::runtime_error, "duplicate name entry");
+        throw std::runtime_error(std::string("duplicate name entry"));
       } else {
         s_lookup_table.insert(std::pair<std::string, CycleKeySequencePtr>(name, sequence));
       }
@@ -83,12 +84,12 @@ CycleKeyButtonEventHandler *CycleKeyButtonEventHandler::from_string_ref(
 
     CycleKeySequencePtr cycle_sequence = CycleKeyButtonEventHandler::lookup(name);
     if (!cycle_sequence) {
-      raise_exception(std::runtime_error, "unknown cycle sequence: " << name);
+      throw std::runtime_error(std::string("unknown cycle sequence: ") + name);
     } else {
       return new CycleKeyButtonEventHandler(cycle_sequence, direction, press);
     }
   } else {
-    raise_exception(std::runtime_error, "need at least one arguments");
+    throw std::runtime_error(std::string("need at least one arguments"));
   }
 }
 

@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "helper.hpp"
+#include "log.hpp"
 
 class LinuxUinput;
 

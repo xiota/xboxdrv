@@ -33,9 +33,9 @@
 #include "helper.hpp"
 #include "ini_parser.hpp"
 #include "ini_schema_builder.hpp"
+#include "log.hpp"
 #include "options.hpp"
 #include "path.hpp"
-#include "raise_exception.hpp"
 #include "ui_event.hpp"
 #include "xboxdrv_vfs.hpp"
 
@@ -952,8 +952,8 @@ void CommandLineParser::apply_opt(const ArgParser::ParsedOption &opt, Options &o
         opts.rumble_l = std::max(0, std::min(255, opts.rumble_l));
         opts.rumble_r = std::max(0, std::min(255, opts.rumble_r));
       } else {
-        raise_exception(
-            std::runtime_error, opt.option << " expected an argument in form INT,INT"
+        throw std::runtime_error(
+            std::string(opt.option) + " expected an argument in form INT,INT"
         );
       }
       break;
@@ -1006,19 +1006,18 @@ void CommandLineParser::apply_opt(const ArgParser::ParsedOption &opt, Options &o
       } else if (opt.argument == "generic-usb") {
         opts.gamepad_type = GAMEPAD_GENERIC_USB;
       } else {
-        raise_exception(
-            std::runtime_error,
-            "unknown type: " << opt.argument << '\n'
-                             << "Possible types are:\n"
-                             << " * xbox\n"
-                             << " * xbox-mat\n"
-                             << " * xbox360\n"
-                             << " * xbox360-guitar\n"
-                             << " * xbox360-wireless\n"
-                             << " * firestorm\n"
-                             << " * firestorm-vsb\n"
-                             << " * saitek-p2500\n"
-                             << " * generic-usb\n"
+        throw std::runtime_error(
+            std::string("unknown type: ") + opt.argument +
+            "\nPossible types are:\n"
+            " * xbox\n"
+            " * xbox-mat\n"
+            " * xbox360\n"
+            " * xbox360-guitar\n"
+            " * xbox360-wireless\n"
+            " * firestorm\n"
+            " * firestorm-vsb\n"
+            " * saitek-p2500\n"
+            " * generic-usb\n"
         );
       }
       break;
@@ -1290,10 +1289,9 @@ void CommandLineParser::apply_opt(const ArgParser::ParsedOption &opt, Options &o
         opts.vendor_id = tmp_vendor_id;
         opts.product_id = tmp_product_id;
       } else {
-        raise_exception(
-            std::runtime_error,
-            opt.option << " expected an argument in form "
-                          "PRODUCT:VENDOR (i.e. 046d:c626)"
+        throw std::runtime_error(
+            std::string(opt.option) +
+            " expected an argument in form PRODUCT:VENDOR (i.e. 046d:c626)"
         );
       }
       break;
@@ -1304,9 +1302,8 @@ void CommandLineParser::apply_opt(const ArgParser::ParsedOption &opt, Options &o
       char devid[4] = { '\0' };
 
       if (sscanf(opt.argument.c_str(), "%3s:%3s", busid, devid) != 2) {
-        raise_exception(
-            std::runtime_error,
-            opt.option << " expected an argument in form BUS:DEV (i.e. 006:003)"
+        throw std::runtime_error(
+            std::string(opt.option) + " expected an argument in form BUS:DEV (i.e. 006:003)"
         );
       } else {
         opts.busid = busid;
@@ -1374,7 +1371,7 @@ void CommandLineParser::apply_opt(const ArgParser::ParsedOption &opt, Options &o
       break;
 
     default:
-      raise_exception(std::runtime_error, "unknown command line option: " << opt.option);
+      throw std::runtime_error(std::string("unknown command line option: ") + opt.option);
       break;
   }
 }
@@ -1642,7 +1639,7 @@ void CommandLineParser::read_buildin_config_file(
   std::string str(data, data_len);
   std::istringstream in(str);
   if (!in) {
-    raise_exception(std::runtime_error, "couldn't open: buildin://" << filename);
+    throw std::runtime_error(std::string("couldn't open: buildin://") + filename);
   } else {
     INISchemaBuilder builder(m_ini);
     INIParser parser(in, builder, filename);
@@ -1655,7 +1652,7 @@ void CommandLineParser::read_config_file(const std::string &filename) {
 
   std::ifstream in(filename.c_str());
   if (!in) {
-    raise_exception(std::runtime_error, "couldn't open: " << filename);
+    throw std::runtime_error(std::string("couldn't open: ") + filename);
   } else {
     m_directory_context.push_back(path::dirname(filename));
 

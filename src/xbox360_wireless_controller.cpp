@@ -24,7 +24,7 @@
 #include <sstream>
 
 #include "helper.hpp"
-#include "raise_exception.hpp"
+#include "log.hpp"
 #include "unpack.hpp"
 #include "usb_helper.hpp"
 #include "xboxmsg.hpp"

@@ -22,13 +22,11 @@
 #include <stdexcept>
 #include <string>
 
-#include "raise_exception.hpp"
-
 DpadRestrictorModifier *DpadRestrictorModifier::from_string(
     const std::vector<std::string> &args
 ) {
   if (args.size() != 1) {
-    raise_exception(std::runtime_error, "one argument required");
+    throw std::runtime_error(std::string("one argument required"));
   } else {
     if (args[0] == "xy" || args[0] == "fourway" || args[0] == "four-way") {
       return new DpadRestrictorModifier(kRestrictFourWay);
@@ -39,7 +37,7 @@ DpadRestrictorModifier *DpadRestrictorModifier::from_string(
                args[0] == "vert" || args[0] == "vertical") {
       return new DpadRestrictorModifier(kRestrictYAxis);
     } else {
-      raise_exception(std::runtime_error, "unknown restrictor mode: " << args[0]);
+      throw std::runtime_error(std::string("unknown restrictor mode: ") + args[0]);
     }
   }
 }

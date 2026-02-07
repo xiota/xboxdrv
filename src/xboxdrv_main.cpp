@@ -34,9 +34,9 @@
 #include "dummy_message_processor.hpp"
 #include "evdev_controller.hpp"
 #include "helper.hpp"
+#include "log.hpp"
 #include "message_processor.hpp"
 #include "options.hpp"
-#include "raise_exception.hpp"
 #include "uinput.hpp"
 #include "uinput_message_processor.hpp"
 #include "usb_gsource.hpp"
@@ -211,8 +211,8 @@ void XboxdrvMain::print_info(
   libusb_device_descriptor desc;
   int ret = libusb_get_device_descriptor(dev, &desc);
   if (ret != LIBUSB_SUCCESS) {
-    raise_exception(
-        std::runtime_error, "libusb_get_device_descriptor() failed: " << usb_strerror(ret)
+    throw std::runtime_error(
+        std::string("libusb_get_device_descriptor() failed: ") + usb_strerror(ret)
     );
   }
 

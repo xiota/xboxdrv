@@ -21,11 +21,11 @@
 #include <algorithm>
 #include <cassert>
 #include <format>
+#include <ostream>
 #include <stdexcept>
 #include <string>
 
 #include "helper.hpp"
-#include "raise_exception.hpp"
 
 int16_t u8_to_s16(uint8_t value) {
   // FIXME: verify this
@@ -79,6 +79,7 @@ std::string gamepadtype_to_string(const GamepadType &type) {
 
     default:
       assert(!"Unknown gamepad type supplied");
+      return "unknown";
   }
 }
 
@@ -1502,8 +1503,8 @@ XboxButton string2btn(const std::string &str_) {
     return XBOX_DPAD_RIGHT;
 
   } else {
-    raise_exception(
-        std::runtime_error, "couldn't convert string \"" + str + "\" to XboxButton"
+    throw std::runtime_error(
+        std::string("couldn't convert string \"") + str + "\" to XboxButton"
     );
   }
 }
@@ -1552,7 +1553,9 @@ XboxAxis string2axis(const std::string &str_) {
     return XBOX_AXIS_BLACK;
 
   } else {
-    raise_exception(std::runtime_error, "couldn't convert string \"" + str + "\" to XboxAxis");
+    throw std::runtime_error(
+        std::string("couldn't convert string \"") + str + "\" to XboxAxis"
+    );
   }
 }
 

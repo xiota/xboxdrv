@@ -23,7 +23,7 @@
 #include <stdexcept>
 
 #include "helper.hpp"
-#include "raise_exception.hpp"
+#include "log.hpp"
 
 class ControllerMatchRuleProperty : public ControllerMatchRule {
  private:
@@ -111,7 +111,7 @@ ControllerMatchRule::from_string(const std::string &lhs, const std::string &rhs)
 
   if (lhs == "usbid") {
     if (args.size() != 2) {
-      raise_exception(std::runtime_error, "usbid requires VENDOR:PRODUCT argument");
+      throw std::runtime_error(std::string("usbid requires VENDOR:PRODUCT argument"));
     } else {
       std::shared_ptr<ControllerMatchRuleGroup> group(new ControllerMatchRuleGroup);
 
@@ -126,25 +126,25 @@ ControllerMatchRule::from_string(const std::string &lhs, const std::string &rhs)
     }
   } else if (lhs == "vendor") {
     if (args.size() != 1) {
-      raise_exception(std::runtime_error, "vendor requires an argument");
+      throw std::runtime_error(std::string("vendor requires an argument"));
     } else {
       return ControllerMatchRulePtr(new ControllerMatchRuleProperty("ID_VENDOR_ID", args[0]));
     }
   } else if (lhs == "product") {
     if (args.size() != 1) {
-      raise_exception(std::runtime_error, "product requires an argument");
+      throw std::runtime_error(std::string("product requires an argument"));
     } else {
       return ControllerMatchRulePtr(new ControllerMatchRuleProperty("ID_MODEL_ID", args[0]));
     }
   } else if (lhs == "property") {
     if (args.size() != 2) {
-      raise_exception(std::runtime_error, "property two arguments");
+      throw std::runtime_error(std::string("property two arguments"));
     } else {
       return ControllerMatchRulePtr(new ControllerMatchRuleProperty(args[0], args[1]));
     }
   } else if (lhs == "usbpath") {
     if (args.size() != 2) {
-      raise_exception(std::runtime_error, "usbpath requires BUS:DEV argument");
+      throw std::runtime_error(std::string("usbpath requires BUS:DEV argument"));
     } else {
       std::shared_ptr<ControllerMatchRuleGroup> group(new ControllerMatchRuleGroup);
 
@@ -159,7 +159,7 @@ ControllerMatchRule::from_string(const std::string &lhs, const std::string &rhs)
     }
   } else if (lhs == "usbserial") {
     if (args.size() != 1) {
-      raise_exception(std::runtime_error, "usbserial rule requires SERIAL argument");
+      throw std::runtime_error(std::string("usbserial rule requires SERIAL argument"));
     } else {
       return ControllerMatchRulePtr(
           new ControllerMatchRuleProperty("ID_SERIAL_SHORT", args[0])
@@ -167,12 +167,12 @@ ControllerMatchRule::from_string(const std::string &lhs, const std::string &rhs)
     }
   } else if (lhs == "evdev") {
     if (args.size() != 1) {
-      raise_exception(std::runtime_error, "evdev rule requires PATH argument");
+      throw std::runtime_error(std::string("evdev rule requires PATH argument"));
     } else {
-      raise_exception(std::runtime_error, "evdev rule not yet implemented");
+      throw std::runtime_error(std::string("evdev rule not yet implemented"));
     }
   } else {
-    raise_exception(std::runtime_error, "'" << lhs << "' not a valid match rule name");
+    throw std::runtime_error(std::string("'") + lhs + "' not a valid match rule name");
   }
 }
 

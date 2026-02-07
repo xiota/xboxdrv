@@ -30,7 +30,7 @@
 #include "controller.hpp"
 #include "evdev_helper.hpp"
 #include "force_feedback_handler.hpp"
-#include "raise_exception.hpp"
+#include "log.hpp"
 
 LinuxUinput::LinuxUinput(
     DeviceType device_type,
@@ -248,9 +248,8 @@ void LinuxUinput::finish() {
 
   log_debug("finish");
   if (ioctl(m_fd, UI_DEV_CREATE)) {
-    raise_exception(
-        std::runtime_error,
-        "unable to create uinput device: '" << name << "': " << strerror(errno)
+    throw std::runtime_error(
+        std::string("unable to create uinput device: '") + name + "': " + strerror(errno)
     );
   }
 

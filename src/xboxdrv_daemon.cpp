@@ -37,7 +37,7 @@
 #include "controller_slot.hpp"
 #include "dbus_subsystem.hpp"
 #include "helper.hpp"
-#include "raise_exception.hpp"
+#include "log.hpp"
 #include "select.hpp"
 #include "udev_subsystem.hpp"
 #include "uinput.hpp"
@@ -254,9 +254,8 @@ void XboxdrvDaemon::create_pid_file() {
     log_info("writing pid file: " << m_opts.pid_file);
     std::ofstream out(m_opts.pid_file.c_str());
     if (!out) {
-      raise_exception(
-          std::runtime_error,
-          "failed to create pid file: " << m_opts.pid_file << ": " << strerror(errno)
+      throw std::runtime_error(
+          "failed to create pid file: " + m_opts.pid_file + ": " + strerror(errno)
       );
     } else {
       out << getpid() << std::endl;

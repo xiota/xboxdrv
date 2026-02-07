@@ -22,8 +22,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "raise_exception.hpp"
-
 CycleKeySequencePtr CycleKeySequence::from_range(
     std::vector<std::string>::const_iterator beg,
     std::vector<std::string>::const_iterator end,
@@ -36,7 +34,7 @@ CycleKeySequencePtr CycleKeySequence::from_range(
   }
 
   if (keys.empty()) {
-    raise_exception(std::runtime_error, "no keys found");
+    throw std::runtime_error(std::string("no keys found"));
   } else {
     return CycleKeySequencePtr(new CycleKeySequence(keys, wrap_around));
   }

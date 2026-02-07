@@ -30,7 +30,6 @@
 #include "evdev_helper.hpp"
 #include "helper.hpp"
 #include "log.hpp"
-#include "raise_exception.hpp"
 #include "uinput.hpp"
 
 AxisEventPtr AxisEvent::invalid() {

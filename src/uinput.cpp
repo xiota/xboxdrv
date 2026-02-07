@@ -27,7 +27,6 @@
 
 #include "helper.hpp"
 #include "log.hpp"
-#include "raise_exception.hpp"
 #include "ui_abs_event_collector.hpp"
 #include "ui_key_event_collector.hpp"
 #include "ui_rel_event_collector.hpp"
@@ -57,7 +56,7 @@ struct input_id UInput::parse_input_id(const std::string &str) {
     usbid.version = hexstr2int(args[2]);
     usbid.bustype = hexstr2int(args[3]);
   } else {
-    raise_exception(std::runtime_error, "incorrect number of arguments");
+    throw std::runtime_error(std::string("incorrect number of arguments"));
   }
 
   return usbid;

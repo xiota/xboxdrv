@@ -21,7 +21,6 @@
 #include <cstring>
 #include <sstream>
 
-#include "raise_exception.hpp"
 #include "usb_helper.hpp"
 #include "xboxmsg.hpp"
 

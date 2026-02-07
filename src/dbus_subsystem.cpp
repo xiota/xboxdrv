@@ -26,7 +26,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "raise_exception.hpp"
 #include "xboxdrv_g_controller.hpp"
 #include "xboxdrv_g_daemon.hpp"
 
@@ -73,7 +72,7 @@ void DBusSubsystem::request_name(const std::string &name) {
   }
 
   if (ret != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER) {
-    raise_exception(std::runtime_error, "failed to become primary owner of dbus name");
+    throw std::runtime_error(std::string("failed to become primary owner of dbus name"));
   }
 }
 

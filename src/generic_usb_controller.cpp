@@ -22,7 +22,7 @@
 #include <stdexcept>
 
 #include "helper.hpp"
-#include "raise_exception.hpp"
+#include "log.hpp"
 
 GenericUSBController::GenericUSBController(
     libusb_device *dev,
@@ -33,18 +33,18 @@ GenericUSBController::GenericUSBController(
     : USBController(dev), m_interface(interface), m_endpoint(endpoint) {
   struct libusb_config_descriptor *config;
   if (libusb_get_active_config_descriptor(dev, &config) != LIBUSB_SUCCESS) {
-    raise_exception(std::runtime_error, "failed to get config descriptor");
+    throw std::runtime_error(std::string("failed to get config descriptor"));
   } else {
     if (config->bNumInterfaces == 0) {
-      raise_exception(std::runtime_error, "no interfaces available");
+      throw std::runtime_error(std::string("no interfaces available"));
     }
 
     if (config->interface[0].num_altsetting == 0) {
-      raise_exception(std::runtime_error, "no interface descriptors available");
+      throw std::runtime_error(std::string("no interface descriptors available"));
     }
 
     if (config->interface[0].altsetting[0].bNumEndpoints <= m_endpoint) {
-      raise_exception(std::runtime_error, "endpoint not available");
+      throw std::runtime_error(std::string("endpoint not available"));
     }
 
     uint16_t wMaxPacketSize =

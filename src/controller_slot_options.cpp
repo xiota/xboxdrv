@@ -21,8 +21,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "raise_exception.hpp"
-
 ControllerSlotOptions::ControllerSlotOptions()
     : m_options(),
       m_match_rules(),
@@ -38,7 +36,7 @@ ControllerOptions &ControllerSlotOptions::get_options(int num) {
 const ControllerOptions &ControllerSlotOptions::get_options(int num) const {
   std::map<int, ControllerOptions>::const_iterator it = m_options.find(num);
   if (it == m_options.end()) {
-    raise_exception(std::runtime_error, "illegal option: " << num);
+    throw std::runtime_error(std::string("illegal option: ") + std::to_string(num));
   } else {
     return it->second;
   }

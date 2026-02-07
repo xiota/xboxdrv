@@ -25,7 +25,6 @@
 #include "headset.hpp"
 #include "helper.hpp"
 #include "options.hpp"
-#include "raise_exception.hpp"
 #include "unpack.hpp"
 #include "usb_helper.hpp"
 
@@ -64,8 +63,8 @@ Xbox360Controller::Xbox360Controller(
 
     int ret = libusb_get_device_descriptor(dev, &desc);
     if (ret != LIBUSB_SUCCESS) {
-      raise_exception(
-          std::runtime_error, "libusb_get_config_descriptor() failed: " << usb_strerror(ret)
+      throw std::runtime_error(
+          std::string("libusb_get_config_descriptor() failed: ") + usb_strerror(ret)
       );
     } else {
       m_chatpad.reset(new Chatpad(m_handle, desc.bcdDevice, chatpad_no_init, chatpad_debug));

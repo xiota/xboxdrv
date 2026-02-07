@@ -21,12 +21,12 @@
 #include <cassert>
 #include <stdexcept>
 
-#include "raise_exception.hpp"
+#include "log.hpp"
 
 UdevSubsystem::UdevSubsystem() : m_udev(), m_monitor(), m_process_match_cb() {
   m_udev = udev_new();
   if (!m_udev) {
-    raise_exception(std::runtime_error, "udev init failure");
+    throw std::runtime_error(std::string("udev init failure"));
   }
 }
 

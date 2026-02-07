@@ -22,7 +22,6 @@
 #include <cstring>
 #include <stdexcept>
 
-#include "raise_exception.hpp"
 #include "usb_helper.hpp"
 
 struct USBReadCallback {
@@ -58,24 +57,24 @@ USBInterface::USBInterface(libusb_device_handle *handle, int interface, bool try
     // try to detach and then try to reopen
     ret = libusb_detach_kernel_driver(handle, interface);
     if (ret != LIBUSB_SUCCESS) {
-      raise_exception(
-          std::runtime_error,
-          "error detaching kernel driver: " << interface << ": " << usb_strerror(ret)
+      throw std::runtime_error(
+          std::string("error detaching kernel driver: ") + std::to_string(interface) + ": " +
+          usb_strerror(ret)
       );
     } else {
       // kernel driver detached, try to claim it again
       ret = libusb_claim_interface(handle, interface);
       if (ret != LIBUSB_SUCCESS) {
-        raise_exception(
-            std::runtime_error,
-            "error claiming interface: " << interface << ": " << usb_strerror(ret)
+        throw std::runtime_error(
+            std::string("error claiming interface: ") + std::to_string(interface) + ": " +
+            usb_strerror(ret)
         );
       }
     }
   } else {
-    raise_exception(
-        std::runtime_error,
-        "error claiming interface: " << interface << ": " << usb_strerror(ret)
+    throw std::runtime_error(
+        std::string("error claiming interface: ") + std::to_string(interface) + ": " +
+        usb_strerror(ret)
     );
   }
 }
@@ -118,7 +117,7 @@ void USBInterface::submit_read(
   ret = libusb_submit_transfer(transfer);
   if (ret != LIBUSB_SUCCESS) {
     libusb_free_transfer(transfer);
-    raise_exception(std::runtime_error, "libusb_submit_transfer(): " << usb_strerror(ret));
+    throw std::runtime_error(std::string("libusb_submit_transfer(): ") + usb_strerror(ret));
   } else {
     // transfer is send on its way, so store it
     m_endpoints[endpoint | LIBUSB_ENDPOINT_IN] = transfer;
@@ -153,7 +152,7 @@ void USBInterface::submit_write(
   ret = libusb_submit_transfer(transfer);
   if (ret != LIBUSB_SUCCESS) {
     libusb_free_transfer(transfer);
-    raise_exception(std::runtime_error, "libusb_submit_transfer(): " << usb_strerror(ret));
+    throw std::runtime_error(std::string("libusb_submit_transfer(): ") + usb_strerror(ret));
   } else {
     m_endpoints[endpoint | LIBUSB_ENDPOINT_OUT] = transfer;
   }
@@ -162,9 +161,9 @@ void USBInterface::submit_write(
 void USBInterface::cancel_transfer(int endpoint) {
   Endpoints::iterator it = m_endpoints.find(endpoint);
   if (it == m_endpoints.end()) {
-    raise_exception(
-        std::runtime_error,
-        "endpoint " << (endpoint & LIBUSB_ENDPOINT_ADDRESS_MASK) << "not found"
+    throw std::runtime_error(
+        std::string("endpoint ") + std::to_string(endpoint & LIBUSB_ENDPOINT_ADDRESS_MASK) +
+        " not found"
     );
   } else {
     libusb_cancel_transfer(it->second);
@@ -188,7 +187,7 @@ void USBInterface::on_read_data(USBReadCallback *callback, libusb_transfer *tran
     ret = libusb_submit_transfer(transfer);
     if (ret != LIBUSB_SUCCESS) {
       libusb_free_transfer(transfer);
-      raise_exception(std::runtime_error, "libusb_submit_transfer(): " << usb_strerror(ret));
+      throw std::runtime_error(std::string("libusb_submit_transfer(): ") + usb_strerror(ret));
     }
   } else {
     // callback returned false, thus doing cleanup
@@ -206,7 +205,7 @@ void USBInterface::on_write_data(USBWriteCallback *callback, libusb_transfer *tr
     ret = libusb_submit_transfer(transfer);
     if (ret != LIBUSB_SUCCESS) {
       libusb_free_transfer(transfer);
-      raise_exception(std::runtime_error, "libusb_submit_transfer(): " << usb_strerror(ret));
+      throw std::runtime_error(std::string("libusb_submit_transfer(): ") + usb_strerror(ret));
     }
   } else {
     // callback returned false, thus doing cleanup

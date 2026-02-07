@@ -26,7 +26,6 @@
 #include "modifier/dpad_rotation_modifier.hpp"
 #include "modifier/four_way_restrictor_modifier.hpp"
 #include "modifier/square_axis_modifier.hpp"
-#include "raise_exception.hpp"
 #include "uinput.hpp"
 
 ControllerSlotConfigPtr ControllerSlotConfig::create(
@@ -234,7 +233,7 @@ void ControllerSlotConfig::set_current_config(int num) {
   if (num >= 0 && num < static_cast<int>(m_config.size())) {
     m_current_config = num;
   } else {
-    raise_exception(std::runtime_error, "argument out of range");
+    throw std::runtime_error(std::string("argument out of range"));
   }
 }
 

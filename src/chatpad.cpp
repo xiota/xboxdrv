@@ -25,7 +25,6 @@
 
 #include "helper.hpp"
 #include "linux_uinput.hpp"
-#include "raise_exception.hpp"
 #include "usb_helper.hpp"
 
 struct USBControlMsg {
@@ -174,7 +173,7 @@ void Chatpad::usb_submit_read(int endpoint, int len) {
   int ret;
   ret = libusb_submit_transfer(m_read_transfer);
   if (ret != LIBUSB_SUCCESS) {
-    raise_exception(std::runtime_error, "libusb_submit_transfer(): " << usb_strerror(ret));
+    throw std::runtime_error(std::string("libusb_submit_transfer(): ") + usb_strerror(ret));
   }
 }
 
@@ -356,7 +355,7 @@ void Chatpad::send_ctrl(
   int ret;
   ret = libusb_submit_transfer(transfer);
   if (ret != LIBUSB_SUCCESS) {
-    raise_exception(std::runtime_error, "libusb_submit_transfer(): " << usb_strerror(ret));
+    throw std::runtime_error(std::string("libusb_submit_transfer(): ") + usb_strerror(ret));
   }
 }
 

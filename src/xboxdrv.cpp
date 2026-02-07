@@ -38,7 +38,7 @@
 #include "evdev_controller.hpp"
 #include "evdev_helper.hpp"
 #include "helper.hpp"
-#include "raise_exception.hpp"
+#include "log.hpp"
 #include "uinput_message_processor.hpp"
 #include "usb_gsource.hpp"
 #include "usb_helper.hpp"
@@ -53,7 +53,7 @@ bool global_exit_xboxdrv = false;
 void Xboxdrv::run_list_controller() {
   int ret = libusb_init(NULL);
   if (ret != LIBUSB_SUCCESS) {
-    raise_exception(std::runtime_error, "libusb_init() failed: " << usb_strerror(ret));
+    throw std::runtime_error(std::string("libusb_init() failed: ") + usb_strerror(ret));
   }
 
   libusb_device **list;
@@ -220,17 +220,17 @@ void Xboxdrv::run_daemon(Options &opts) {
     pid_t pid = fork();
 
     if (pid < 0) {  // fork error
-      raise_exception(std::runtime_error, "failed to fork(): " << strerror(errno));
+      throw std::runtime_error(std::string("failed to fork(): ") + strerror(errno));
     } else if (pid > 0) {  // parent, just exit
       _exit(EXIT_SUCCESS);
     } else {  // child, run daemon
       pid_t sid = setsid();
 
       if (sid == static_cast<pid_t>(-1)) {
-        raise_exception(std::runtime_error, "failed to setsid(): " << strerror(errno));
+        throw std::runtime_error(std::string("failed to setsid(): ") + strerror(errno));
       } else {
         if (chdir("/") != 0) {
-          raise_exception(std::runtime_error, "failed to chdir(\"/\"): " << strerror(errno));
+          throw std::runtime_error(std::string("failed to chdir(\"/\"): ") + strerror(errno));
         } else {
           USBSubsystem usb_subsystem;
           XboxdrvDaemon daemon(opts);
@@ -318,7 +318,7 @@ void Xboxdrv::set_scheduling(const Options &opts) {
 
     int ret;
     if ((ret = sched_setscheduler(getpid(), policy, &param)) != 0) {
-      raise_exception(std::runtime_error, "sched_setschedparam() failed: " << strerror(errno));
+      throw std::runtime_error(std::string("sched_setschedparam() failed: ") + strerror(errno));
     }
   }
 }

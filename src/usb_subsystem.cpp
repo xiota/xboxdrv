@@ -23,15 +23,15 @@
 #include <string>
 
 #include "helper.hpp"
+#include "log.hpp"
 #include "options.hpp"
-#include "raise_exception.hpp"
 #include "usb_gsource.hpp"
 #include "usb_helper.hpp"
 
 USBSubsystem::USBSubsystem() : m_usb_gsource() {
   int ret = libusb_init(NULL);
   if (ret != LIBUSB_SUCCESS) {
-    raise_exception(std::runtime_error, "libusb_init() failed: " << usb_strerror(ret));
+    throw std::runtime_error(std::string("libusb_init() failed: ") + usb_strerror(ret));
   }
 
   m_usb_gsource.reset(new USBGSource);
@@ -56,8 +56,8 @@ void USBSubsystem::find_controller(
       );
     } else {
       if (!find_controller_by_path(opts.busid, opts.devid, dev)) {
-        raise_exception(
-            std::runtime_error, "couldn't find device " << opts.busid << ":" << opts.devid
+        throw std::runtime_error(
+            std::string("couldn't find device ") + opts.busid + ":" + opts.devid
         );
       } else {
         dev_type.type = opts.gamepad_type;
@@ -77,8 +77,7 @@ void USBSubsystem::find_controller(
       );
     } else {
       if (!find_controller_by_id(opts.controller_id, opts.vendor_id, opts.product_id, dev)) {
-        raise_exception(
-            std::runtime_error,
+        throw std::runtime_error(
             std::format(
                 "couldn't find device with {:#04x}:{:#04x}", opts.vendor_id, opts.product_id
             )

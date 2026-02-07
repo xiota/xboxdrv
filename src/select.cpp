@@ -22,8 +22,6 @@
 #include <cstring>
 #include <stdexcept>
 
-#include "raise_exception.hpp"
-
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
 Select::Select() : m_nfds(0), m_readfds() {
@@ -50,7 +48,7 @@ int Select::wait() {
   );
 
   if (ret < 0) {
-    raise_exception(std::runtime_error, "select() call failed: " << strerror(errno));
+    throw std::runtime_error(std::string("select() call failed: ") + strerror(errno));
   } else {
     // return number of fds that have data on them
     return ret;

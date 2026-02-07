@@ -25,7 +25,6 @@
 #include <string>
 
 #include "log.hpp"
-#include "raise_exception.hpp"
 #include "usb_helper.hpp"
 #include "xboxmsg.hpp"
 
@@ -33,7 +32,7 @@ USBController::USBController(libusb_device *dev)
     : m_dev(dev), m_handle(0), m_transfers(), m_interfaces(), m_usbpath(), m_usbid(), m_name() {
   int ret = libusb_open(dev, &m_handle);
   if (ret != LIBUSB_SUCCESS) {
-    raise_exception(std::runtime_error, "libusb_open() failed: " << usb_strerror(ret));
+    throw std::runtime_error(std::string("libusb_open() failed: ") + usb_strerror(ret));
   } else {
     // get usbpath, usbid and name
     m_usbpath = std::format(
@@ -142,7 +141,7 @@ void USBController::usb_submit_read(int endpoint, int len) {
   ret = libusb_submit_transfer(transfer);
   if (ret != LIBUSB_SUCCESS) {
     libusb_free_transfer(transfer);
-    raise_exception(std::runtime_error, "libusb_submit_transfer(): " << usb_strerror(ret));
+    throw std::runtime_error(std::string("libusb_submit_transfer(): ") + usb_strerror(ret));
   } else {
     m_transfers.insert(transfer);
   }
@@ -175,7 +174,7 @@ void USBController::usb_write(int endpoint, uint8_t *data_in, int len) {
   ret = libusb_submit_transfer(transfer);
   if (ret != LIBUSB_SUCCESS) {
     libusb_free_transfer(transfer);
-    raise_exception(std::runtime_error, "libusb_submit_transfer(): " << usb_strerror(ret));
+    throw std::runtime_error(std::string("libusb_submit_transfer(): ") + usb_strerror(ret));
   } else {
     m_transfers.insert(transfer);
   }
@@ -208,7 +207,7 @@ void USBController::usb_control(
   ret = libusb_submit_transfer(transfer);
   if (ret != LIBUSB_SUCCESS) {
     libusb_free_transfer(transfer);
-    raise_exception(std::runtime_error, "libusb_submit_transfer(): " << usb_strerror(ret));
+    throw std::runtime_error(std::string("libusb_submit_transfer(): ") + usb_strerror(ret));
   } else {
     m_transfers.insert(transfer);
   }
@@ -307,8 +306,8 @@ int USBController::usb_find_ep(
   int ret = libusb_get_config_descriptor(m_dev, 0 /* config_index */, &config);
 
   if (ret != LIBUSB_SUCCESS) {
-    raise_exception(
-        std::runtime_error, "libusb_get_config_descriptor() failed: " << usb_strerror(ret)
+    throw std::runtime_error(
+        std::string("libusb_get_config_descriptor() failed: ") + usb_strerror(ret)
     );
   } else {
     int ret_endpoint = -1;
@@ -345,7 +344,7 @@ int USBController::usb_find_ep(
     libusb_free_config_descriptor(config);
 
     if (ret_endpoint < 0) {
-      raise_exception(std::runtime_error, "couldn't find matching endpoint");
+      throw std::runtime_error(std::string("couldn't find matching endpoint"));
     } else {
       return ret_endpoint;
     }
