@@ -1,16 +1,15 @@
-The driver portion of this project is deprecated in favor of kernel drivers.
-However, this program is able to remap evdev input to an emulated Xbox controller.
-This continues to be useful for programs that support only Xbox gamepads.
-Outside of Steam, I am not aware of any other program with this capability.
+> [!NOTE]
+> **xboxdrv is deprecated.**
 
-The primary objectives of this fork are to:
+While I may entertain pull requests or minor fixes to keep it usable a little longer, users are encouraged to consider other options.
 
-* Serve as a backup in case other repos are taken offline.
-* Merge existing fixes and patches that do not break input remapping.
-* Update and cleanup code to keep it functional on modern systems.
+* Kernel modules: xpad, [xpadneo](https://github.com/atar-axis/xpadneo), [xone](https://github.com/dlundqvist/xone)
 
-New features are unlikely to be added unless they are extremely simple
-to implement, improve input remapping, or are required to fix bugs.
+* Set `SDL_GAMECONTROLLERCONFIG` for simple remapping.
+    * [SDL_GameControllerDB](https://github.com/mdqinc/SDL_GameControllerDB)
+    * SDL3 `testcontroller`.
+
+* Other [input remap utilities](https://wiki.archlinux.org/title/Input_remap_utilities)
 
 -----
 
@@ -91,20 +90,10 @@ You can also change the install PREFIX and DESTDIR with:
     $ meson install -C build --prefix=/usr --destdir "/tmp"
 
 If you want to run `xboxdrv` in daemon mode on boot,
-copy `data/org.seul.Xboxdrv.conf` into `/etc/dbus-1/system.d/`,
+copy `data/org.seul.Xboxdrv.conf` into `/usr/share/dbus-1/system.d/`,
 otherwise `xboxdrv` will complain with:
 
     [ERROR] XboxdrvDaemon::run(): fatal exception: failed to get unique dbus name: Connection ":1.135" is not allowed to own the service "org.seul.Xboxdrv" due to security policies in the configuration file
-
-
-Arch Linux
-----------
-
-For convenience, Arch Linux users may use one of the
-[AUR](https://wiki.archlinux.org/title/Arch_User_Repository) packages:
-
-* [`xboxdrv`](https://aur.archlinux.org/pkgbase/xboxdrv) – tagged releases
-* [`xboxdrv-git`](https://aur.archlinux.org/pkgbase/xboxdrv-git) – most recent commit in main branch
 
 
 Running
