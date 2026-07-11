@@ -219,6 +219,11 @@ void LinuxUinput::finish() {
     for (size_t i = 0; i < m_controller->get_ff_features().size(); ++i) {
       add_ff(m_controller->get_ff_features()[i]);
     }
+
+    if (m_controller->get_ff_features().empty()) {
+      add_ff(FF_RUMBLE);
+      add_ff(FF_GAIN);
+    }
   }
 
   strncpy(user_dev.name, name.c_str(), UINPUT_MAX_NAME_SIZE - 1);
@@ -232,6 +237,9 @@ void LinuxUinput::finish() {
 
   if (m_force_feedback_enabled) {
     user_dev.ff_effects_max = m_controller->get_num_ff_effects();
+    if (user_dev.ff_effects_max == 0) {
+      user_dev.ff_effects_max = 16;
+    }
   }
 
   {
@@ -305,22 +313,9 @@ void LinuxUinput::sync() {
 }
 
 void LinuxUinput::update(int msec_delta) {
-#if 0
-  if (ff_bit)
-  {
-    assert(m_ff_handler);
-
+  if (m_force_feedback_enabled && m_ff_handler) {
     m_ff_handler->update(msec_delta);
-
-    log_info(std::format("{:#5d} {:5d}", m_ff_handler->get_strong_magnitude() , m_ff_handler->get_weak_magnitude()));
-
-    if (m_ff_callback)
-    {
-      m_ff_callback(static_cast<unsigned char>(m_ff_handler->get_strong_magnitude() / 128),
-                    static_cast<unsigned char>(m_ff_handler->get_weak_magnitude()   / 128));
-    }
   }
-#endif
 }
 
 gboolean LinuxUinput::on_read_data(GIOChannel *source, GIOCondition condition) {

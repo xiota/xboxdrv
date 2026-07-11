@@ -272,37 +272,126 @@ int ForceFeedbackHandler::get_max_effects() {
   return max_effects;
 }
 
+namespace {
+bool controller_handles_ff(Controller *controller) {
+  return !controller->get_ff_features().empty();
+}
+}  // namespace
+
 void ForceFeedbackHandler::upload(const struct ff_effect &effect) {
   log_debug(
       "FF_UPLOAD(" << "effect_id:" << effect.id << ", effect_type:" << effect.type
                    << ",\n          " << effect << ")"
   );
-  m_controller->upload(effect);
+
+  if (controller_handles_ff(m_controller)) {
+    m_controller->upload(effect);
+    return;
+  }
+
+  Effects::iterator i = effects.find(effect.id);
+  if (i == effects.end()) {
+    effects[effect.id] = ForceFeedbackEffect(effect);
+  } else {
+    ForceFeedbackEffect old_effect = i->second;
+    ForceFeedbackEffect new_effect(effect);
+
+    // copy the state variables so the effect can be updated while playing
+    new_effect.playing = old_effect.playing;
+    new_effect.count = old_effect.count;
+    new_effect.weak_magnitude = old_effect.weak_magnitude;
+    new_effect.strong_magnitude = old_effect.strong_magnitude;
+
+    effects[effect.id] = new_effect;
+  }
 }
 
 void ForceFeedbackHandler::erase(int id) {
   log_debug("FF_ERASE(effect_id:" << id << ")");
-  m_controller->erase(id);
+
+  if (controller_handles_ff(m_controller)) {
+    m_controller->erase(id);
+    return;
+  }
+
+  Effects::iterator i = effects.find(id);
+  if (i != effects.end()) {
+    effects.erase(i);
+  } else {
+    log_warn("unknown id " << id);
+  }
 }
 
 void ForceFeedbackHandler::play(int id) {
   log_debug("FFPlay(effect_id:" << id << ")");
-  m_controller->play(id);
+
+  if (controller_handles_ff(m_controller)) {
+    m_controller->play(id);
+    return;
+  }
+
+  Effects::iterator i = effects.find(id);
+  if (i != effects.end()) {
+    i->second.play();
+  } else {
+    log_warn("unknown id " << id);
+  }
 }
 
 void ForceFeedbackHandler::stop(int id) {
   log_debug("FFStop(effect_id:" << id << ")");
-  m_controller->stop(id);
+
+  if (controller_handles_ff(m_controller)) {
+    m_controller->stop(id);
+    return;
+  }
+
+  Effects::iterator i = effects.find(id);
+  if (i != effects.end()) {
+    i->second.stop();
+  } else {
+    log_warn("unknown id " << id);
+  }
 }
 
-void ForceFeedbackHandler::set_gain(int gain) {
-  log_debug("FFGain(g:" << gain << ")");
-  m_controller->set_gain(gain);
+void ForceFeedbackHandler::set_gain(int g) {
+  log_debug("FFGain(g:" << g << ")");
+
+  if (controller_handles_ff(m_controller)) {
+    m_controller->set_gain(g);
+    return;
+  }
+
+  gain = g;
 }
 
 void ForceFeedbackHandler::update(int msec_delta) {
   weak_magnitude = 0;
   strong_magnitude = 0;
+
+  if (controller_handles_ff(m_controller)) {
+    return;
+  }
+
+  if (!effects.empty()) {
+    for (Effects::iterator i = effects.begin(); i != effects.end(); ++i) {
+      i->second.update(msec_delta);
+
+      weak_magnitude += i->second.get_weak_magnitude();
+      strong_magnitude += i->second.get_strong_magnitude();
+    }
+
+    weak_magnitude = std::min(weak_magnitude, 0x7fff);
+    strong_magnitude = std::min(strong_magnitude, 0x7fff);
+  }
+
+  // The uinput-side ff callback path is gone,
+  // so drive the rumble motors directly;
+  // set_rumble() ignores repeated identical values.
+  m_controller->set_rumble(
+      static_cast<unsigned char>(get_strong_magnitude() / 128),
+      static_cast<unsigned char>(get_weak_magnitude() / 128)
+  );
 }
 
 int ForceFeedbackHandler::get_weak_magnitude() const {
