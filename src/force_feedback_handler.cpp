@@ -145,37 +145,37 @@ ForceFeedbackEffect::ForceFeedbackEffect(const struct ff_effect &effect)
 
   switch (effect.type) {
     case FF_CONSTANT:
-      start_weak_magnitude = std::clamp(0x7fff, 0, abs(effect.u.constant.level));
-      start_strong_magnitude = std::clamp(0x7fff, 0, abs(effect.u.constant.level));
-      end_weak_magnitude = std::clamp(0x7fff, 0, abs(effect.u.constant.level));
-      end_strong_magnitude = std::clamp(0x7fff, 0, abs(effect.u.constant.level));
+      start_weak_magnitude = std::clamp(abs(effect.u.constant.level), 0, 0x7fff);
+      start_strong_magnitude = std::clamp(abs(effect.u.constant.level), 0, 0x7fff);
+      end_weak_magnitude = std::clamp(abs(effect.u.constant.level), 0, 0x7fff);
+      end_strong_magnitude = std::clamp(abs(effect.u.constant.level), 0, 0x7fff);
 
       envelope = effect.u.constant.envelope;
       break;
 
     case FF_PERIODIC:
-      start_weak_magnitude = std::clamp(0x7fff, 0, abs(effect.u.periodic.magnitude));
-      start_strong_magnitude = std::clamp(0x7fff, 0, abs(effect.u.periodic.magnitude));
-      end_weak_magnitude = std::clamp(0x7fff, 0, abs(effect.u.periodic.magnitude));
-      end_strong_magnitude = std::clamp(0x7fff, 0, abs(effect.u.periodic.magnitude));
+      start_weak_magnitude = std::clamp(abs(effect.u.periodic.magnitude), 0, 0x7fff);
+      start_strong_magnitude = std::clamp(abs(effect.u.periodic.magnitude), 0, 0x7fff);
+      end_weak_magnitude = std::clamp(abs(effect.u.periodic.magnitude), 0, 0x7fff);
+      end_strong_magnitude = std::clamp(abs(effect.u.periodic.magnitude), 0, 0x7fff);
 
       envelope = effect.u.periodic.envelope;
       break;
 
     case FF_RAMP:
-      start_weak_magnitude = std::clamp(0x7fff, 0, abs(effect.u.ramp.start_level));
-      start_strong_magnitude = std::clamp(0x7fff, 0, abs(effect.u.ramp.start_level));
-      end_weak_magnitude = std::clamp(0x7fff, 0, abs(effect.u.ramp.end_level));
-      end_strong_magnitude = std::clamp(0x7fff, 0, abs(effect.u.ramp.end_level));
+      start_weak_magnitude = std::clamp(abs(effect.u.ramp.start_level), 0, 0x7fff);
+      start_strong_magnitude = std::clamp(abs(effect.u.ramp.start_level), 0, 0x7fff);
+      end_weak_magnitude = std::clamp(abs(effect.u.ramp.end_level), 0, 0x7fff);
+      end_strong_magnitude = std::clamp(abs(effect.u.ramp.end_level), 0, 0x7fff);
 
       envelope = effect.u.ramp.envelope;
       break;
 
     case FF_RUMBLE:
-      start_weak_magnitude = std::clamp(0x7fff, 0, abs(effect.u.rumble.weak_magnitude));
-      start_strong_magnitude = std::clamp(0x7fff, 0, abs(effect.u.rumble.strong_magnitude));
-      end_weak_magnitude = std::clamp(0x7fff, 0, abs(effect.u.rumble.weak_magnitude));
-      end_strong_magnitude = std::clamp(0x7fff, 0, abs(effect.u.rumble.strong_magnitude));
+      start_weak_magnitude = std::clamp(abs(effect.u.rumble.weak_magnitude), 0, 0x7fff);
+      start_strong_magnitude = std::clamp(abs(effect.u.rumble.strong_magnitude), 0, 0x7fff);
+      end_weak_magnitude = std::clamp(abs(effect.u.rumble.weak_magnitude), 0, 0x7fff);
+      end_strong_magnitude = std::clamp(abs(effect.u.rumble.strong_magnitude), 0, 0x7fff);
       break;
 
     default:
