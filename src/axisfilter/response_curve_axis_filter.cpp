@@ -43,12 +43,21 @@ int ResponseCurveAxisFilter::filter(int value, int min, int max) {
   } else {
     // FIXME: should rewrite this to use integer only and make sure
     // that the edge conditions are meet
+    int clamped_value = std::clamp(value, min, max);
     int bucket_count = m_samples.size() - 1;
     float bucket_size = (max - min) / static_cast<float>(bucket_count);
 
-    int bucket_index = int((value - min) / bucket_size);
+    if (bucket_size <= 0.0f) {
+      return m_samples[0];
+    }
 
-    float t = ((value - min) - (static_cast<float>(bucket_index) * bucket_size)) / bucket_size;
+    int bucket_index = int((clamped_value - min) / bucket_size);
+    if (bucket_index >= bucket_count) {
+      bucket_index = bucket_count - 1;
+    }
+
+    float t = ((clamped_value - min) - (static_cast<float>(bucket_index) * bucket_size)) /
+              bucket_size;
 
     return ((1.0f - t) * m_samples[bucket_index]) + (t * m_samples[bucket_index + 1]);
   }
