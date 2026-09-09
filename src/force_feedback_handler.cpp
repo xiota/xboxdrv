@@ -214,12 +214,14 @@ void ForceFeedbackEffect::update(int msec_delta) {
           weak_magnitude = get_pos(start_weak_magnitude, end_weak_magnitude, t, length);
 
           // apply envelope
-          strong_magnitude =
-              ((envelope.attack_level * t) + strong_magnitude * (envelope.attack_length - t)) /
-              envelope.attack_length;
-          weak_magnitude =
-              ((envelope.attack_level * t) + weak_magnitude * (envelope.attack_length - t)) /
-              envelope.attack_length;
+          if (envelope.attack_length > 0) {
+            strong_magnitude = ((envelope.attack_level * t) +
+                                strong_magnitude * (envelope.attack_length - t)) /
+                               envelope.attack_length;
+            weak_magnitude =
+                ((envelope.attack_level * t) + weak_magnitude * (envelope.attack_length - t)) /
+                envelope.attack_length;
+          }
         } else if (t < length - envelope.fade_length) {  // sustain
           strong_magnitude = get_pos(start_strong_magnitude, end_strong_magnitude, t, length);
           weak_magnitude = get_pos(start_weak_magnitude, end_weak_magnitude, t, length);
@@ -228,13 +230,15 @@ void ForceFeedbackEffect::update(int msec_delta) {
           weak_magnitude = get_pos(start_weak_magnitude, end_weak_magnitude, t, length);
 
           // apply envelope
-          int dt = t - (length - envelope.fade_length);
-          strong_magnitude =
-              ((envelope.fade_level * dt) + strong_magnitude * (envelope.fade_length - dt)) /
-              envelope.fade_length;
-          weak_magnitude =
-              ((envelope.fade_level * dt) + weak_magnitude * (envelope.fade_length - dt)) /
-              envelope.fade_length;
+          if (envelope.fade_length > 0) {
+            int dt = t - (length - envelope.fade_length);
+            strong_magnitude =
+                ((envelope.fade_level * dt) + strong_magnitude * (envelope.fade_length - dt)) /
+                envelope.fade_length;
+            weak_magnitude =
+                ((envelope.fade_level * dt) + weak_magnitude * (envelope.fade_length - dt)) /
+                envelope.fade_length;
+          }
         } else {  // effect ended
           stop();
         }
